@@ -1,18 +1,32 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *  DrumsEmulation - drum emulator & sythesizer
+ *  Copyright (C) 2011 C.D.Immanuel Albrecht
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
 package drumsemulation.snd;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.*;
+import java.util.logging.*;
 import javax.sound.sampled.*;
 
 /**
  *
  * @author immanuel
  */
-public class PlaybackDriver implements LineListener, Runnable {
+public class playbackDriver implements LineListener, Runnable {
 
     boolean on_air;
     int line_nbr;
@@ -25,8 +39,11 @@ public class PlaybackDriver implements LineListener, Runnable {
     int[] i_buffer;
     Thread writing_thread;
     long frames_elapsed;
+    final Object generators_lock;
+    ArrayList<soundGenerator> generators;
+    final functionTables table;
 
-    public PlaybackDriver() {
+    public playbackDriver() {
         this.on_air = false;
         this.line_nbr = 0;
         this.channels = 2;
@@ -37,18 +54,30 @@ public class PlaybackDriver implements LineListener, Runnable {
         this.b_buffer = new byte[channels * 4 * buffer_frames];
         this.i_buffer = new int[channels * buffer_frames];
         this.frames_elapsed = 0;
+        this.table = functionTables.getObject();
+        this.generators = new ArrayList<soundGenerator>(64);
+        this.generators_lock = new Object();
     }
 
     public void update(LineEvent le) {
-            if (le.getType() == LineEvent.Type.STOP) {
-                System.out.println("X-RUN! @" + frames_elapsed);
-            }        
+        if (le.getType() == LineEvent.Type.STOP) {
+            System.out.println("X-RUN! @" + frames_elapsed);
+        }
+    }
+
+    public int addGenerator(soundGenerator g) {
+        synchronized (generators_lock) {
+            if (generators.indexOf(g) == -1) {
+                generators.add(g);
+            }
+            return generators.indexOf(g);
+        }
     }
 
     public void run() {
-        Thread writing_thread;
+        Thread local_writing_thread_copy;
         synchronized (this) {
-            writing_thread = this.writing_thread;
+            local_writing_thread_copy = this.writing_thread;
         }
         int byte_count = (buffer_frames * channels * 4);
         int count = out_line.available() / byte_count;
@@ -69,7 +98,21 @@ public class PlaybackDriver implements LineListener, Runnable {
         }
 
         out_line.start();
-        while (writing_thread != null) {
+        while (local_writing_thread_copy != null) {
+            for (int idx = 0; idx < int_count; ++idx) {
+                i_buffer[idx] = 0;
+            }
+            synchronized (generators_lock) {
+
+                Iterator<soundGenerator> it = generators.iterator();
+                while (it.hasNext()) {
+                    it.next().additiveSynthesis(frames_elapsed, i_buffer,
+                            channels, buffer_frames);
+                }
+            }
+            for (int idx = 0; idx < int_count; ++idx) {
+                i_buffer[idx] += table.square(frames_elapsed + (idx >> 1), 440) >> 7;
+            }
             for (int idx = 0; idx < int_count; ++idx) {
                 int b_idx = idx << 2;
                 int f = i_buffer[idx];
@@ -82,7 +125,7 @@ public class PlaybackDriver implements LineListener, Runnable {
             frames_elapsed += this.buffer_frames;
             out_line.write(b_buffer, 0, buffer_frames * channels * 4);
             synchronized (this) {
-                writing_thread = this.writing_thread;
+                local_writing_thread_copy = this.writing_thread;
             }
         }
 
@@ -99,7 +142,7 @@ public class PlaybackDriver implements LineListener, Runnable {
 
     public boolean setOn_air(boolean on_air) {
         if (on_air != this.on_air) {
-            
+
             if (on_air) { //start
                 try {
                     //starts
@@ -111,20 +154,20 @@ public class PlaybackDriver implements LineListener, Runnable {
                         writing_thread.setName("WritingThread");
                         writing_thread.start();
                         this.on_air = true;
-                        System.out.println("Went On-Air @"+frames_elapsed);
+                        System.out.println("Went On-Air @" + frames_elapsed);
                     }
 
                 } catch (LineUnavailableException ex) {
-                    Logger.getLogger(PlaybackDriver.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(playbackDriver.class.getName()).log(Level.SEVERE, null, ex);
                     synchronized (this) {
                         this.on_air = false;
                     }
                 }
             } else { //stop
-                synchronized(this){
+                synchronized (this) {
                     writing_thread = null;
                     this.on_air = false;
-                    System.out.println("Went Off-Air @"+frames_elapsed);
+                    System.out.println("Went Off-Air @" + frames_elapsed);
                 }
             }
         }
