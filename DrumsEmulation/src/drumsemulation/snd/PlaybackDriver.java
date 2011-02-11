@@ -2,8 +2,8 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package drumsemulation.snd;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.*;
@@ -12,33 +12,86 @@ import javax.sound.sampled.*;
  *
  * @author immanuel
  */
-public class PlaybackDriver implements LineListener {
+public class PlaybackDriver implements LineListener, Runnable {
 
     boolean on_air;
     int line_nbr;
     AudioFormat format;
     Line.Info[] lines;
     SourceDataLine out_line;
-    int buffer_samples;
-    int channels;
-    byte[] buffer;
+    int buffer_frames;
+    int channels; // 1 frame consists of _channels_ samples
+    byte[] b_buffer;
+    int[] i_buffer;
+    Thread writing_thread;
+    long frames_elapsed;
 
     public PlaybackDriver() {
         this.on_air = false;
         this.line_nbr = 0;
         this.channels = 2;
-        this.format = new AudioFormat(44100.f, 32, channels, true, false);
+        this.format = new AudioFormat(44100.f, 32, channels, true, true);
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
         lines = AudioSystem.getSourceLineInfo(info);
-        this.buffer_samples = 256;
-        this.buffer = new byte[channels*4*buffer_samples];
+        this.buffer_frames = 256;
+        this.b_buffer = new byte[channels * 4 * buffer_frames];
+        this.i_buffer = new int[channels * buffer_frames];
+        this.frames_elapsed = 0;
     }
 
     public void update(LineEvent le) {
-        System.out.println(le+" "+out_line.available());
+            if (le.getType() == LineEvent.Type.STOP) {
+                System.out.println("X-RUN! @" + frames_elapsed);
+            }        
     }
 
+    public void run() {
+        Thread writing_thread;
+        synchronized (this) {
+            writing_thread = this.writing_thread;
+        }
+        int byte_count = (buffer_frames * channels * 4);
+        int count = out_line.available() / byte_count;
+        int int_count = buffer_frames * channels;
 
+        for (int idx = 0; idx < int_count; ++idx) {
+            i_buffer[idx] = 0;
+            int b_idx = idx << 2;
+            b_buffer[b_idx] = 0;
+            b_buffer[b_idx + 1] = 0;
+            b_buffer[b_idx + 2] = 0;
+            b_buffer[b_idx + 3] = 0;
+        }
+
+        for (int i = 0; i < count; ++i) {
+
+            out_line.write(b_buffer, 0, byte_count);
+        }
+
+        out_line.start();
+        while (writing_thread != null) {
+            for (int idx = 0; idx < int_count; ++idx) {
+                int b_idx = idx << 2;
+                int f = i_buffer[idx];
+                b_buffer[b_idx] = (byte) (f >> 24);
+                b_buffer[b_idx + 1] = (byte) (f >> 16);
+                b_buffer[b_idx + 2] = (byte) (f >> 8);
+                b_buffer[b_idx + 3] = (byte) (f);
+            }
+
+            frames_elapsed += this.buffer_frames;
+            out_line.write(b_buffer, 0, buffer_frames * channels * 4);
+            synchronized (this) {
+                writing_thread = this.writing_thread;
+            }
+        }
+
+        synchronized (this) {
+            out_line.close();
+            out_line.removeLineListener(this);
+            out_line = null;
+        }
+    }
 
     public boolean isOn_air() {
         return on_air;
@@ -46,32 +99,35 @@ public class PlaybackDriver implements LineListener {
 
     public boolean setOn_air(boolean on_air) {
         if (on_air != this.on_air) {
-            this.on_air = on_air;
+            
             if (on_air) { //start
                 try {
-                    //start
-                    this.out_line = (SourceDataLine) AudioSystem.getLine(lines[line_nbr]);
-                    out_line.addLineListener(this);
-                    out_line.open(format);
-                    System.out.println("Available: "+out_line.available());
-                    for (int i=0;i<20;++i)
-                        out_line.write(buffer, 0, channels*4*buffer_samples);
-                    
-                    
-                    out_line.start();
-                    
-                    
+                    //starts
+                    synchronized (this) {
+                        this.out_line = (SourceDataLine) AudioSystem.getLine(lines[line_nbr]);
+                        out_line.addLineListener(this);
+                        out_line.open(format);
+                        writing_thread = new Thread(this);
+                        writing_thread.setName("WritingThread");
+                        writing_thread.start();
+                        this.on_air = true;
+                        System.out.println("Went On-Air @"+frames_elapsed);
+                    }
+
                 } catch (LineUnavailableException ex) {
                     Logger.getLogger(PlaybackDriver.class.getName()).log(Level.SEVERE, null, ex);
-                    this.on_air = false;
+                    synchronized (this) {
+                        this.on_air = false;
+                    }
                 }
             } else { //stop
-                out_line.close();
+                synchronized(this){
+                    writing_thread = null;
+                    this.on_air = false;
+                    System.out.println("Went Off-Air @"+frames_elapsed);
+                }
             }
         }
         return this.on_air;
     }
-
-
-
 }
