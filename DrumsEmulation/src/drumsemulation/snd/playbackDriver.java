@@ -44,6 +44,8 @@ public class playbackDriver implements LineListener, Runnable {
     final functionTables table;
     Random random_generator;
 
+    public hitGenerator beep;
+
     public playbackDriver() {
         this.on_air = false;
         this.line_nbr = 0;
@@ -59,6 +61,9 @@ public class playbackDriver implements LineListener, Runnable {
         this.generators = new ArrayList<soundGenerator>(64);
         this.generators_lock = new Object();
         this.random_generator = new Random();
+        this.beep = new hitGenerator();
+        
+        addGenerator(beep);
     }
 
     public void update(LineEvent le) {
@@ -74,6 +79,10 @@ public class playbackDriver implements LineListener, Runnable {
             }
             return generators.indexOf(g);
         }
+    }
+
+    public long get_elapsed() {
+        return frames_elapsed;
     }
 
     public void run() {
@@ -105,7 +114,6 @@ public class playbackDriver implements LineListener, Runnable {
                 i_buffer[idx] = 0;
             }
             synchronized (generators_lock) {
-
                 Iterator<soundGenerator> it = generators.iterator();
                 while (it.hasNext()) {
                     it.next().additiveSynthesis(frames_elapsed, i_buffer,

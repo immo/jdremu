@@ -70,7 +70,7 @@ public class hitGenerator extends soundGenerator {
             if (!future_hits_t.isEmpty()) {
                 boolean missed_hit = false;
                 int max_level = 0;
-                while (future_hits_t.get(0) < start_frame) {
+                while ((!future_hits_t.isEmpty())&&(future_hits_t.get(0) < start_frame)) {
                     Long l = future_hits_t.get(0);
                     future_hits_t.remove(l);
                     int lvl = future_hits.get(l);
@@ -86,15 +86,17 @@ public class hitGenerator extends soundGenerator {
                         noise_level = hit_level;
                     }
                 }
+
+                if ((!future_hits_t.isEmpty())&&(future_hits_t.get(0) < next_block_start_frame)) {
+                }
             }
-            if (future_hits_t.get(0) < next_block_start_frame) {
-            }
+
         }
         if (noise_level > 0) {
             for (long f = start_frame; f < next_block_start_frame; ++f) {
-                int noise = (rnd.nextInt()>>12)*noise_level;
-                for (int c=0;c<channels;++c) {
-                    buffer[frame_idx*channels+c] += noise;
+                int noise = (rnd.nextInt() >> 12) * noise_level;
+                for (int c = 0; c < channels; ++c) {
+                    buffer[frame_idx * channels + c] += noise;
                 }
                 frame_idx++;
                 noise_level--;

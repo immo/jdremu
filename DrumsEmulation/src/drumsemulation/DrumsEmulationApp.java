@@ -47,6 +47,10 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         return playback_driver.setOn_air(on_air);
     }
 
+    public void beep(int lvl) {
+        playback_driver.beep.hit(playback_driver.get_elapsed(), lvl);
+    }
+
     /**
      * This method is to initialize the specified window by injecting resources.
      * Windows shown in our application come fully initialized from the GUI
