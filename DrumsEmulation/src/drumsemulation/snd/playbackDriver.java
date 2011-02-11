@@ -112,9 +112,7 @@ public class playbackDriver implements LineListener, Runnable {
                             channels, buffer_frames);
                 }
             }
-            for (int idx = 0; idx < int_count; ++idx) {
-                i_buffer[idx] += random_generator.nextInt()>>7;
-            }
+            
             for (int idx = 0; idx < int_count; ++idx) {
                 int b_idx = idx << 2;
                 int f = i_buffer[idx];
