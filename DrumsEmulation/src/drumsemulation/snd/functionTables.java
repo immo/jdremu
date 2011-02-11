@@ -18,6 +18,8 @@
  */
 package drumsemulation.snd;
 
+import java.util.Random;
+
 /**
  *
  * @author immanuel
@@ -39,6 +41,7 @@ public class functionTables {
     public final int tooth_period_length;
     public final int tri_p1;
     public final int tri_p3;
+    
 
     protected functionTables() {
         d_sample_rate = 44100.;

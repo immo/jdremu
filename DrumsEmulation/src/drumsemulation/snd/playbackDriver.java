@@ -42,6 +42,7 @@ public class playbackDriver implements LineListener, Runnable {
     final Object generators_lock;
     ArrayList<soundGenerator> generators;
     final functionTables table;
+    Random random_generator;
 
     public playbackDriver() {
         this.on_air = false;
@@ -57,6 +58,7 @@ public class playbackDriver implements LineListener, Runnable {
         this.table = functionTables.getObject();
         this.generators = new ArrayList<soundGenerator>(64);
         this.generators_lock = new Object();
+        this.random_generator = new Random();
     }
 
     public void update(LineEvent le) {
@@ -111,7 +113,7 @@ public class playbackDriver implements LineListener, Runnable {
                 }
             }
             for (int idx = 0; idx < int_count; ++idx) {
-                i_buffer[idx] += table.square(frames_elapsed + (idx >> 1), 440) >> 7;
+                i_buffer[idx] += random_generator.nextInt()>>7;
             }
             for (int idx = 0; idx < int_count; ++idx) {
                 int b_idx = idx << 2;
