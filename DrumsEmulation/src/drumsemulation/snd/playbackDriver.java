@@ -42,6 +42,7 @@ public class playbackDriver implements LineListener, Runnable {
     final Object generators_lock;
     ArrayList<soundGenerator> generators;
     final functionTables table;
+    long total_lvl31;
     Random random_generator;
 
     public hitGenerator beep;
@@ -62,6 +63,7 @@ public class playbackDriver implements LineListener, Runnable {
         this.generators_lock = new Object();
         this.random_generator = new Random();
         this.beep = new hitGenerator();
+        this.total_lvl31 = 1 << 27; /* 1<<31 equals 0dB */
         
         addGenerator(beep);
     }
@@ -81,6 +83,18 @@ public class playbackDriver implements LineListener, Runnable {
         }
     }
 
+    public long get_total_lvl() {
+        synchronized(this) {
+            return total_lvl31;
+        }
+    }
+
+    public void set_total_lvl(long lvl31) {
+        synchronized(this) {
+            total_lvl31 = lvl31;
+        }
+    }
+
     public long get_elapsed() {
         return frames_elapsed;
     }
@@ -93,6 +107,7 @@ public class playbackDriver implements LineListener, Runnable {
         int byte_count = (buffer_frames * channels * 4);
         int count = out_line.available() / byte_count;
         int int_count = buffer_frames * channels;
+        long local_lvl31=0;
 
         for (int idx = 0; idx < int_count; ++idx) {
             i_buffer[idx] = 0;
@@ -117,7 +132,7 @@ public class playbackDriver implements LineListener, Runnable {
                 Iterator<soundGenerator> it = generators.iterator();
                 while (it.hasNext()) {
                     it.next().additiveSynthesis(frames_elapsed, i_buffer,
-                            channels, buffer_frames);
+                            channels, buffer_frames, local_lvl31);
                 }
             }
             
@@ -134,6 +149,7 @@ public class playbackDriver implements LineListener, Runnable {
             out_line.write(b_buffer, 0, buffer_frames * channels * 4);
             synchronized (this) {
                 local_writing_thread_copy = this.writing_thread;
+                local_lvl31 = this.total_lvl31;
             }
         }
 
@@ -170,6 +186,9 @@ public class playbackDriver implements LineListener, Runnable {
                     synchronized (this) {
                         this.on_air = false;
                     }
+                } catch (java.lang.ArrayIndexOutOfBoundsException ex) {
+                    System.out.println("No lines found!");
+                    System.out.println(lines);
                 }
             } else { //stop
                 synchronized (this) {

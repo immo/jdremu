@@ -11,7 +11,7 @@ package drumsemulation.snd;
  */
 public class soundGenerator {
 
-    public void additiveSynthesis(long start_frame, int[] buffer, int channels, int frames) {
+    public void additiveSynthesis(long start_frame, int[] buffer, int channels, int frames, long lvl31) {
         
     }
 

@@ -63,14 +63,14 @@ public class hitGenerator extends soundGenerator {
     }
 
     @Override
-    public void additiveSynthesis(long start_frame, int[] buffer, int channels, int frames) {
+    public void additiveSynthesis(long start_frame, int[] buffer, int channels, int frames, long lvl31) {
         long next_block_start_frame = start_frame + frames;
         int frame_idx = 0;
         synchronized (sync_token) {
             if (!future_hits_t.isEmpty()) {
                 boolean missed_hit = false;
                 int max_level = 0;
-                while ((!future_hits_t.isEmpty())&&(future_hits_t.get(0) < start_frame)) {
+                while ((!future_hits_t.isEmpty()) && (future_hits_t.get(0) < start_frame)) {
                     Long l = future_hits_t.get(0);
                     future_hits_t.remove(l);
                     int lvl = future_hits.get(l);
@@ -87,14 +87,35 @@ public class hitGenerator extends soundGenerator {
                     }
                 }
 
-                if ((!future_hits_t.isEmpty())&&(future_hits_t.get(0) < next_block_start_frame)) {
+                while ((!future_hits_t.isEmpty()) && (future_hits_t.get(0) < next_block_start_frame)) {
+                    Long next_event = future_hits_t.get(0);
+                    for (long f = start_frame; f < next_event; ++f) {
+                        if (noise_level > 0) {
+                            int noise = (int) (((long) ((rnd.nextInt() >> 12) * noise_level) * lvl31) >> 31);
+                            for (int c = 0; c < channels; ++c) {
+                                buffer[frame_idx * channels + c] += noise;
+                            }
+
+                            noise_level--;
+                        }
+                        frame_idx++;
+
+                    }
+                    start_frame = next_event;
+                    
+                    int lvl = (future_hits.get(next_event) & 0x7F) << 5;
+                    future_hits.remove(next_event);
+                    future_hits_t.remove(next_event);
+                    if (lvl > noise_level) {
+                        noise_level = lvl;
+                    }
                 }
             }
 
         }
         if (noise_level > 0) {
             for (long f = start_frame; f < next_block_start_frame; ++f) {
-                int noise = (rnd.nextInt() >> 12) * noise_level;
+                int noise = (int) (((long) ((rnd.nextInt() >> 12) * noise_level) * lvl31) >> 31);
                 for (int c = 0; c < channels; ++c) {
                     buffer[frame_idx * channels + c] += noise;
                 }
@@ -115,7 +136,7 @@ public class hitGenerator extends soundGenerator {
         h.hit(30, 1);
         h.hit(1030, 1);
         h.hit(677, 1);
-        h.additiveSynthesis(300, null, 0, 100);
+        h.additiveSynthesis(300, null, 0, 100, 1 << 31);
         System.out.println(h.future_hits_t);
     }
 }
