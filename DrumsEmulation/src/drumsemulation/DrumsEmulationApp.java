@@ -23,9 +23,17 @@
 
 package drumsemulation;
 
+import java.io.FileNotFoundException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 import drumsemulation.snd.*;
+import java.io.File;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Scanner;
 
 /**
  * The main class of the application.
@@ -33,14 +41,69 @@ import drumsemulation.snd.*;
 public class DrumsEmulationApp extends SingleFrameApplication {
 
     private playbackDriver playback_driver;
+    private ArrayList<String> hitGeneratorSetup;
+    private ArrayList<String> names;
+    private ArrayList<hitGenerator> generators;
 
     /**
      * At startup create and show the main frame of the application.
      */
     @Override protected void startup() {
         playback_driver = new playbackDriver();
+        hitGeneratorSetup = new ArrayList<String>();
+        names = new ArrayList<String>();
+        generators = new ArrayList<hitGenerator>();
+
+        String setupFile = System.getProperty("user.home") + "/.jdremu.conf";
+        File f = new File(setupFile);
+        boolean default_setup = true;
+        if (f.exists()) {
+            FileReader fr;
+            try {
+                fr = new FileReader(f);
+                Scanner lines = new Scanner(fr);
+
+                while (lines.hasNextLine()) {
+                    hitGeneratorSetup.add(lines.nextLine());
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(DrumsEmulationApp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+        if (default_setup) {
+            hitGeneratorSetup.add("Beep=Beep()");
+            hitGeneratorSetup.add("Test1=swOsc()");
+        }
+
+        Iterator<String> it = hitGeneratorSetup.iterator();
+
+        while (it.hasNext()) {
+            String s = it.next();
+            if (s.contains("=")) {
+                int idx = s.indexOf("=");
+                names.add(s.substring(0, idx));
+                hitGenerator generator = hitGenerator.getGeneratorByDesc(s.substring(idx+1));
+                generators.add(generator);
+                playback_driver.addGenerator(generator);
+            }
+        }
+
+
 
         show(new DrumsEmulationView(this));
+    }
+
+    public int getGeneratorsCount() {
+        return names.size();
+    }
+
+    public String getGeneratorName(int index) {
+        return names.get(index);
+    }
+
+    public hitGenerator getGenerator(int index) {
+        return generators.get(index);
     }
 
     public boolean setOn_air(boolean on_air) {
@@ -49,6 +112,14 @@ public class DrumsEmulationApp extends SingleFrameApplication {
 
     public void beep(int lvl) {
         playback_driver.beep.hit(playback_driver.get_elapsed(), lvl);
+    }
+
+    public void instrument_hit_button(int i) {
+        generators.get(i).hit(playback_driver.get_elapsed(), 127);
+    }
+
+    public int getSampleRate() {
+        return 44100;
     }
 
     /**

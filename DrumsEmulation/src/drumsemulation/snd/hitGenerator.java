@@ -36,13 +36,21 @@ public class hitGenerator extends soundGenerator {
     ArrayList<Long> future_hits_t;
     Random rnd;
     int noise_level;
+    String description;
 
     public hitGenerator() {
         this.sync_token = new Object();
         this.future_hits = new TreeMap<Long, Integer>();
         this.future_hits_t = new ArrayList<Long>();
         this.rnd = new Random();
+        this.description = "Beep()";
     }
+
+    public hitGenerator(String description) {
+        this();
+        this.description = "Beep("+description+")";
+    }
+
 
     public void hit(long when, int level) {
         synchronized (sync_token) {
@@ -128,6 +136,43 @@ public class hitGenerator extends soundGenerator {
         }
     }
 
+    public static hitGenerator getGeneratorByDesc(String desc) {
+        hitGenerator error = new hitGenerator();
+        error.description = desc + "!";
+        desc = desc.trim();
+
+
+        if (desc.contains("(")) {
+            int idx = desc.indexOf("(");
+            String type = desc.substring(0,idx).trim();
+            String parms = desc.substring(idx+1);
+            if (parms.substring(parms.length()-1).equals(")")) {
+                parms = parms.substring(0,parms.length()-1).trim();
+                
+                if (type.equals("Beep")) {
+                    return new hitGenerator(parms);
+                } else if (type.equals("swOsc")) {
+                    return new swingOscillator(parms);
+                }
+
+            }
+        }
+
+
+        return error;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    @Override
+    public String toString() {
+        return description;
+    }
+
+
+
     public static void main(String args[])
             throws java.io.IOException, java.io.FileNotFoundException {
         hitGenerator h = new hitGenerator();
@@ -136,7 +181,8 @@ public class hitGenerator extends soundGenerator {
         h.hit(30, 1);
         h.hit(1030, 1);
         h.hit(677, 1);
-        h.additiveSynthesis(300, null, 0, 100, 1 << 31);
+        h.additiveSynthesis(300, null, 0, 100, 1l << 31);
         System.out.println(h.future_hits_t);
+        System.out.println(getGeneratorByDesc("Beep( 1 =2 )"));
     }
 }

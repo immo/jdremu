@@ -51,7 +51,7 @@ public class playbackDriver implements LineListener, Runnable {
         this.on_air = false;
         this.line_nbr = 0;
         this.channels = 2;
-        this.format = new AudioFormat(44100.f, 32, channels, true, true);
+        this.format = new AudioFormat(new Float(drumsemulation.DrumsEmulationApp.getApplication().getSampleRate()), 32, channels, true, true);
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
         lines = AudioSystem.getSourceLineInfo(info);
         this.buffer_frames = 256;
@@ -63,7 +63,7 @@ public class playbackDriver implements LineListener, Runnable {
         this.generators_lock = new Object();
         this.random_generator = new Random();
         this.beep = new hitGenerator();
-        this.total_lvl31 = 1 << 27; /* 1<<31 equals 0dB */
+        this.total_lvl31 = 1 << 27; /* 1l <<31 equals 0dB */
         
         addGenerator(beep);
     }
