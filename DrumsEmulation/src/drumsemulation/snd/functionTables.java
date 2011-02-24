@@ -35,6 +35,7 @@ public class functionTables {
     public final long sine_p1;
     public final long sine_p2;
     public final long sine_p3;
+    public final int[] poke_table;
     public final int[] sine_table;
     public final int[] tooth_table;
     public final int tooth_freq_hz;
@@ -59,12 +60,22 @@ public class functionTables {
             sine_table[i] = sin_t.intValue();
         }
 
+        int poke_len = i_sample_rate / 10;
+
+        poke_table = new int[poke_len];
+
+        for (int i = 0; i < poke_len; ++i) {
+            double t = (i * Math.PI + 0.5) / (2.0 * poke_len);
+            Double sin_t = (-1.0 + 2.0*Math.sin(t)) * Integer.MAX_VALUE;
+            poke_table[i] = sin_t.intValue();
+        }
+
         int tooth_length = i_sample_rate / (2 * tooth_freq_hz);
 
         tooth_table = new int[tooth_length];
 
         for (int i = 0; i < tooth_length; ++i) {
-            Double t = ((0.5 + i) / (tooth_length)) * Integer.MAX_VALUE;
+            Double t = ((0.5 + i) / (tooth_length)) * (1<<30);
             tooth_table[i] = t.intValue();
         }
 
@@ -105,6 +116,23 @@ public class functionTables {
                 return sine_table[position];
             }
         }
+    }
+
+    public final int poke(long t, long length, long amplitude31) {
+        if ((t<0)||(t >= length)) {
+            return Integer.MIN_VALUE;
+        }
+
+        long position = (t * poke_table.length)/length;
+        long poke_factor = ((3*t)<<31)/length;
+        if (poke_factor > 1l<<31) {
+            poke_factor = 1l << 31;
+        }
+        long other_factor = (1l<<31)-poke_factor;
+        long x = poke_table[(int)position];
+        long y = (x * amplitude31) >> 31;
+
+        return (int)(((x*other_factor)>>31)+((y*poke_factor)>>31));
     }
 
     public final int cosine(long t, long freq_hz) {
@@ -197,15 +225,8 @@ public class functionTables {
             throws java.io.IOException, java.io.FileNotFoundException {
         final functionTables table = functionTables.getObject();
 
-        System.out.println(table.saw(0, 1));
-
-        System.out.println(table.saw(22049, 1));
-        System.out.println(table.saw(22050, 1));
-        System.out.println(table.saw(44099, 1));
-
-        System.out.println(table.square(0, 1));
-        System.out.println(table.square(-1, 1));
-        System.out.println(table.square(22049, 1));
-        System.out.println(table.square(22050, 1));
+        for (int i=0;i<102;++i) {
+            System.out.println(table.poke(i,100,0));
+        }
     }
 }

@@ -15,6 +15,12 @@ public class swingOscillator extends hitGenerator {
     long damping31; //damping factor shifted by 31
     long phase_frame; // start sample time
 
+    int max_hits; //max nbr of hits
+    int poke_length; // length of hit poke
+    long[] hit_time;
+    long[] hit_amplitude31;
+    int hit_round_robin;
+
     long[] c_lvl31; //channel panning levels
     long[] chan_lvls;
 
@@ -27,13 +33,18 @@ public class swingOscillator extends hitGenerator {
 
     public swingOscillator() {
         super();
+        max_hits = 8;
+        poke_length = drumsemulation.DrumsEmulationApp.getApplication().getSampleRate()/20;
+        hit_time = new long[max_hits];
+        hit_amplitude31 = new long[max_hits];
         description = "swOsc()";
         phase_frame = 0;
-        frequency = 100;
-        amplitude31 = 1l<<31;
+        frequency = 220;
+        amplitude31 = 0;
         c_lvl31 = new long[]{1l << 31, 1l << 31};
         chan_lvls = new long[]{1l << 31, 1l << 31};        
         damping31 = (9999l << 31)/10000l;
+        hit_round_robin = 0;
         
     }
 
@@ -48,12 +59,31 @@ public class swingOscillator extends hitGenerator {
         int idx = 0;
         synchronized (sync_token) {
             for (long f = start_frame; f < next_frame_block; ++f) {
-                long position = (ft.cosine(relative_frame, frequency)*amplitude31)>>31;
-                long damped31 = (amplitude31*damping31)>>31;
-                if (damped31 < 0) {
-                    System.out.println(amplitude31+"->"+damped31);
+                long stick = Integer.MIN_VALUE;
+                for (int hit_idx =0;hit_idx<max_hits;++hit_idx) {
+                    if ((hit_time[hit_idx] > f)||(f>hit_time[hit_idx]+poke_length+1)) {
+                        continue;
+                    }
+                    
+                    long poke_pos = f-hit_time[hit_idx];
+                    if (poke_pos == poke_length) {
+                        if (amplitude31<hit_amplitude31[hit_idx]) {
+                            amplitude31 = hit_amplitude31[hit_idx];
+                            relative_frame = 0;
+                            phase_frame = f;
+                        }
+                    } 
+                        
+                     stick = Math.max(stick, ft.poke(poke_pos, poke_length, hit_amplitude31[hit_idx]));
+                    
                 }
+
+
+                long position = Math.max(stick,(ft.cosine(relative_frame, frequency)*amplitude31)>>31);
+                long damped31 = (amplitude31*damping31)>>31;
+                
                 amplitude31 = damped31;
+
 
                 for (int c = 0; c < channels; ++c) {
                     buffer[idx] += (position * chan_lvls[c]) >> 31;
@@ -66,10 +96,14 @@ public class swingOscillator extends hitGenerator {
 
     @Override
     public void hit(long when, int level) {
-        
+        System.out.println(hit_round_robin);
         synchronized (sync_token) {
-            amplitude31 = ((long)(level & 0x7F))<<23;
-            phase_frame = when;
+            hit_time[hit_round_robin] = when;
+            hit_amplitude31[hit_round_robin] = (level&0x7F)<<23;
+            hit_round_robin++;
+            if (hit_round_robin == max_hits) {
+                hit_round_robin = 0;
+            }
         }
     }
 
