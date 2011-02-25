@@ -133,10 +133,7 @@ public class swingOscillator extends hitGenerator {
 
                 if (amplitude31 > 0) {
                     long position = Math.max(stick, (waveform.wave(relative_frame, frequency) * amplitude31) >> 31);
-                    long damped31 = (amplitude31 * damping31) >> 31;
-
-                    amplitude31 = damped31;
-
+                    amplitude31 = (amplitude31 * damping31) >> 31;
 
                     for (int c = 0; c < channels; ++c) {
                         buffer[idx] += (position * chan_lvls[c]) >> 31;

@@ -29,122 +29,31 @@ import java.util.*;
  *
  * @author immanuel
  */
-public class hitGenerator extends soundGenerator {
+public abstract class hitGenerator extends soundGenerator {
 
     final Object sync_token;
-    Map<Long, Long> future_hits;
-    ArrayList<Long> future_hits_t;
-    Random rnd;
-    long noise_level;
     String description;
     static functionTables ft = functionTables.getObject();
 
     public hitGenerator() {
         this.sync_token = new Object();
-        this.future_hits = new TreeMap<Long, Long>();
-        this.future_hits_t = new ArrayList<Long>();
-        this.rnd = new Random();
-        this.description = "Beep()";
+        
+        this.description = "!!!";
         
     }
 
     public hitGenerator(String description) {
         this();
-        this.description = "Beep("+description+")";
+        this.description = "!!!("+description+")";
     }
 
 
-    public void hit(long when, float level) {
-        if (level > 1.f) {
-            level = 1.f;
-        } else if (level < 0.f) {
-            level = 0.f;
-        }
-        synchronized (sync_token) {
-            future_hits.put(when, (long)(level*0x7F));
-            future_hits_t.ensureCapacity(future_hits.size());
-            int i = 0;
-            int s = future_hits_t.size();
-            Iterator<Long> it = future_hits.keySet().iterator();
-            while (it.hasNext()) {
-                if (i < s) {
-                    future_hits_t.set(i, it.next());
-                } else {
-                    future_hits_t.add(it.next());
-                }
-                ++i;
-            }
-        }
-    }
+    public abstract void hit(long when, float level);
 
-    @Override
-    public void additiveSynthesis(long start_frame, int[] buffer, int channels, int frames, long lvl31) {
-        long next_block_start_frame = start_frame + frames;
-        int frame_idx = 0;
-        synchronized (sync_token) {
-            if (!future_hits_t.isEmpty()) {
-                boolean missed_hit = false;
-                long max_level = 0;
-                while ((!future_hits_t.isEmpty()) && (future_hits_t.get(0) < start_frame)) {
-                    Long l = future_hits_t.get(0);
-                    future_hits_t.remove(l);
-                    long lvl = future_hits.get(l);
-                    if (lvl > max_level) {
-                        max_level = lvl;
-                    }
-                    future_hits.remove(l);
-                    missed_hit = true;
-                }
-                if (missed_hit) {
-                    long hit_level = (max_level & 0x7F) << 5;
-                    if (hit_level > noise_level) {
-                        noise_level = hit_level;
-                    }
-                }
-
-                while ((!future_hits_t.isEmpty()) && (future_hits_t.get(0) < next_block_start_frame)) {
-                    Long next_event = future_hits_t.get(0);
-                    for (long f = start_frame; f < next_event; ++f) {
-                        if (noise_level > 0) {
-                            int noise = (int) (((long) ((rnd.nextInt() >> 12) * noise_level) * lvl31) >> 31);
-                            for (int c = 0; c < channels; ++c) {
-                                buffer[frame_idx * channels + c] += noise;
-                            }
-
-                            noise_level--;
-                        }
-                        frame_idx++;
-
-                    }
-                    start_frame = next_event;
-                    
-                    long lvl = (future_hits.get(next_event) & 0x7F) << 5;
-                    future_hits.remove(next_event);
-                    future_hits_t.remove(next_event);
-                    if (lvl > noise_level) {
-                        noise_level = lvl;
-                    }
-                }
-            }
-
-        }
-        if (noise_level > 0) {
-            for (long f = start_frame; f < next_block_start_frame; ++f) {
-                int noise = (int) (((long) ((rnd.nextInt() >> 12) * noise_level) * lvl31) >> 31);
-                for (int c = 0; c < channels; ++c) {
-                    buffer[frame_idx * channels + c] += noise;
-                }
-                frame_idx++;
-                noise_level--;
-                if (noise_level == 0) {
-                    return;
-                }
-            }
-        }
-    }
+    
 
     public static hitGenerator getGeneratorByDesc(String desc) {
-        hitGenerator error = new hitGenerator();
+        hitGenerator error = new beepGenerator();
         error.description = desc + "!";
         desc = desc.trim();
 
@@ -157,7 +66,7 @@ public class hitGenerator extends soundGenerator {
                 parms = parms.substring(0,parms.length()-1).trim();
                 
                 if (type.equals("Beep")) {
-                    return new hitGenerator(parms);
+                    return new beepGenerator(parms);
                 } else if (type.equals("swOsc")) {
                     return new swingOscillator(parms);
                 }
@@ -182,7 +91,7 @@ public class hitGenerator extends soundGenerator {
 
     public static void main(String args[])
             throws java.io.IOException, java.io.FileNotFoundException {
-        hitGenerator h = new hitGenerator();
+        hitGenerator h = new beepGenerator();
 
         float flt = 0.9f;
         System.out.println("(long)0.9*(1l<<31)="+((long)(0.9*(1l<<31))));
@@ -192,7 +101,6 @@ public class hitGenerator extends soundGenerator {
         h.hit(1030, 1);
         h.hit(677, 1);
         h.additiveSynthesis(300, null, 0, 100, 1l << 31);
-        System.out.println(h.future_hits_t);
-        System.out.println(getGeneratorByDesc("Beep( 1 =2 )"));
+        
     }
 }

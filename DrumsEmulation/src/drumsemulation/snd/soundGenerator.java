@@ -9,11 +9,8 @@ package drumsemulation.snd;
  *
  * @author immanuel
  */
-public class soundGenerator {
+public abstract class soundGenerator {
 
-    public void additiveSynthesis(long start_frame, int[] buffer, int channels, int frames, long lvl31) {
-        
-    }
-
+    public abstract void additiveSynthesis(long start_frame, int[] buffer, int channels, int frames, long lvl31);
     
 }

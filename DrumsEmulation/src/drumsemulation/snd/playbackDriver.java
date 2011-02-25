@@ -62,7 +62,7 @@ public class playbackDriver implements LineListener, Runnable {
         this.generators = new ArrayList<soundGenerator>(64);
         this.generators_lock = new Object();
         this.random_generator = new Random();
-        this.beep = new hitGenerator();
+        this.beep = new beepGenerator();
         this.total_lvl31 = 1 << 27; /* 1l <<31 equals 0dB */
         
         addGenerator(beep);
