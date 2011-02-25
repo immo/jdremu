@@ -4,6 +4,8 @@
  */
 package drumsemulation.snd;
 
+import java.util.Scanner;
+
 /**
  *
  * @author immanuel
@@ -28,12 +30,38 @@ public class swingOscillator extends hitGenerator {
 
     public swingOscillator(String description) {
         this();
+
+        Scanner scan = new Scanner(description);
+        scan.useDelimiter(",");
+        while (scan.hasNext()) {
+            String parm = scan.next();
+            if (parm.contains("=")) {
+                int idx = parm.indexOf("=");
+                String pname = parm.substring(0,idx).trim();
+                String pval = parm.substring(idx+1).trim();
+
+                if (pname.equals("f")) {
+                    this.frequency = Integer.parseInt(pval);
+                } else if (pname.equals("a")) { //attack, ms
+                    this.poke_length = (int)(((float)drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * Float.parseFloat(pval))/1000.0f);
+                } else if (pname.equals("d")) { //decay (well, 1/2 value), ms
+                    float half_ms = Float.parseFloat(pval);
+                    int steps = (int)(drumsemulation.DrumsEmulationApp.getApplication().getSampleRate()*half_ms)/1000;
+                    double x = Math.exp(-0.69314718055994529/steps); //e^(ln(1/2)/steps)
+                    damping31 = (long)(((1l<<31)*x));
+                } else if (pname.equals("g")) { //gain levels, channelwise
+                    
+                }
+
+            }
+        }
+
         this.description = "swOsc(" + description + ")";
     }
 
     public swingOscillator() {
         super();
-        max_hits = 8;
+        max_hits = 4;
         poke_length = drumsemulation.DrumsEmulationApp.getApplication().getSampleRate()/20;
         hit_time = new long[max_hits];
         hit_amplitude31 = new long[max_hits];
@@ -96,10 +124,10 @@ public class swingOscillator extends hitGenerator {
 
     @Override
     public void hit(long when, int level) {
-        System.out.println(hit_round_robin);
+        
         synchronized (sync_token) {
             hit_time[hit_round_robin] = when;
-            hit_amplitude31[hit_round_robin] = (level&0x7F)<<23;
+            hit_amplitude31[hit_round_robin] = ft.level_to_amplitude31(level);
             hit_round_robin++;
             if (hit_round_robin == max_hits) {
                 hit_round_robin = 0;

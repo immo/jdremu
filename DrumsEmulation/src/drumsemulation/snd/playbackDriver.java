@@ -83,6 +83,12 @@ public class playbackDriver implements LineListener, Runnable {
         }
     }
 
+    public boolean delGenerator(soundGenerator g) {
+        synchronized (generators_lock) {
+            return generators.remove(g);
+        }
+    }
+
     public long get_total_lvl() {
         synchronized(this) {
             return total_lvl31;

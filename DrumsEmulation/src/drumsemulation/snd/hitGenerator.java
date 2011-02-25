@@ -177,6 +177,9 @@ public class hitGenerator extends soundGenerator {
             throws java.io.IOException, java.io.FileNotFoundException {
         hitGenerator h = new hitGenerator();
 
+        float flt = 0.9f;
+        System.out.println("(long)0.9*(1l<<31)="+((long)(0.9*(1l<<31))));
+
         h.hit(100, 1);
         h.hit(30, 1);
         h.hit(1030, 1);

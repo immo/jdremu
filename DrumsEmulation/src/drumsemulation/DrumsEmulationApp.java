@@ -73,7 +73,7 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         }
         if (default_setup) {
             hitGeneratorSetup.add("Beep=Beep()");
-            hitGeneratorSetup.add("Test1=swOsc()");
+            hitGeneratorSetup.add("Test1=swOsc(f=1000,a=2)");
         }
 
         Iterator<String> it = hitGeneratorSetup.iterator();
@@ -102,9 +102,33 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         return names.get(index);
     }
 
+    public void setGeneratorName(int index, String new_name) {
+        names.set(index,new_name);
+    }
+
     public hitGenerator getGenerator(int index) {
         return generators.get(index);
     }
+
+     public void setGenerator(int index, hitGenerator new_generator) {
+        playback_driver.delGenerator(generators.get(index));
+        playback_driver.addGenerator(new_generator);
+        generators.set(index,new_generator);
+    }
+
+     public void addNamedGenerator(String name, String params) {
+         hitGenerator g = hitGenerator.getGeneratorByDesc(params);
+         names.add(name);
+         generators.add(g);
+         playback_driver.addGenerator(g);
+     }
+
+     public void delGenerator(int index) {
+         names.remove(index);
+         hitGenerator g = generators.get(index);
+         playback_driver.delGenerator(g);
+         generators.remove(index);
+     }
 
     public boolean setOn_air(boolean on_air) {
         return playback_driver.setOn_air(on_air);

@@ -20,9 +20,10 @@
 /*
  * DrumsEmulationView.java
  */
-
 package drumsemulation;
 
+import drumsemulation.snd.hitGenerator;
+import javax.swing.event.TableModelEvent;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
 import org.jdesktop.application.SingleFrameApplication;
@@ -34,11 +35,13 @@ import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
 
 /**
  * The application's main frame.
  */
-public class DrumsEmulationView extends FrameView {
+public class DrumsEmulationView extends FrameView implements TableModelListener {
 
     public DrumsEmulationView(SingleFrameApplication app) {
         super(app);
@@ -49,8 +52,8 @@ public class DrumsEmulationView extends FrameView {
         ResourceMap resourceMap = getResourceMap();
         int messageTimeout = resourceMap.getInteger("StatusBar.messageTimeout");
         messageTimer = new Timer(messageTimeout, new ActionListener() {
+
             public void actionPerformed(ActionEvent e) {
-                
             }
         });
         messageTimer.setRepeats(false);
@@ -59,14 +62,34 @@ public class DrumsEmulationView extends FrameView {
             busyIcons[i] = resourceMap.getIcon("StatusBar.busyIcons[" + i + "]");
         }
         busyIconTimer = new Timer(busyAnimationRate, new ActionListener() {
+
             public void actionPerformed(ActionEvent e) {
                 busyIconIndex = (busyIconIndex + 1) % busyIcons.length;
-                
+
             }
         });
         idleIcon = resourceMap.getIcon("StatusBar.idleIcon");
-        
-        
+
+
+    }
+
+    public void tableChanged(TableModelEvent tme) {
+        DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+        if (tme.getType() == TableModelEvent.UPDATE) {
+            if (tme.getColumn() == 0) {
+                for (int row = tme.getFirstRow(); row <= tme.getLastRow(); ++row) {
+
+                    app.setGeneratorName(row, (String) instrumentTable.getValueAt(row, 0));
+
+                }
+            } else if (tme.getColumn() == 2) {
+                for (int row = tme.getFirstRow(); row <= tme.getLastRow(); ++row) {
+                    hitGenerator new_generator = hitGenerator.getGeneratorByDesc((String) instrumentTable.getValueAt(row, 2));
+
+                    app.setGenerator(row, new_generator);
+                }
+            }
+        }
     }
 
     @Action
@@ -96,6 +119,8 @@ public class DrumsEmulationView extends FrameView {
         jScrollPane1 = new javax.swing.JScrollPane();
         instrumentTable = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
@@ -140,7 +165,7 @@ public class DrumsEmulationView extends FrameView {
                 java.lang.String.class, java.lang.Object.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false
+                true, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -168,31 +193,59 @@ public class DrumsEmulationView extends FrameView {
         instrumentTable.getColumnModel().getColumn(0).setPreferredWidth(80);
         instrumentTable.getColumnModel().getColumn(1).setPreferredWidth(50);
 
+        mdl.addTableModelListener(this);
+
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
+
+        jButton2.setText(resourceMap.getString("jButton2.text")); // NOI18N
+        jButton2.setName("jButton2"); // NOI18N
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText(resourceMap.getString("jButton3.text")); // NOI18N
+        jButton3.setName("jButton3"); // NOI18N
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jToggleButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(232, Short.MAX_VALUE))
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addContainerGap())
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jToggleButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 95, Short.MAX_VALUE)
+                .addComponent(jButton3)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jToggleButton1)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jToggleButton1)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jButton2)
+                            .addComponent(jButton3))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
         );
@@ -262,14 +315,38 @@ public class DrumsEmulationView extends FrameView {
     private void instrumentTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_instrumentTableMouseClicked
         int c = instrumentTable.getSelectedColumn();
         int i = instrumentTable.getSelectedRow();
-        if (c==1) {
+        if (c == 1) {
             DrumsEmulationApp.getApplication().instrument_hit_button(i);
         }
     }//GEN-LAST:event_instrumentTableMouseClicked
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        int i = instrumentTable.getSelectedRow();
+        if (i == -1) {
+            DefaultTableModel mdl = (DefaultTableModel) instrumentTable.getModel();
+            mdl.addRow(new Object[]{"Beep", "(click)", "Beep()"});
+            DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+            app.addNamedGenerator("Beep","Beep()");
+        } else {
+            DefaultTableModel mdl = (DefaultTableModel) instrumentTable.getModel();
+            mdl.addRow(new Object[]{instrumentTable.getValueAt(i, 0) + "'", "(click)", instrumentTable.getValueAt(i, 2)});
+            DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+            app.addNamedGenerator((String) instrumentTable.getValueAt(i, 0) + "'", (String) instrumentTable.getValueAt(i, 2));
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        int i = instrumentTable.getSelectedRow();
+        DefaultTableModel mdl = (DefaultTableModel) instrumentTable.getModel();
+        mdl.removeRow(i);
+        DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+        app.delGenerator(i);
+    }//GEN-LAST:event_jButton3ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable instrumentTable;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
@@ -279,12 +356,10 @@ public class DrumsEmulationView extends FrameView {
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     // End of variables declaration//GEN-END:variables
-
     private final Timer messageTimer;
     private final Timer busyIconTimer;
     private final Icon idleIcon;
     private final Icon[] busyIcons = new Icon[15];
     private int busyIconIndex = 0;
-
     private JDialog aboutBox;
 }

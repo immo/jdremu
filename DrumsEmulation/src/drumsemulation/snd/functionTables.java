@@ -42,7 +42,6 @@ public class functionTables {
     public final int tooth_period_length;
     public final int tri_p1;
     public final int tri_p3;
-    
 
     protected functionTables() {
         d_sample_rate = 44100.;
@@ -66,7 +65,7 @@ public class functionTables {
 
         for (int i = 0; i < poke_len; ++i) {
             double t = (i * Math.PI + 0.5) / (2.0 * poke_len);
-            Double sin_t = (-1.0 + 2.0*Math.sin(t)) * Integer.MAX_VALUE;
+            Double sin_t = (-1.0 + 2.0 * Math.sin(t)) * Integer.MAX_VALUE;
             poke_table[i] = sin_t.intValue();
         }
 
@@ -75,7 +74,7 @@ public class functionTables {
         tooth_table = new int[tooth_length];
 
         for (int i = 0; i < tooth_length; ++i) {
-            Double t = ((0.5 + i) / (tooth_length)) * (1<<30);
+            Double t = ((0.5 + i) / (tooth_length)) * (1 << 30);
             tooth_table[i] = t.intValue();
         }
 
@@ -118,21 +117,31 @@ public class functionTables {
         }
     }
 
+    public final long level_to_amplitude31(int lvl) {
+        if (lvl < 0) {
+            lvl = 0;
+        } else if (lvl > 0x7F) {
+            lvl = 0x7F;
+        }
+
+        return lvl<<23;
+    }
+
     public final int poke(long t, long length, long amplitude31) {
-        if ((t<0)||(t >= length)) {
+        if ((t < 0) || (t >= length)) {
             return Integer.MIN_VALUE;
         }
 
-        long position = (t * poke_table.length)/length;
-        long poke_factor = ((3*t)<<31)/length;
-        if (poke_factor > 1l<<31) {
+        long position = (t * poke_table.length) / length;
+        long poke_factor = ((3 * t) << 31) / length;
+        if (poke_factor > 1l << 31) {
             poke_factor = 1l << 31;
         }
-        long other_factor = (1l<<31)-poke_factor;
-        long x = poke_table[(int)position];
+        long other_factor = (1l << 31) - poke_factor;
+        long x = poke_table[(int) position];
         long y = (x * amplitude31) >> 31;
 
-        return (int)(((x*other_factor)>>31)+((y*poke_factor)>>31));
+        return (int) (((x * other_factor) >> 31) + ((y * poke_factor) >> 31));
     }
 
     public final int cosine(long t, long freq_hz) {
@@ -225,8 +234,8 @@ public class functionTables {
             throws java.io.IOException, java.io.FileNotFoundException {
         final functionTables table = functionTables.getObject();
 
-        for (int i=0;i<102;++i) {
-            System.out.println(table.poke(i,100,0));
+        for (int i = 0; i < 102; ++i) {
+            System.out.println(table.poke(i, 100, 0));
         }
     }
 }
