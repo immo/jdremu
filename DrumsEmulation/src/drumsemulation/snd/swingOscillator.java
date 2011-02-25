@@ -4,6 +4,7 @@
  */
 package drumsemulation.snd;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -26,7 +27,8 @@ public class swingOscillator extends hitGenerator {
     long[] c_lvl31; //channel panning levels
     long[] chan_lvls;
 
-    static functionTables ft = functionTables.getObject();
+    functionTables.periodicWaveform waveform;
+    
 
     public swingOscillator(String description) {
         this();
@@ -50,7 +52,22 @@ public class swingOscillator extends hitGenerator {
                     double x = Math.exp(-0.69314718055994529/steps); //e^(ln(1/2)/steps)
                     damping31 = (long)(((1l<<31)*x));
                 } else if (pname.equals("g")) { //gain levels, channelwise
-                    
+                    Scanner pscan = new Scanner(pval);
+                    pscan.useDelimiter(" ");
+                    ArrayList<Long> chan_gain = new ArrayList<Long>();
+                    while (pscan.hasNext()) {
+                        String v = pscan.next().trim();
+                        if (!v.isEmpty()) {
+                            chan_gain.add((long)(Float.parseFloat(v)*(1l<<31)));
+                        }
+                    }
+                    c_lvl31 = new long[chan_gain.size()];
+                    chan_lvls = new long[chan_gain.size()];
+                    for (int i=0;i<chan_gain.size();++i) {
+                        c_lvl31[i] = chan_gain.get(i);
+                    }
+                } else if (pname.equals("wave")) {
+                    waveform = ft.waveforms.get(pval);
                 }
 
             }
@@ -62,6 +79,7 @@ public class swingOscillator extends hitGenerator {
     public swingOscillator() {
         super();
         max_hits = 4;
+        waveform = ft.waveforms.get("cosine");
         poke_length = drumsemulation.DrumsEmulationApp.getApplication().getSampleRate()/20;
         hit_time = new long[max_hits];
         hit_amplitude31 = new long[max_hits];
@@ -107,7 +125,7 @@ public class swingOscillator extends hitGenerator {
                 }
 
 
-                long position = Math.max(stick,(ft.cosine(relative_frame, frequency)*amplitude31)>>31);
+                long position = Math.max(stick,(waveform.wave(relative_frame, frequency)*amplitude31)>>31);
                 long damped31 = (amplitude31*damping31)>>31;
                 
                 amplitude31 = damped31;
@@ -123,7 +141,7 @@ public class swingOscillator extends hitGenerator {
     }
 
     @Override
-    public void hit(long when, int level) {
+    public void hit(long when, float level) {
         
         synchronized (sync_token) {
             hit_time[hit_round_robin] = when;

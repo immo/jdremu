@@ -73,7 +73,10 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         }
         if (default_setup) {
             hitGeneratorSetup.add("Beep=Beep()");
-            hitGeneratorSetup.add("Test1=swOsc(f=1000,a=2)");
+            hitGeneratorSetup.add("TestSine=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cosine)");
+            hitGeneratorSetup.add("TestTri=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cotri)");
+            hitGeneratorSetup.add("TestSaw=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cosaw)");
+            hitGeneratorSetup.add("TestSquare=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cosquare)");
         }
 
         Iterator<String> it = hitGeneratorSetup.iterator();
@@ -134,12 +137,12 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         return playback_driver.setOn_air(on_air);
     }
 
-    public void beep(int lvl) {
+    public void beep(float lvl) {
         playback_driver.beep.hit(playback_driver.get_elapsed(), lvl);
     }
 
     public void instrument_hit_button(int i) {
-        generators.get(i).hit(playback_driver.get_elapsed(), 127);
+        generators.get(i).hit(playback_driver.get_elapsed(), 1.0f);
     }
 
     public int getSampleRate() {

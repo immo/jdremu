@@ -309,7 +309,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
     }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        DrumsEmulationApp.getApplication().beep(127);
+        DrumsEmulationApp.getApplication().beep(1.f);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void instrumentTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_instrumentTableMouseClicked

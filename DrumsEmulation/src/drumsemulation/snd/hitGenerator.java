@@ -32,18 +32,20 @@ import java.util.*;
 public class hitGenerator extends soundGenerator {
 
     final Object sync_token;
-    Map<Long, Integer> future_hits;
+    Map<Long, Long> future_hits;
     ArrayList<Long> future_hits_t;
     Random rnd;
-    int noise_level;
+    long noise_level;
     String description;
+    static functionTables ft = functionTables.getObject();
 
     public hitGenerator() {
         this.sync_token = new Object();
-        this.future_hits = new TreeMap<Long, Integer>();
+        this.future_hits = new TreeMap<Long, Long>();
         this.future_hits_t = new ArrayList<Long>();
         this.rnd = new Random();
         this.description = "Beep()";
+        
     }
 
     public hitGenerator(String description) {
@@ -52,9 +54,14 @@ public class hitGenerator extends soundGenerator {
     }
 
 
-    public void hit(long when, int level) {
+    public void hit(long when, float level) {
+        if (level > 1.f) {
+            level = 1.f;
+        } else if (level < 0.f) {
+            level = 0.f;
+        }
         synchronized (sync_token) {
-            future_hits.put(when, level);
+            future_hits.put(when, (long)(level*0x7F));
             future_hits_t.ensureCapacity(future_hits.size());
             int i = 0;
             int s = future_hits_t.size();
@@ -77,11 +84,11 @@ public class hitGenerator extends soundGenerator {
         synchronized (sync_token) {
             if (!future_hits_t.isEmpty()) {
                 boolean missed_hit = false;
-                int max_level = 0;
+                long max_level = 0;
                 while ((!future_hits_t.isEmpty()) && (future_hits_t.get(0) < start_frame)) {
                     Long l = future_hits_t.get(0);
                     future_hits_t.remove(l);
-                    int lvl = future_hits.get(l);
+                    long lvl = future_hits.get(l);
                     if (lvl > max_level) {
                         max_level = lvl;
                     }
@@ -89,7 +96,7 @@ public class hitGenerator extends soundGenerator {
                     missed_hit = true;
                 }
                 if (missed_hit) {
-                    int hit_level = (max_level & 0x7F) << 5;
+                    long hit_level = (max_level & 0x7F) << 5;
                     if (hit_level > noise_level) {
                         noise_level = hit_level;
                     }
@@ -111,7 +118,7 @@ public class hitGenerator extends soundGenerator {
                     }
                     start_frame = next_event;
                     
-                    int lvl = (future_hits.get(next_event) & 0x7F) << 5;
+                    long lvl = (future_hits.get(next_event) & 0x7F) << 5;
                     future_hits.remove(next_event);
                     future_hits_t.remove(next_event);
                     if (lvl > noise_level) {

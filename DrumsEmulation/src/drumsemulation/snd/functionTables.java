@@ -18,6 +18,8 @@
  */
 package drumsemulation.snd;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 /**
@@ -43,7 +45,85 @@ public class functionTables {
     public final int tri_p1;
     public final int tri_p3;
 
+
+    public interface periodicWaveform {
+        int wave(long t, long freq_hz);
+    }
+
+    private class cosineWaveform implements periodicWaveform {
+        public int wave(long t, long freq_hz) {
+            return theObject.cosine(t, freq_hz);
+        }
+
+        @Override
+        public String toString() {
+            return "cosine";
+        }
+    }
+
+    private class cotriWaveform implements periodicWaveform {
+        public int wave(long t, long freq_hz) {
+            return theObject.cotri(t, freq_hz);
+        }
+
+        @Override
+        public String toString() {
+            return "cotri";
+        }
+    }
+
+    private class cosawWaveform implements periodicWaveform {
+        public int wave(long t, long freq_hz) {
+            return theObject.cosaw(t, freq_hz);
+        }
+
+        @Override
+        public String toString() {
+            return "cosaw";
+        }
+    }
+
+    private class cosquareWaveform implements periodicWaveform {
+        public int wave(long t, long freq_hz) {
+            return theObject.square(t, freq_hz);
+        }
+
+        @Override
+        public String toString() {
+            return "cosquare";
+        }
+    }
+
+    private class whiteWaveform implements periodicWaveform {
+
+        Random generator;
+
+        public whiteWaveform() {
+            generator = new Random();
+        }
+
+        public int wave(long t, long freq_hz) {
+            return generator.nextInt();
+        }
+
+        @Override
+        public String toString() {
+            return "white";
+        }
+    }
+
+    public final Map<String, periodicWaveform> waveforms;
+
+
     protected functionTables() {
+
+        waveforms = new HashMap<String, periodicWaveform>();
+        waveforms.put("cosine", new cosineWaveform());
+        waveforms.put("cosaw", new cosawWaveform());
+        waveforms.put("cotri", new cotriWaveform());
+        waveforms.put("cosquare", new cosquareWaveform());
+        waveforms.put("white", new whiteWaveform());
+
         d_sample_rate = 44100.;
         i_sample_rate = 44100;
         l_sample_rate = 44100;
@@ -74,7 +154,7 @@ public class functionTables {
         tooth_table = new int[tooth_length];
 
         for (int i = 0; i < tooth_length; ++i) {
-            Double t = ((0.5 + i) / (tooth_length)) * (1 << 30);
+            Double t = ((0.5 + i) / (tooth_length)) * (Integer.MAX_VALUE);
             tooth_table[i] = t.intValue();
         }
 
@@ -117,14 +197,14 @@ public class functionTables {
         }
     }
 
-    public final long level_to_amplitude31(int lvl) {
-        if (lvl < 0) {
-            lvl = 0;
-        } else if (lvl > 0x7F) {
-            lvl = 0x7F;
+    public final long level_to_amplitude31(float lvl) {
+        if (lvl < 0.f) {
+            lvl = 0.f;
+        } else if (lvl > 1.f) {
+            lvl = 1.f;
         }
 
-        return lvl<<23;
+        return (long)(lvl*(1l<<31));
     }
 
     public final int poke(long t, long length, long amplitude31) {
@@ -184,6 +264,19 @@ public class functionTables {
         }
     }
 
+    public final int cosaw(long t, long freq_hz) {
+        int period_t = (int) (((t * freq_hz) / tooth_freq_hz) % tooth_period_length);
+        if (period_t < 0) {
+            period_t += (int) l_sample_rate;
+        }
+        int position = period_t % tooth_table.length;
+        if (period_t >= tooth_table.length) {
+            return -tooth_table[position];
+        } else {
+            return tooth_table[tooth_table.length - position - 1];
+        }
+    }
+
     public final int tri(long t, long freq_hz) {
         int period_t = (int) (((t * freq_hz) / tooth_freq_hz) % tooth_period_length);
         if (period_t < 0) {
@@ -201,6 +294,27 @@ public class functionTables {
                 return tooth_table[tooth_table.length - position - 1];
             } else {
                 return tooth_table[position];
+            }
+        }
+    }
+
+    public final int cotri(long t, long freq_hz) {
+        int period_t = (int) (((t * freq_hz) / tooth_freq_hz) % tooth_period_length);
+        if (period_t < 0) {
+            period_t += (int) l_sample_rate;
+        }
+        int position = (period_t % tri_p1) << 1;
+        if (period_t >= tooth_table.length) {
+            if (period_t >= tri_p3) {
+                return tooth_table[position];
+            } else {
+                return -tooth_table[tooth_table.length - position - 1];
+            }
+        } else {
+            if (period_t >= tri_p1) {
+                return -tooth_table[position];
+            } else {
+                return tooth_table[tooth_table.length - position - 1];
             }
         }
     }
@@ -235,7 +349,9 @@ public class functionTables {
         final functionTables table = functionTables.getObject();
 
         for (int i = 0; i < 102; ++i) {
-            System.out.println(table.poke(i, 100, 0));
+            System.out.println(table.cotri(i, 441));
         }
+
+        System.out.println(table.waveforms);
     }
 }
