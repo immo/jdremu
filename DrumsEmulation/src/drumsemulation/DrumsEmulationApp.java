@@ -45,10 +45,15 @@ public class DrumsEmulationApp extends SingleFrameApplication {
     private ArrayList<String> names;
     private ArrayList<hitGenerator> generators;
 
+    float p1,p2,lvl;
+
     /**
      * At startup create and show the main frame of the application.
      */
     @Override protected void startup() {
+        p1 = 0.5f;
+        p2 = 0.5f;
+        lvl = 1.f;
         playback_driver = new playbackDriver();
         hitGeneratorSetup = new ArrayList<String>();
         names = new ArrayList<String>();
@@ -139,6 +144,16 @@ public class DrumsEmulationApp extends SingleFrameApplication {
          hitGenerator g = generators.get(index);
          playback_driver.delGenerator(g);
          generators.remove(index);
+     }
+
+     public void levelHitGenerator(int index, float new_lvl) {
+         lvl = new_lvl;
+         generators.get(index).hit2d(playback_driver.get_elapsed(), lvl, p1, p2);
+     }
+     public void p2dHitGenerator(int index, float new_p1, float new_p2) {
+         p1 = new_p1;
+         p2 = new_p2;
+         generators.get(index).hit2d(playback_driver.get_elapsed(), lvl, p1, p2);
      }
 
     public boolean setOn_air(boolean on_air) {
