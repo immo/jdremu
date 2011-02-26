@@ -5,6 +5,8 @@
 
 package drumsemulation.snd;
 
+import java.util.Scanner;
+
 /**
  *
  * @author immanuel
@@ -17,8 +19,9 @@ public class tomGenerator extends hitGenerator {
 
     swingOscillator click;
 
-    long base_freq_p;
-    long offset_p;
+    int base_freq_p;
+    int offset_p;
+    float decay;
 
     long d2;
     long d3;
@@ -31,11 +34,32 @@ public class tomGenerator extends hitGenerator {
     public tomGenerator(String parms) {
         base_freq_p = 100-13;
         offset_p = 13;
+        decay = 160.f;
+
+        Scanner scan = new Scanner(parms);
+        scan.useDelimiter(",");
+        while (scan.hasNext()) {
+            String parm = scan.next();
+            if (parm.contains("=")) {
+                int idx = parm.indexOf("=");
+                String pname = parm.substring(0, idx).trim();
+                String pval = parm.substring(idx + 1).trim();
+
+                if (pname.equals("f")) {
+                    base_freq_p = Integer.parseInt(pval);
+                } else if (pname.equals("d")) {
+                    decay = Float.parseFloat(pval);
+                } else if (pname.equals("fo")) {
+                    offset_p = Integer.parseInt(pval);
+                }
+            }
+        }
+
         drumsemulation.DrumsEmulationApp app = drumsemulation.DrumsEmulationApp.getApplication();
-        p1 = new swingOscillator("f="+(base_freq_p+offset_p)+",a=40,d=160,g=0.5 0.5");
-        p2 = new swingOscillator("f="+(2*base_freq_p+offset_p)+",a=10,d=40,g=0.4 0.4");
-        p3 = new swingOscillator("f="+(3*base_freq_p+offset_p)+",a=15,d=28,g=0.25 0.25");
-        click = new swingOscillator("f=5200,a=2,d=1,g=0.4 0.4,wave=cosquare");
+        p1 = new swingOscillator("f="+(base_freq_p+offset_p)+",a=40,d="+decay+",g=0.5 0.5");
+        p2 = new swingOscillator("f="+(2*base_freq_p+offset_p)+",a=10,d="+(decay/4)+",g=0.4 0.4");
+        p3 = new swingOscillator("f="+(3*base_freq_p+offset_p)+",a=15,d="+(decay/5)+",g=0.25 0.25");
+        click = new swingOscillator("f=5200,a=2,ar=0.5,d=1,g=0.4 0.4,wave=cosquare");
         d2 = (app.getSampleRate()*5)/1000;
         d3 = (app.getSampleRate()*7)/1000;
         this.description = "Tom("+parms+")";
