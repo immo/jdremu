@@ -1,11 +1,26 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ *  DrumsEmulation - drum emulator & sythesizer
+ *  Copyright (C) 2011 C.D.Immanuel Albrecht
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>
+ *
  */
-
 package drumsemulation.snd;
 
-import java.util.Scanner;
+import java.util.*;
+import java.util.logging.*;
+import javax.sound.sampled.*;
 
 /**
  *
@@ -36,6 +51,10 @@ public class tomGenerator extends hitGenerator {
         offset_p = 13;
         decay = 160.f;
 
+        ArrayList<Float> gain_factors = new ArrayList<Float>();
+        gain_factors.add(1.f);
+        gain_factors.add(1.f);
+
         Scanner scan = new Scanner(parms);
         scan.useDelimiter(",");
         while (scan.hasNext()) {
@@ -51,17 +70,26 @@ public class tomGenerator extends hitGenerator {
                     decay = Float.parseFloat(pval);
                 } else if (pname.equals("fo")) {
                     offset_p = Integer.parseInt(pval);
+                } else if (pname.equals("g")) {
+                    Scanner gvals = new Scanner(pval);
+                    gvals.useDelimiter(" ");
+                    gain_factors.clear();
+                    while (gvals.hasNext()) {
+                        float f = Float.parseFloat(gvals.next().trim());
+                        gain_factors.add(f);
+                    }
                 }
             }
         }
 
+
         drumsemulation.DrumsEmulationApp app = drumsemulation.DrumsEmulationApp.getApplication();
-        p1 = new swingOscillator("f="+(base_freq_p+offset_p)+",a=40,d="+decay+",g=0.5 0.5");
-        p2 = new swingOscillator("f="+(2*base_freq_p+offset_p)+",a=10,d="+(decay/4)+",g=0.4 0.4");
-        p3 = new swingOscillator("f="+(3*base_freq_p+offset_p)+",a=15,d="+(decay/5)+",g=0.25 0.25");
-        click = new swingOscillator("f=5200,a=2,ar=0.5,d=1,g=0.4 0.4,wave=cosquare");
-        d2 = (app.getSampleRate()*5)/1000;
-        d3 = (app.getSampleRate()*7)/1000;
+        p1 = new swingOscillator("f="+(base_freq_p+offset_p)+",a=40,d="+decay+",g="+utils.multiplyGainList(gain_factors,0.5f));
+        p2 = new swingOscillator("f="+(2*base_freq_p+offset_p)+",a=10,d="+(decay/4)+",g="+utils.multiplyGainList(gain_factors, 0.4f));
+        p3 = new swingOscillator("f="+(3*base_freq_p+offset_p)+",a=15,d="+(decay/5)+",g="+utils.multiplyGainList(gain_factors, 0.25f));
+        click = new swingOscillator("f=5200,a=2,ar=0.5,d=1,g="+utils.multiplyGainList(gain_factors, 0.4f)+",wave=cosquare");
+        d2 = (app.getSampleRate()*5*83)/(1000*base_freq_p);
+        d3 = (app.getSampleRate()*7*83)/(1000*base_freq_p);
         this.description = "Tom("+parms+")";
     }
 
