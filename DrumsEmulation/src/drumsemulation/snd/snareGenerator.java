@@ -57,9 +57,9 @@ public class snareGenerator extends hitGenerator {
         p1 = new swingOscillator("f=" + (p_base + p_shift) + ",a=2,d=80,g=0.15 0.15");
         p2 = new swingOscillator("f=" + (2 * p_base + p_shift) + ",a=2,d=60,g=0.15 0.15");
         p3 = new swingOscillator("f=" + (3 * p_base + p_shift) + ",a=2,d=40,g=0.15 0.15");
-        q1 = new swingOscillator("f=" + (q_base + q_shift) + ",a=2,d=75,g=0.15 0.15,wave=cotri");
-        q2 = new swingOscillator("f=" + (2 * q_base + q_shift) + ",a=2,d=55,g=0.15 0.15,wave=cotri");
-        q3 = new swingOscillator("f=" + (3 * q_base + q_shift) + ",a=2,d=35,g=0.15 0.15,wave=cotri");
+        q1 = new swingOscillator("f=" + (q_base + q_shift) + ",a=2,d=75,g=0.15 0.15");
+        q2 = new swingOscillator("f=" + (2 * q_base + q_shift) + ",a=2,d=55,g=0.15 0.15");
+        q3 = new swingOscillator("f=" + (3 * q_base + q_shift) + ",a=2,d=35,g=0.15 0.15");
         click = new swingOscillator("f=5200,a=2,ar=0.5,d=1,g=0.4 0.4");
     }
 
