@@ -19,8 +19,10 @@ public class swingOscillator extends hitGenerator {
     long phase_frame; // start sample time
     int max_hits; //max nbr of hits
     int poke_length; // length of hit poke
+    int poke_miss_release_length; // length of poke release if hit was too weak
     long[] hit_time;
     long[] hit_amplitude31;
+    boolean[] hit_miss; //hit was too weak
     int hit_round_robin;
     long[] c_lvl31; //channel panning levels
     long[] chan_lvls;
@@ -42,6 +44,8 @@ public class swingOscillator extends hitGenerator {
                     this.frequency = Integer.parseInt(pval);
                 } else if (pname.equals("a")) { //attack, ms
                     this.poke_length = (int) (((float) drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * Float.parseFloat(pval)) / 1000.0f);
+                } else if (pname.equals("ar")) { //failed attack poke release, ms
+                    this.poke_miss_release_length = (int) (((float) drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * Float.parseFloat(pval)) / 1000.0f);
                 } else if (pname.equals("d")) { //decay (well, 1/2 value), ms
                     float half_ms = Float.parseFloat(pval);
                     int steps = (int) (drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * half_ms) / 1000;
@@ -77,8 +81,10 @@ public class swingOscillator extends hitGenerator {
         max_hits = 4;
         waveform = ft.waveforms.get("cosine");
         poke_length = drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() / 20;
+        poke_miss_release_length = (drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * 2) / 1000;
         hit_time = new long[max_hits];
         hit_amplitude31 = new long[max_hits];
+        hit_miss = new boolean[max_hits];
         description = "swOsc()";
         phase_frame = 0;
         frequency = 220;
@@ -112,21 +118,27 @@ public class swingOscillator extends hitGenerator {
                             }
                             continue;
                         }
-                        if (f > hit_time[hit_idx] + poke_length + 1) {
+                        if (f > hit_time[hit_idx] + poke_length + 1 + (hit_miss[hit_idx]?poke_miss_release_length:0) ) {
                             continue;
                         }
                         hit_waiting = true;
 
                         long poke_pos = f - hit_time[hit_idx];
                         if (poke_pos == poke_length) {
-                            if (amplitude31 < hit_amplitude31[hit_idx]) {
+                            if (amplitude31 <= hit_amplitude31[hit_idx]) {
                                 amplitude31 = hit_amplitude31[hit_idx];
                                 relative_frame = 0;
                                 phase_frame = f;
+                            } else {
+                                
+                                hit_miss[hit_idx] = true;
                             }
                         }
-
-                        stick = Math.max(stick, ft.poke(poke_pos, poke_length, hit_amplitude31[hit_idx]));
+                        if (poke_pos < poke_length) {
+                            stick = Math.max(stick, ft.poke(poke_pos, poke_length, hit_amplitude31[hit_idx]));
+                        } else if (hit_miss[hit_idx]) {
+                            stick = Math.max(stick, ft.copoke(poke_pos-poke_length, poke_miss_release_length, hit_amplitude31[hit_idx]));
+                        }
 
                     }
                 }
@@ -142,6 +154,14 @@ public class swingOscillator extends hitGenerator {
                     relative_frame++;
                 } else if (!hit_waiting) { //amplitude == 0 and there are no hits waiting
                     break;
+                } else {
+                    long position = Math.max(stick, 0);
+
+                    for (int c = 0; c < channels; ++c) {
+                        buffer[idx] += (position * chan_lvls[c]) >> 31;
+                        idx++;
+                    }
+                    relative_frame++;
                 }
             }
         }
@@ -153,6 +173,7 @@ public class swingOscillator extends hitGenerator {
         synchronized (sync_token) {
             hit_time[hit_round_robin] = when;
             hit_amplitude31[hit_round_robin] = ft.level_to_amplitude31(level);
+            hit_miss[hit_round_robin] = false;
             hit_round_robin++;
             if (hit_round_robin == max_hits) {
                 hit_round_robin = 0;

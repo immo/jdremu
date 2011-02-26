@@ -204,7 +204,8 @@ public class functionTables {
             lvl = 1.f;
         }
 
-        return (long)(lvl*(1l<<31));
+
+        return (long)(Math.exp(3.f*(lvl-1.f))*(1l<<31));
     }
 
     public final int poke(long t, long length, long amplitude31) {
@@ -214,6 +215,23 @@ public class functionTables {
 
         long position = (t * poke_table.length) / length;
         long poke_factor = ((3 * t) << 31) / length;
+        if (poke_factor > 1l << 31) {
+            poke_factor = 1l << 31;
+        }
+        long other_factor = (1l << 31) - poke_factor;
+        long x = poke_table[(int) position];
+        long y = (x * amplitude31) >> 31;
+
+        return (int) (((x * other_factor) >> 31) + ((y * poke_factor) >> 31));
+    }
+
+    public final int copoke(long t, long length, long amplitude31) {
+        if ((t < 0) || (t >= length)) {
+            return Integer.MIN_VALUE;
+        }
+
+        long position = ((length-t-1) * poke_table.length) / length;
+        long poke_factor = ((3 * (length-t-1)) << 31) / length;
         if (poke_factor > 1l << 31) {
             poke_factor = 1l << 31;
         }
@@ -348,8 +366,11 @@ public class functionTables {
             throws java.io.IOException, java.io.FileNotFoundException {
         final functionTables table = functionTables.getObject();
 
-        for (int i = 0; i < 102; ++i) {
-            System.out.println(table.cotri(i, 441));
+        for (int i = 0; i <= 10; ++i) {
+            float f = i/10.f;
+            System.out.println(f+" = "+table.level_to_amplitude31(f));
+            System.out.println("poke("+i+") = "+table.poke(i, 10, 1l<<31));
+            System.out.println("copoke("+(9-i)+") = "+table.copoke(9-i, 10, 1l<<31));
         }
 
         System.out.println(table.waveforms);

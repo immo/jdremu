@@ -50,6 +50,14 @@ public abstract class hitGenerator extends soundGenerator {
 
     public abstract void hit(long when, float level);
 
+    public void hit1d(long when, float level, float p1) {
+        hit(when,level);
+    }
+
+    public void hit2d(long when, float level, float p1, float p2) {
+        hit(when,level);
+    }
+
     
 
     public static hitGenerator getGeneratorByDesc(String desc) {
@@ -69,6 +77,8 @@ public abstract class hitGenerator extends soundGenerator {
                     return new beepGenerator(parms);
                 } else if (type.equals("swOsc")) {
                     return new swingOscillator(parms);
+                } else if (type.equals("Tom")) {
+                    return new tomGenerator(parms);
                 }
 
             }

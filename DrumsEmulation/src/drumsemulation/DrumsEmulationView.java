@@ -23,6 +23,7 @@
 package drumsemulation;
 
 import drumsemulation.snd.hitGenerator;
+import java.awt.event.MouseEvent;
 import javax.swing.event.TableModelEvent;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.ResourceMap;
@@ -316,7 +317,11 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         int c = instrumentTable.getSelectedColumn();
         int i = instrumentTable.getSelectedRow();
         if (c == 1) {
-            DrumsEmulationApp.getApplication().instrument_hit_button(i);
+            if (evt.getButton() == MouseEvent.BUTTON1) {
+                DrumsEmulationApp.getApplication().instrument_hit_button(i);
+            } else {
+                DrumsEmulationApp.getApplication().instrument_hit_button2(i);
+            }
         }
     }//GEN-LAST:event_instrumentTableMouseClicked
 
