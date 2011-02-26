@@ -79,6 +79,8 @@ public abstract class hitGenerator extends soundGenerator {
                     return new swingOscillator(parms);
                 } else if (type.equals("Tom")) {
                     return new tomGenerator(parms);
+                } else if (type.equals("Snare")) {
+                    return new snareGenerator(parms);
                 }
 
             }

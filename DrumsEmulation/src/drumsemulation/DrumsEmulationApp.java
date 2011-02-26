@@ -82,6 +82,7 @@ public class DrumsEmulationApp extends SingleFrameApplication {
             hitGeneratorSetup.add("TestTri=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cotri)");
             hitGeneratorSetup.add("TestSaw=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cosaw)");
             hitGeneratorSetup.add("TestSquare=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cosquare)");
+            hitGeneratorSetup.add("TestSnare=Snare()");
             hitGeneratorSetup.add("TestTomC=Tom(f=52,fo=13,d=200)");
             hitGeneratorSetup.add("TestTomD=Tom(f=60,fo=13,d=195)");
             hitGeneratorSetup.add("TestTomE=Tom(f=69,fo=13,d=190)");
