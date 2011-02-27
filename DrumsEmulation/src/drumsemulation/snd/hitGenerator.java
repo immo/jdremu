@@ -81,6 +81,8 @@ public abstract class hitGenerator extends soundGenerator {
                     return new tomGenerator(parms);
                 } else if (type.equals("Snare")) {
                     return new snareGenerator(parms);
+                } else if (type.equals("asdNoise")) {
+                    return new contourNoiseGenerator(parms);
                 }
 
             }
