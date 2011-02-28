@@ -42,6 +42,8 @@ public class swingOscillator extends hitGenerator {
     long[] c_lvl31; //channel panning levels
     long[] chan_lvls;
     functionTables.periodicWaveform waveform;
+    long next_frame_block;
+    
 
     public swingOscillator(String description) {
         this();
@@ -117,10 +119,12 @@ public class swingOscillator extends hitGenerator {
         for (int c = 0; c < channels; ++c) {
             chan_lvls[c] = (c_lvl31[c] * lvl31) >> 31;
         }
-        long next_frame_block = start_frame + frames;
+        
         long relative_frame = start_frame - phase_frame;
         int idx = 0;
         synchronized (sync_token) {
+            next_frame_block = start_frame + frames;
+
             boolean hit_waiting = true;
             for (long f = start_frame; f < next_frame_block; ++f) {
                 long stick = Integer.MIN_VALUE;
@@ -186,6 +190,9 @@ public class swingOscillator extends hitGenerator {
     public void hit(long when, float level) {
 
         synchronized (sync_token) {
+            if (when < next_frame_block) {
+                when = next_frame_block;
+            }
             hit_time[hit_round_robin] = when;
             hit_amplitude31[hit_round_robin] = ft.level_to_amplitude31(level);
             hit_miss[hit_round_robin] = false;

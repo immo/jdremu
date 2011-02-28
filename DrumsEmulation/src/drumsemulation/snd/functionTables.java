@@ -200,8 +200,8 @@ public class functionTables {
     public final long level_to_amplitude31(float lvl) {
         if (lvl < 0.f) {
             lvl = 0.f;
-        } else if (lvl > 1.f) {
-            lvl = 1.f;
+        } else if (lvl > 3.f) {
+            lvl = 3.f;
         }
 
 

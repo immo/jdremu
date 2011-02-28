@@ -55,7 +55,7 @@ public abstract class hitGenerator extends soundGenerator {
     }
 
     public void hit2d(long when, float level, float p1, float p2) {
-        hit(when,level);
+        hit1d(when,level,p1);
     }
 
     
@@ -83,6 +83,8 @@ public abstract class hitGenerator extends soundGenerator {
                     return new snareGenerator(parms);
                 } else if (type.equals("asdNoise")) {
                     return new contourNoiseGenerator(parms);
+                } else if (type.equals("asdMfNoise")) {
+                    return new mfcNoiseGenerator(parms);
                 }
 
             }
