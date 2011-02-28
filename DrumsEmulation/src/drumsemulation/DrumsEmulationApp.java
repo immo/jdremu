@@ -79,11 +79,15 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         if (default_setup) {
             hitGeneratorSetup.add("Beep=Beep()");
             hitGeneratorSetup.add("TestNoise=asdNoise()");
+            hitGeneratorSetup.add("TestSnare=Snare()");
+            hitGeneratorSetup.add("TestSnare2=Snare(reso=cotri)");
+            hitGeneratorSetup.add("TestSnare2=Snare(reso=cosaw)");
+            hitGeneratorSetup.add("TestSnare2=Snare(reso=cosquare)");
             hitGeneratorSetup.add("TestSine=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cosine)");
             hitGeneratorSetup.add("TestTri=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cotri)");
             hitGeneratorSetup.add("TestSaw=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cosaw)");
             hitGeneratorSetup.add("TestSquare=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cosquare)");
-            hitGeneratorSetup.add("TestSnare=Snare()");
+            
             hitGeneratorSetup.add("TestTomC=Tom(f=52,fo=13,d=200)");
             hitGeneratorSetup.add("TestTomD=Tom(f=60,fo=13,d=195)");
             hitGeneratorSetup.add("TestTomE=Tom(f=69,fo=13,d=190)");

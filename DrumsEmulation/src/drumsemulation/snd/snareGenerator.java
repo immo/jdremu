@@ -34,10 +34,16 @@ public class snareGenerator extends hitGenerator {
     swingOscillator click;
     int p_base, q_base, p_shift, q_shift;
     int db2, dp2, dp3, dq2, dq3;
+    String waveform;
+
+    
 
     public snareGenerator(String parms) {
         super();
         this.description = "Snare(" + parms + ")";
+        
+        waveform = "cosine";
+
 
         drumsemulation.DrumsEmulationApp app = drumsemulation.DrumsEmulationApp.getApplication();
         int rate = app.getSampleRate();
@@ -52,14 +58,31 @@ public class snareGenerator extends hitGenerator {
         dp3 = (rate * 7 * 31) / ((p_base + p_shift) * 1000);
         dq3 = (rate * 7 * 31) / ((q_base + q_shift) * 1000);
 
+        Scanner scan = new Scanner(parms);
+        scan.useDelimiter(",");
+        while (scan.hasNext()) {
+            String parm = scan.next();
+            if (parm.contains("=")) {
+                int idx = parm.indexOf("=");
+                String pname = parm.substring(0, idx).trim();
+                String pval = parm.substring(idx + 1).trim();
+
+                if (pname.equals("reso")) {
+                    waveform = pval;
+                }
+            }
+        }
+        String rstr=",wave="+waveform;
+        
+
         b1 = new swingOscillator("f=180,a=2,d=240,g=0.3 0.3");
         b2 = new swingOscillator("f=330,a=2,d=120,g=0.3 0.3");
-        p1 = new swingOscillator("f=" + (p_base + p_shift) + ",a=2,d=80,g=0.15 0.15");
-        p2 = new swingOscillator("f=" + (2 * p_base + p_shift) + ",a=2,d=60,g=0.15 0.15");
-        p3 = new swingOscillator("f=" + (3 * p_base + p_shift) + ",a=2,d=40,g=0.15 0.15");
-        q1 = new swingOscillator("f=" + (q_base + q_shift) + ",a=2,d=75,g=0.15 0.15");
-        q2 = new swingOscillator("f=" + (2 * q_base + q_shift) + ",a=2,d=55,g=0.15 0.15");
-        q3 = new swingOscillator("f=" + (3 * q_base + q_shift) + ",a=2,d=35,g=0.15 0.15");
+        p1 = new swingOscillator("f=" + (p_base + p_shift) + ",a=2,d=80,g=0.15 0.15"+rstr);
+        p2 = new swingOscillator("f=" + (2 * p_base + p_shift) + ",a=2,d=60,g=0.15 0.15"+rstr);
+        p3 = new swingOscillator("f=" + (3 * p_base + p_shift) + ",a=2,d=40,g=0.15 0.15"+rstr);
+        q1 = new swingOscillator("f=" + (q_base + q_shift) + ",a=2,d=75,g=0.15 0.15"+rstr);
+        q2 = new swingOscillator("f=" + (2 * q_base + q_shift) + ",a=2,d=55,g=0.15 0.15"+rstr);
+        q3 = new swingOscillator("f=" + (3 * q_base + q_shift) + ",a=2,d=35,g=0.15 0.15"+rstr);
         click = new swingOscillator("f=5200,a=2,ar=0.5,d=1,g=0.4 0.4");
     }
 
