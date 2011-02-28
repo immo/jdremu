@@ -77,6 +77,8 @@ public abstract class hitGenerator extends soundGenerator {
                     return new beepGenerator(parms);
                 } else if (type.equals("swOsc")) {
                     return new swingOscillator(parms);
+                } else if (type.equals("fmodOsc")) {
+                    return new fmodOscillator(parms);
                 } else if (type.equals("Tom")) {
                     return new tomGenerator(parms);
                 } else if (type.equals("Snare")) {
