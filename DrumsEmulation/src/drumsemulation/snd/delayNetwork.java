@@ -40,11 +40,14 @@ public class delayNetwork extends hitGenerator {
     int current_offset;
     int nbr_connections;
     long[][] amplitudes; //its amplitude[node][current_offset-delay /%/ max_delay] for the nodes amplitude before delay frames
+    long[] combined_amplitudes; // sum of all amplitudes at one time frame
     long[][] connections; //its connections[i] in the format [source, target, delay, damp]
     int nbr_output;
     long[][] output; //output weights, output[i] is in the format [source, delay, factor]
     long[] c_lvl31; //channel panning levels
     long[] chan_lvls;
+    long total_amplitude31;
+    long total_damping31;
 
     public delayNetwork() {
         this("");
@@ -60,15 +63,15 @@ public class delayNetwork extends hitGenerator {
         c_from.add(0);
         c_to.add(0);
         c_delay.add(1.2);
-        c_damp.add(0.5);
+        c_damp.add(0.8);
         c_from.add(0);
         c_to.add(0);
         c_delay.add(2.2);
-        c_damp.add(0.25);
+        c_damp.add(0.7);
         c_from.add(0);
         c_to.add(0);
         c_delay.add(18.0);
-        c_damp.add(0.25);
+        c_damp.add(0.05);
 
         nodes = 1;
         max_delay = (drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * 20) / 1000;
@@ -85,6 +88,9 @@ public class delayNetwork extends hitGenerator {
 
         c_lvl31 = new long[]{1l << 31, 1l << 31};
         chan_lvls = new long[]{1l << 31, 1l << 31};
+
+        total_damping31 = (long)(0.9999*(1l<<31));
+        total_amplitude31 = 0;
 
         Scanner scan = new Scanner(description);
         scan.useDelimiter(",");
@@ -127,6 +133,7 @@ public class delayNetwork extends hitGenerator {
 
 
         amplitudes = new long[nodes][max_delay];
+        combined_amplitudes = new long[max_delay];
 
         output = new long[nbr_output][3];
         output[0][0] = 0;
@@ -164,9 +171,15 @@ public class delayNetwork extends hitGenerator {
             next_frame_block = start_frame + frames;
             for (long f = start_frame; f < next_frame_block; ++f) {
 
+                long remove_dc = 0;
+
+//                for (int i=0;i<max_delay;++i) {
+//                    remove_dc -= combined_amplitudes[i];
+//                }
+//                remove_dc /= max_delay*nodes*8;
 
                 for (int i = 0; i < nodes; ++i) {
-                    amplitudes[i][current_offset] = 0;
+                    amplitudes[i][current_offset] = remove_dc;
                 }
 
             
@@ -181,14 +194,33 @@ public class delayNetwork extends hitGenerator {
                     }
                     amplitudes[target][current_offset] += (amplitudes[source][delayed_offset] * damping) >> 31;
                 }
+
+                boolean clear_out = true;
                 
                 for (int i = 0; i < max_hits; ++i) {
                     if ((f >= hit_time[i]) && (f < hit_time[i] + ping + yoing)) {
-                        amplitudes[stick_target][current_offset] = Math.max((ft.piyoing(f - hit_time[i], ping, yoing) * hit_amplitude31[i]) >> 31,
+                        if (f == hit_time[i]) {
+                            total_amplitude31 = 1l<<31;
+                        }
+                        if (clear_out) {
+                            clear_out = false;
+                            amplitudes[stick_target][current_offset] = (ft.piyoing(f - hit_time[i], ping, yoing) * hit_amplitude31[i]) >> 31;
+                        } else {
+                        amplitudes[stick_target][current_offset] = utils.Amax((ft.piyoing(f - hit_time[i], ping, yoing) * hit_amplitude31[i]) >> 31,
                                 amplitudes[stick_target][current_offset]);
+                        }
 
                     }
                 }
+
+                long amp_sum = 0;
+                for (int i=0;i<nodes;++i) {
+                    amp_sum += amplitudes[i][current_offset];
+                }
+
+                combined_amplitudes[current_offset] = amp_sum;
+
+                
 
 
                 current_offset++;
@@ -205,11 +237,16 @@ public class delayNetwork extends hitGenerator {
                     output_sum += (amplitudes[(int) output[i][0]][offset] * output[i][2]) >> 31;
                 }
 
+                output_sum = (output_sum * total_amplitude31) >> 31;
+
+                total_amplitude31 = (total_amplitude31*total_damping31) >> 31;
+
                 for (int c = 0; c < channels; ++c) {
                     buffer[idx] += (output_sum * chan_lvls[c]) >> 31;
                     idx++;
                 }
             }
         }
+        System.out.println(combined_amplitudes[current_offset]);
     }
 }

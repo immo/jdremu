@@ -34,11 +34,42 @@ public class utils {
         Iterator it = gains.iterator();
         while (it.hasNext()) {
             s += " ";
-            Float f = (Float)it.next();
-            s += (f*factor);
+            Float f = (Float) it.next();
+            s += (f * factor);
 
         }
         return s.substring(1);
     }
 
+    public static long Amax(long a, long b) {
+        if (a < 0) {
+            if (b < 0) {
+                if (a < b) {
+                    return a;
+                } else {
+                    return b;
+                }
+            } else {
+                if (a < -b) {
+                    return a;
+                } else {
+                    return b;
+                }
+            }
+        } else {
+            if (b < 0) {
+                if (-a < b) {
+                    return a;
+                } else {
+                    return b;
+                }
+            } else {
+                if (a > b) {
+                    return a;
+                } else {
+                    return b;
+                }
+            }
+        }
+    }
 }
