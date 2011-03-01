@@ -197,6 +197,29 @@ public class functionTables {
         }
     }
 
+    public final int piyoing(long t, long pi_length, long yoing_length) {
+        if (t<0) {
+            return 0;
+        }
+        pi_length -= pi_length&1;
+        yoing_length -= yoing_length&1;
+
+        if (t>=pi_length+yoing_length) {
+            return 0;
+        }
+
+        if (t < (pi_length >> 1)) {
+            return sine_table[(int)((t * sine_table.length)/(pi_length >> 1))];
+        } else if (t < pi_length) {
+            return sine_table[(int)(((pi_length-t-1) * sine_table.length)/(pi_length >> 1))];
+        } else if (t < pi_length+(yoing_length>>1)){
+            return -sine_table[(int)(((t-pi_length) * sine_table.length)/(yoing_length >> 1))];
+        } else {
+            return -sine_table[(int)(((yoing_length-(t-pi_length)-1) * sine_table.length)/(yoing_length >> 1))];
+        }
+
+    }
+
     public final long level_to_amplitude31(float lvl) {
         if (lvl < 0.f) {
             lvl = 0.f;
@@ -366,11 +389,8 @@ public class functionTables {
             throws java.io.IOException, java.io.FileNotFoundException {
         final functionTables table = functionTables.getObject();
 
-        for (int i = 0; i <= 10; ++i) {
-            float f = i/10.f;
-            System.out.println(f+" = "+table.level_to_amplitude31(f));
-            System.out.println("poke("+i+") = "+table.poke(i, 10, 1l<<31));
-            System.out.println("copoke("+(9-i)+") = "+table.copoke(9-i, 10, 1l<<31));
+        for (int i = 0; i <= 40; ++i) {
+            System.out.println("i="+i+" piyoing="+table.piyoing(i, 25, 15));
         }
 
         System.out.println(table.waveforms);

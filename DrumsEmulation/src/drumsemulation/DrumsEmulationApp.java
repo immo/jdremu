@@ -78,9 +78,10 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         }
         if (default_setup) {
             hitGeneratorSetup.add("Beep=Beep()");
+            hitGeneratorSetup.add("TestNet=delayNet()");
             hitGeneratorSetup.add("TestNoise=asdNoise()");
             hitGeneratorSetup.add("TestMfNoise=asdMfNoise()");
-            hitGeneratorSetup.add("TestFmodOsc=fmodOsc(f1=400,f2=100,a=2,d=500,wave=cotri)");
+            hitGeneratorSetup.add("TestCymbals=Cymbal()");
             hitGeneratorSetup.add("TestSnare=Snare()");
             hitGeneratorSetup.add("TestSnare2=Snare(reso=cotri)");
             hitGeneratorSetup.add("TestSnare2=Snare(reso=cosaw)");

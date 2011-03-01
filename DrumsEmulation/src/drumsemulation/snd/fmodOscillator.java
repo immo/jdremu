@@ -115,7 +115,7 @@ public class fmodOscillator extends hitGenerator {
         frequency1 = 220;
         frequency2 = 50;
         sf1 = drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * 10 / 1000;
-        sf12 = drumsemulation.DrumsEmulationApp.getApplication().getSampleRate()* 5 /1000;
+        sf12 = drumsemulation.DrumsEmulationApp.getApplication().getSampleRate()* 50 /1000;
         amplitude31 = 0;
         c_lvl31 = new long[]{1l << 31, 1l << 31};
         chan_lvls = new long[]{1l << 31, 1l << 31};
@@ -186,7 +186,7 @@ public class fmodOscillator extends hitGenerator {
                     } else {
                         long way = move_position -sf1;
                         frequency = (int) ((frequency1*way + frequency2*(sf12-way))/sf12);
-                        phase_corrective = -way*(frequency-frequency1)/2;
+                        phase_corrective = way*(frequency-frequency1)/2;///????
                     }
 
                     long position = Math.max(stick, (waveform.wave(relative_frame*frequency+phase_corrective, 1) * amplitude31) >> 31);
