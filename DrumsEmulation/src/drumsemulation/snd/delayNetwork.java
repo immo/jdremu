@@ -33,6 +33,8 @@ public class delayNetwork extends hitGenerator {
     long[] hit_amplitude31;
     int hit_round_robin;
     long next_frame_block;
+    long ping, yoing;
+    int stick_target;
     int nodes;
     int max_delay;
     int current_offset;
@@ -49,18 +51,40 @@ public class delayNetwork extends hitGenerator {
     }
 
     public delayNetwork(String parms) {
+
+        ArrayList<Integer> c_from = new ArrayList<Integer>();
+        ArrayList<Integer> c_to = new ArrayList<Integer>();
+        ArrayList<Double> c_delay = new ArrayList<Double>();
+        ArrayList<Double> c_damp = new ArrayList<Double>();
+
+        c_from.add(0);
+        c_to.add(0);
+        c_delay.add(1.2);
+        c_damp.add(0.5);
+        c_from.add(0);
+        c_to.add(0);
+        c_delay.add(2.2);
+        c_damp.add(0.25);
+        c_from.add(0);
+        c_to.add(0);
+        c_delay.add(18.0);
+        c_damp.add(0.25);
+
         nodes = 1;
         max_delay = (drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * 20) / 1000;
+        ping = (drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * 2) / 1000;
+        yoing = (drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * 5) / 1000;
         current_offset = 0;
-        nbr_connections = 1;
+        stick_target = 0;
+
         max_hits = 4;
         hit_amplitude31 = new long[max_hits];
         hit_time = new long[max_hits];
         hit_round_robin = 0;
         nbr_output = 1;
 
-        c_lvl31 = new long[]{1l<<31, 1l<<31};
-        chan_lvls = new long[]{1l<<31, 1l<<31};
+        c_lvl31 = new long[]{1l << 31, 1l << 31};
+        chan_lvls = new long[]{1l << 31, 1l << 31};
 
         Scanner scan = new Scanner(description);
         scan.useDelimiter(",");
@@ -91,12 +115,24 @@ public class delayNetwork extends hitGenerator {
         }
 
 
-        amplitudes = new long[nodes][max_delay];
+        nbr_connections = c_to.size();
         connections = new long[nbr_connections][4];
+
+        for (int i = 0; i < c_to.size(); ++i) {
+            connections[i][0] = c_from.get(i);
+            connections[i][1] = c_to.get(i);
+            connections[i][2] = (long) (c_delay.get(i) * drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() / 1000.);
+            connections[i][3] = (long) ((c_damp.get(i) * (1l << 31)));
+        }
+
+
+        amplitudes = new long[nodes][max_delay];
+
         output = new long[nbr_output][3];
         output[0][0] = 0;
         output[0][1] = 0;
-        output[0][2] = 1l << 31;
+        output[0][2] = (long) ((1l << 31) * 0.5);
+
 
 
         this.description = "delayNet(" + parms + ")";
@@ -128,20 +164,30 @@ public class delayNetwork extends hitGenerator {
             next_frame_block = start_frame + frames;
             for (long f = start_frame; f < next_frame_block; ++f) {
 
-                for (int i=0;i<nodes;++i) {
+
+                for (int i = 0; i < nodes; ++i) {
                     amplitudes[i][current_offset] = 0;
                 }
 
-                for (int i=0;i<nbr_connections;++i) {
-                    int source = (int)connections[i][0];
-                    int target = (int)connections[i][1];
-                    int delay = (int)connections[i][2];
+            
+                for (int i = 0; i < nbr_connections; ++i) {
+                    int source = (int) connections[i][0];
+                    int target = (int) connections[i][1];
+                    int delay = (int) connections[i][2];
                     long damping = connections[i][3];
-                    int delayed_offset = current_offset-delay;
+                    int delayed_offset = current_offset - delay;
                     if (delayed_offset < 0) {
                         delayed_offset += max_delay;
                     }
                     amplitudes[target][current_offset] += (amplitudes[source][delayed_offset] * damping) >> 31;
+                }
+                
+                for (int i = 0; i < max_hits; ++i) {
+                    if ((f >= hit_time[i]) && (f < hit_time[i] + ping + yoing)) {
+                        amplitudes[stick_target][current_offset] = Math.max((ft.piyoing(f - hit_time[i], ping, yoing) * hit_amplitude31[i]) >> 31,
+                                amplitudes[stick_target][current_offset]);
+
+                    }
                 }
 
 
@@ -156,7 +202,7 @@ public class delayNetwork extends hitGenerator {
                     if (offset < 0) {
                         offset += max_delay;
                     }
-                    output_sum += (amplitudes[(int)output[i][0]][offset] * output[i][2]) >> 31;
+                    output_sum += (amplitudes[(int) output[i][0]][offset] * output[i][2]) >> 31;
                 }
 
                 for (int c = 0; c < channels; ++c) {
