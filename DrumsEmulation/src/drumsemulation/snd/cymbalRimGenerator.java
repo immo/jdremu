@@ -29,6 +29,8 @@ public class cymbalRimGenerator extends hitGenerator  {
         frequency = 200;
         decay = 200;
 
+        String wave="sine";
+
         ArrayList<Float> gain_factors = new ArrayList<Float>();
         gain_factors.add(1.f);
         gain_factors.add(1.f);
@@ -54,6 +56,8 @@ public class cymbalRimGenerator extends hitGenerator  {
                 }else if (pname.equals("d")) {
                     decay = Float.parseFloat(pval);
 
+                }else if (pname.equals("wave")) {
+                    wave = pval;
                 }
             }
         }
@@ -63,7 +67,9 @@ public class cymbalRimGenerator extends hitGenerator  {
 
         rim_modes = new resoOscillator[factors.length];
         for (int i=0;i<factors.length;++i) {
-            rim_modes[i] = new resoOscillator("a=40,wave=sine,f="+((int)(frequency*factors[i]))+",d="+(decay+10.f-(10.f*factors[i])));
+            rim_modes[i] = new resoOscillator("a=40,wave="+wave+",f="+((int)(frequency*factors[i]))
+                    +",d="+(decay+10.f-(10.f*factors[i]))
+                    +",g="+utils.multiplyGainList(gain_factors, 1.f/12.f));
         }
 
 

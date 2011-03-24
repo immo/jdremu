@@ -34,6 +34,7 @@ public class cymbalBellGenerator extends hitGenerator {
     float click_gain;
     int frequency;
     int freq_error;
+    float decay;
     long dm1,dm2,dm3,dm4;
     long de1,de2,de3;
 
@@ -47,6 +48,7 @@ public class cymbalBellGenerator extends hitGenerator {
         click_gain = 0.6f;
         frequency = 800;
         freq_error = 42;
+        decay = 500;
         long rate = drumsemulation.DrumsEmulationApp.getApplication().getSampleRate();
 
         ArrayList<Float> gain_factors = new ArrayList<Float>();
@@ -71,25 +73,28 @@ public class cymbalBellGenerator extends hitGenerator {
                 } else if (pname.equals("f")) {
                     frequency = Integer.parseInt(pval);
 
+                }else if (pname.equals("d")) {
+                    decay = Float.parseFloat(pval);
+
                 }
             }
         }
 
-        clicker = new swingOscillator("f=8000,wave=cosquare,a=2,d=3,g=0.5 0.5");
-        m1 = new swingOscillator("f="+(frequency/2+freq_error)+",wave=cosine,a=0,d=500,g=0.5 0.5");
-        m2 = new swingOscillator("f="+(frequency+freq_error)+",wave=cosine,a=0,d=400,g=0.4 0.4");
-        m3 = new swingOscillator("f="+(frequency*2+freq_error)+",wave=cosine,a=0,d=300,g=0.3 0.3");
-        m4 = new swingOscillator("f="+(frequency*3+freq_error)+",wave=cosine,a=0,d=240,g=0.3 0.3");
+        clicker = new swingOscillator("f=8000,wave=cosquare,a=2,d=3"+",g="+utils.multiplyGainList(gain_factors, 0.5f));
+        m1 = new swingOscillator("f="+(frequency/2+freq_error)+",wave=cosine,a=0,d="+(decay)+",g="+utils.multiplyGainList(gain_factors, 0.5f));
+        m2 = new swingOscillator("f="+(frequency+freq_error)+",wave=cosine,a=0,d="+(decay*0.8f)+",g="+utils.multiplyGainList(gain_factors, 0.4f));
+        m3 = new swingOscillator("f="+(frequency*2+freq_error)+",wave=cosine,a=0,d="+(decay*0.6f)+",g="+utils.multiplyGainList(gain_factors, 0.3f));
+        m4 = new swingOscillator("f="+(frequency*3+freq_error)+",wave=cosine,a=0,d="+(decay*0.48f)+",g="+utils.multiplyGainList(gain_factors, 0.3f));
 
         dm1 = (rate*100)/(frequency*1000);
         dm2 = (rate*50)/(frequency*1000);
         dm3 = (rate*25)/(frequency*1000);
         dm4 = (rate*11)/(frequency*1000);
 
-        e1 = new swingOscillator("f="+((frequency*42)/10+freq_error)+",wave=cosine,a=0,d=200,g=0.5 0.5");
-        e2 = new swingOscillator("f="+((frequency*54)/10+freq_error)+",wave=cosine,a=0,d=180,g=0.4 0.4");
-        e3 = new swingOscillator("f="+((frequency*68)/10+freq_error)+",wave=cosine,a=0,d=100,g=0.3 0.3");
-        e4 = new swingOscillator("f="+((frequency*168)/10+freq_error)+",wave=cosine,a=0,d=100,g=0.3 0.3");
+        e1 = new swingOscillator("f="+((frequency*42)/10+freq_error)+",wave=cosine,a=0,d="+(decay*0.4f)+",g="+utils.multiplyGainList(gain_factors, 0.5f));
+        e2 = new swingOscillator("f="+((frequency*54)/10+freq_error)+",wave=cosine,a=0,d="+(decay*0.36f)+",g="+utils.multiplyGainList(gain_factors, 0.4f));
+        e3 = new swingOscillator("f="+((frequency*68)/10+freq_error)+",wave=cosine,a=0,d="+(decay*0.2f)+",g="+utils.multiplyGainList(gain_factors, 0.3f));
+        e4 = new swingOscillator("f="+((frequency*168)/10+freq_error)+",wave=cosine,a=0,d="+(decay*0.2f)+",g="+utils.multiplyGainList(gain_factors, 0.3f));
 
         de1 = (rate*4)/(1000);
         de2 = (rate*2)/(1000);
