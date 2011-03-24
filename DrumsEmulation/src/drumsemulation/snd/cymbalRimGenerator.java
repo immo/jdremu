@@ -16,7 +16,7 @@ public class cymbalRimGenerator extends hitGenerator  {
 
     int frequency;
     float decay;
-    swingOscillator[] rim_modes;
+    resoOscillator[] rim_modes;
 
 
      public cymbalRimGenerator() {
@@ -61,9 +61,9 @@ public class cymbalRimGenerator extends hitGenerator  {
 
         float[] factors ={1.f, 1.3f, 1.8f, 2.f, 2.3f, 3.0f, 3.3f, 4.f, 4.5f, 5.0f, 6.f, 8.2f};
 
-        rim_modes = new swingOscillator[factors.length];
+        rim_modes = new resoOscillator[factors.length];
         for (int i=0;i<factors.length;++i) {
-            rim_modes[i] = new swingOscillator("a=1,wave=cotri,f="+((int)(frequency*factors[i]))+",d="+(decay+10.f-(10.f*factors[i])));
+            rim_modes[i] = new resoOscillator("a=40,wave=sine,f="+((int)(frequency*factors[i]))+",d="+(decay+10.f-(10.f*factors[i])));
         }
 
 

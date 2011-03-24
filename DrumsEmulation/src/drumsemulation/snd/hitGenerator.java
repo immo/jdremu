@@ -77,6 +77,8 @@ public abstract class hitGenerator extends soundGenerator {
                     return new beepGenerator(parms);
                 } else if (type.equals("swOsc")) {
                     return new swingOscillator(parms);
+                } else if (type.equals("rOsc")) {
+                    return new resoOscillator(parms);
                 } else if (type.equals("fmodOsc")) {
                     return new fmodOscillator(parms);
                 } else if (type.equals("Tom")) {
@@ -93,6 +95,8 @@ public abstract class hitGenerator extends soundGenerator {
                     return new cymbalRimGenerator(parms);
                 } else if (type.equals("delayNet")) {
                     return new delayNetwork(parms);
+                }else if (type.equals("Cymbal")) {
+                    return new cymbalGenerator(parms);
                 }
 
             }

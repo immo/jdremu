@@ -84,6 +84,7 @@ public class DrumsEmulationApp extends SingleFrameApplication {
             //hitGeneratorSetup.add("TestCymbals=Cymbal()");
             hitGeneratorSetup.add("TestCymbalBell=CymbalBell()");
             hitGeneratorSetup.add("TestCymbalRim=CymbalRim()");
+            hitGeneratorSetup.add("TestCymbal=Cymbal()");
             hitGeneratorSetup.add("TestSnare=Snare()");
             hitGeneratorSetup.add("TestSnare2=Snare(reso=cotri)");
             hitGeneratorSetup.add("TestSnare2=Snare(reso=cosaw)");

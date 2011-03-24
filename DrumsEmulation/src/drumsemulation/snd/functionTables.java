@@ -83,6 +83,40 @@ public class functionTables {
         }
     }
 
+    private class sineWaveform implements periodicWaveform {
+        public int wave(long t, long freq_hz) {
+            return theObject.sine(t, freq_hz);
+        }
+
+        @Override
+        public String toString() {
+            return "sine";
+        }
+    }
+
+    private class triWaveform implements periodicWaveform {
+        public int wave(long t, long freq_hz) {
+            return theObject.tri(t, freq_hz);
+        }
+
+        @Override
+        public String toString() {
+            return "tri";
+        }
+    }
+
+    private class sawWaveform implements periodicWaveform {
+        public int wave(long t, long freq_hz) {
+            return theObject.saw(t, freq_hz);
+        }
+
+        @Override
+        public String toString() {
+            return "saw";
+        }
+    }
+
+
     private class cosquareWaveform implements periodicWaveform {
         public int wave(long t, long freq_hz) {
             return theObject.square(t, freq_hz);
@@ -121,8 +155,12 @@ public class functionTables {
         waveforms.put("cosine", new cosineWaveform());
         waveforms.put("cosaw", new cosawWaveform());
         waveforms.put("cotri", new cotriWaveform());
+        waveforms.put("sine", new sineWaveform());
+        waveforms.put("saw", new sawWaveform());
+        waveforms.put("tri", new triWaveform());
         waveforms.put("cosquare", new cosquareWaveform());
         waveforms.put("white", new whiteWaveform());
+
 
         d_sample_rate = 44100.;
         i_sample_rate = 44100;
