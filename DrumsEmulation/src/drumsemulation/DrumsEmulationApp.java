@@ -77,6 +77,15 @@ public class DrumsEmulationApp extends SingleFrameApplication {
 
         }
         if (default_setup) {
+            hitGeneratorSetup.add("Snare=Snare(g=1.3 1.3,f=160)");
+            hitGeneratorSetup.add("Kick=Snare(g=1 1,d=400,f=31,fp=43,fpo=12,fq=38,fqo=22,snare=0.05,click=0.4,fc=8000,wave=cotri)");
+            hitGeneratorSetup.add("Floor=Snare(g=1 1,d=200,f=80,fp=83,fpo=12,fq=123,fqo=14,snare=0.05,click=0.1,fc=5000)");
+            hitGeneratorSetup.add("Mid=Snare(g=1 1,d=180,f=90,fp=93,fpo=12,fq=143,fqo=14,snare=0.05,click=0.1,fc=5200)");
+            hitGeneratorSetup.add("High=Snare(g=1 1,d=160,f=100,fp=103,fpo=12,fq=163,fqo=14,snare=0.05,click=0.1,fc=5400)");
+            hitGeneratorSetup.add("TestCymbal=Cymbal()");
+            hitGeneratorSetup.add("HiCrash=Cymbal(d=300,gf=0.3,f=2000,fb=5000,fh1=14000,fl1=3000,gb=0.3,gw=1.2,gz=1.4,gr=0.4,gb=0.4)");
+            hitGeneratorSetup.add("LoCrash=Cymbal(d=450,gf=0.3,f=1400,fb=4000,fh1=12000,fl1=2600,gb=0.3,gw=1.2,gz=1.4,gr=0.4,gb=0.4)");
+
             hitGeneratorSetup.add("Beep=Beep()");
             hitGeneratorSetup.add("TestNet=delayNet()");
             hitGeneratorSetup.add("TestNoise=asdNoise()");
@@ -84,7 +93,7 @@ public class DrumsEmulationApp extends SingleFrameApplication {
             //hitGeneratorSetup.add("TestCymbals=Cymbal()");
             hitGeneratorSetup.add("TestCymbalBell=CymbalBell()");
             hitGeneratorSetup.add("TestCymbalRim=CymbalRim()");
-            hitGeneratorSetup.add("TestCymbal=Cymbal()");
+            
             hitGeneratorSetup.add("TestSnare=Snare()");
             hitGeneratorSetup.add("TestSnare2=Snare(reso=cotri)");
             hitGeneratorSetup.add("TestSnare2=Snare(reso=cosaw)");

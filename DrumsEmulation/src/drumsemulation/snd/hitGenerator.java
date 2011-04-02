@@ -89,6 +89,8 @@ public abstract class hitGenerator extends soundGenerator {
                     return new contourNoiseGenerator(parms);
                 } else if (type.equals("asdMfNoise")) {
                     return new mfcNoiseGenerator(parms);
+                } else if (type.equals("asdMfCNoise")) {
+                    return new mfcCNoiseGenerator(parms);
                 } else if (type.equals("CymbalBell")) {
                     return new cymbalBellGenerator(parms);
                     } else if (type.equals("CymbalRim")){

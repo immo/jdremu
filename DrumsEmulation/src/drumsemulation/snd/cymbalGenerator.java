@@ -116,7 +116,7 @@ public class cymbalGenerator extends hitGenerator {
                     lo_zssh = Integer.parseInt(pval);
                 } else if (pname.equals("d")) {
                     decay = Float.parseFloat(pval);
-                } else if (pname.equals("g")) {
+                } else if (pname.equals("gf")) {
                     rim_gain = Float.parseFloat(pval);
                 } else if (pname.equals("gb")) {
                     bell_gain = Float.parseFloat(pval);
