@@ -139,6 +139,15 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         return names.get(index);
     }
 
+    public hitGenerator getGeneratorByName(String name) {
+        for (int i=0;i<names.size();++i) {
+            if (names.get(i).equals(name)) {
+                return generators.get(i);
+            }
+        }
+        return new beepGenerator();
+    }
+
     public void setGeneratorName(int index, String new_name) {
         names.set(index,new_name);
     }

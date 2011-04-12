@@ -162,43 +162,33 @@ public class snareGenerator extends hitGenerator {
 
     @Override
     public void hit(long when, float level) {
-        synchronized (sync_token) {
-            b1.hit(when, level);
-            b2.hit(when + db2, level);
-            p1.hit(when, level);
-            p2.hit(when + dp2, level);
-            p3.hit(when + dp2 + dp3, level);
-            q1.hit(when, level);
-            q2.hit(when + dq2, level);
-            q3.hit(when + dq2 + dq3, level);
-            click.hit(when, level);
-            if (snares != null) {
-                snares.hit(when+dsnares,level);
-            }
-        }
+        hit2d(when,level,0.5f,0.5f);
     }
 
     @Override
     public void hit1d(long when, float level, float p1) {
+        hit2d(when,level,p1,0.5f);
+        
+    }
+
+    @Override
+    public void hit2d(long when, float level, float p1, float p2) {
+        
+
         synchronized (sync_token) {
             b1.hit(when, level);
             b2.hit(when + db2, level);
-            this.p1.hit(when, level*(0.25f+p1*2.f));
-            this.p2.hit(when + dp2, level*(0.25f+p1*2.f));
-            p3.hit(when + dp2 + dp3, level*(0.25f+p1*2.f));
-            q1.hit(when, level*(0.25f+p1*2.f));
-            q2.hit(when + dq2, level*(0.25f+p1*2.f));
-            q3.hit(when + dq2 + dq3, level*(0.25f+p1*2.f));
+            this.p1.hit(when, level*p1);
+            this.p2.hit(when + dp2, level*p1);
+            p3.hit(when + dp2 + dp3, level*p1);
+            q1.hit(when, level*p2);
+            q2.hit(when + dq2, level*p2);
+            q3.hit(when + dq2 + dq3, level*p2);
             click.hit(when, level);
             if (snares != null) {
                 snares.hit(when+dsnares,level);
             }
         }
-    }
-
-    @Override
-    public void hit2d(long when, float level, float p1, float p2) {
-        super.hit2d(when, level, p1, p2);
     }
 
 
