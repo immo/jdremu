@@ -22,6 +22,7 @@
  */
 package drumsemulation;
 
+import drumsemulation.abstraction.instrumentMode;
 import drumsemulation.snd.hitGenerator;
 import java.awt.event.MouseEvent;
 import javax.swing.event.TableModelEvent;
@@ -75,21 +76,44 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
     }
 
     public void tableChanged(TableModelEvent tme) {
-        DrumsEmulationApp app = DrumsEmulationApp.getApplication();
-        if (tme.getType() == TableModelEvent.UPDATE) {
-            if (tme.getColumn() == 0) {
-                for (int row = tme.getFirstRow(); row <= tme.getLastRow(); ++row) {
 
-                    app.setGeneratorName(row, (String) instrumentTable.getValueAt(row, 0));
+        if (tme.getSource() == instrumentTable.getModel()) {
+            DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+            if (tme.getType() == TableModelEvent.UPDATE) {
+                if (tme.getColumn() == 0) {
+                    for (int row = tme.getFirstRow(); row <= tme.getLastRow(); ++row) {
 
-                }
-            } else if (tme.getColumn() == 2) {
-                for (int row = tme.getFirstRow(); row <= tme.getLastRow(); ++row) {
-                    hitGenerator new_generator = hitGenerator.getGeneratorByDesc((String) instrumentTable.getValueAt(row, 2));
+                        app.setGeneratorName(row, (String) instrumentTable.getValueAt(row, 0));
 
-                    app.setGenerator(row, new_generator);
+                    }
+                } else if (tme.getColumn() == 2) {
+                    for (int row = tme.getFirstRow(); row <= tme.getLastRow(); ++row) {
+                        hitGenerator new_generator = hitGenerator.getGeneratorByDesc((String) instrumentTable.getValueAt(row, 2));
+
+                        app.setGenerator(row, new_generator);
+                    }
                 }
             }
+        } else if (tme.getSource() == playModeTable.getModel()) {
+            DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+            if (tme.getType() == TableModelEvent.UPDATE) {
+                if (tme.getColumn() == 0) {
+                    for (int row = tme.getFirstRow(); row <= tme.getLastRow(); ++row) {
+
+                        app.setModeName(row, (String) playModeTable.getValueAt(row, 0));
+
+                    }
+                } else if (tme.getColumn() == 2) {
+                    for (int row = tme.getFirstRow(); row <= tme.getLastRow(); ++row) {
+                        instrumentMode new_generator = new instrumentMode((String) playModeTable.getValueAt(row, 2));
+
+                        app.setMode(row, new_generator);
+                    }
+                }
+            }
+        } else {
+
+            System.out.println("Wrong source!" + tme.getSource());
         }
     }
 
@@ -124,6 +148,14 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         jButton3 = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        playModeTable = new javax.swing.JTable();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
@@ -187,16 +219,16 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
             }
         });
         jScrollPane1.setViewportView(instrumentTable);
-        javax.swing.table.DefaultTableModel mdl = (javax.swing.table.DefaultTableModel)instrumentTable.getModel();
-        DrumsEmulationApp app = DrumsEmulationApp.getApplication();
-        for (int i=0;i<app.getGeneratorsCount();++i) {
-            mdl.addRow(new Object[]{app.getGeneratorName(i),"(click)",app.getGenerator(i).getDescription()});
-        }
-        instrumentTable.getColumnModel().getColumn(2).setPreferredWidth(400);
-        instrumentTable.getColumnModel().getColumn(0).setPreferredWidth(80);
-        instrumentTable.getColumnModel().getColumn(1).setPreferredWidth(50);
+        {javax.swing.table.DefaultTableModel mdl = (javax.swing.table.DefaultTableModel)instrumentTable.getModel();
+            DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+            for (int i=0;i<app.getGeneratorsCount();++i) {
+                mdl.addRow(new Object[]{app.getGeneratorName(i),"(click)",app.getGenerator(i).getDescription()});
+            }
+            instrumentTable.getColumnModel().getColumn(2).setPreferredWidth(400);
+            instrumentTable.getColumnModel().getColumn(0).setPreferredWidth(80);
+            instrumentTable.getColumnModel().getColumn(1).setPreferredWidth(50);
 
-        mdl.addTableModelListener(this);
+            mdl.addTableModelListener(this);}
 
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
@@ -246,38 +278,158 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 22, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 76, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
-                .addGap(24, 24, 24))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
+                .addComponent(jButton2))
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel1))
                     .addComponent(jLabel3)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton2)
                         .addComponent(jButton3))
-                    .addComponent(jLabel2)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1)
-                        .addGap(3, 3, 3)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE))
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
+
+        jPanel2.setName("jPanel2"); // NOI18N
+
+        jButton4.setText(resourceMap.getString("jButton4.text")); // NOI18N
+        jButton4.setName("jButton4"); // NOI18N
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
+        jButton5.setText(resourceMap.getString("jButton5.text")); // NOI18N
+        jButton5.setName("jButton5"); // NOI18N
+        jButton5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton5ActionPerformed(evt);
+            }
+        });
+
+        jLabel6.setText(resourceMap.getString("jLabel6.text")); // NOI18N
+        jLabel6.setName("jLabel6"); // NOI18N
+
+        jScrollPane2.setName("jScrollPane2"); // NOI18N
+
+        playModeTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Name", "Hit", "Description"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Object.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                true, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        playModeTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        playModeTable.setName("playModeTable"); // NOI18N
+        playModeTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                playModeTableMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(playModeTable);
+        {javax.swing.table.DefaultTableModel mdl = (javax.swing.table.DefaultTableModel)playModeTable.getModel();
+            DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+            for (int i=0;i<app.getModesCount();++i) {
+                mdl.addRow(new Object[]{app.getModeName(i),"(click)",app.getMode(i).getDescription()});
+            }
+            playModeTable.getColumnModel().getColumn(2).setPreferredWidth(400);
+            playModeTable.getColumnModel().getColumn(0).setPreferredWidth(80);
+            playModeTable.getColumnModel().getColumn(1).setPreferredWidth(50);
+
+            mdl.addTableModelListener(this);}
+
+        jLabel7.setIcon(resourceMap.getIcon("jLabel7.icon")); // NOI18N
+        jLabel7.setText(resourceMap.getString("jLabel7.text")); // NOI18N
+        jLabel7.setName("jLabel7"); // NOI18N
+        jLabel7.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel7MouseClicked(evt);
+            }
+        });
+
+        jLabel8.setIcon(resourceMap.getIcon("jLabel8.icon")); // NOI18N
+        jLabel8.setText(resourceMap.getString("jLabel8.text")); // NOI18N
+        jLabel8.setName("jLabel8"); // NOI18N
+        jLabel8.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel8MouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton5))
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, 0)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jButton5)
+                                .addComponent(jButton4))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel6))))
+                    .addComponent(jLabel7))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addComponent(jLabel8)
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab(resourceMap.getString("jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
 
         jPanel3.setName("jPanel3"); // NOI18N
 
@@ -285,11 +437,11 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 524, Short.MAX_VALUE)
+            .addGap(0, 554, Short.MAX_VALUE)
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 226, Short.MAX_VALUE)
+            .addGap(0, 264, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel3.TabConstraints.tabTitle"), jPanel3); // NOI18N
@@ -298,11 +450,11 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 529, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE)
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -330,17 +482,9 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         setMenuBar(menuBar);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
-        boolean on_air = DrumsEmulationApp.getApplication().setOn_air(jToggleButton1.isSelected());
-        jToggleButton1.setSelected(on_air);
-    }//GEN-LAST:event_jToggleButton1ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        DrumsEmulationApp.getApplication().beep(1.f);
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void instrumentTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_instrumentTableMouseClicked
         int c = instrumentTable.getSelectedColumn();
+
         int i = instrumentTable.getSelectedRow();
         if (c == 1) {
             if (evt.getButton() == MouseEvent.BUTTON1) {
@@ -351,20 +495,23 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         }
     }//GEN-LAST:event_instrumentTableMouseClicked
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        int i = instrumentTable.getSelectedRow();
-        if (i == -1) {
-            DefaultTableModel mdl = (DefaultTableModel) instrumentTable.getModel();
-            mdl.addRow(new Object[]{"Beep", "(click)", "Beep()"});
-            DrumsEmulationApp app = DrumsEmulationApp.getApplication();
-            app.addNamedGenerator("Beep","Beep()");
-        } else {
-            DefaultTableModel mdl = (DefaultTableModel) instrumentTable.getModel();
-            mdl.addRow(new Object[]{instrumentTable.getValueAt(i, 0) + "'", "(click)", instrumentTable.getValueAt(i, 2)});
-            DrumsEmulationApp app = DrumsEmulationApp.getApplication();
-            app.addNamedGenerator((String) instrumentTable.getValueAt(i, 0) + "'", (String) instrumentTable.getValueAt(i, 2));
+    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
+        float p1 = ((float) evt.getPoint().x) / 49.f;
+        float p2 = ((float) evt.getPoint().y) / 49.f;
+        DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+        app.p2dHitGenerator(instrumentTable.getSelectedRow(), p1, p2);
+    }//GEN-LAST:event_jLabel3MouseClicked
+
+    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+        int l = evt.getPoint().x;
+        if (l < 4) {
+            l = 4;
+        } else if (l > 104) {
+            l = 104;
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+        DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+        app.levelHitGenerator(instrumentTable.getSelectedRow(), ((float) l) / 99.f);
+}//GEN-LAST:event_jLabel2MouseClicked
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         int i = instrumentTable.getSelectedRow();
@@ -372,42 +519,93 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         mdl.removeRow(i);
         DrumsEmulationApp app = DrumsEmulationApp.getApplication();
         app.delGenerator(i);
-    }//GEN-LAST:event_jButton3ActionPerformed
+}//GEN-LAST:event_jButton3ActionPerformed
 
-    private void jLabel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseClicked
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        int i = instrumentTable.getSelectedRow();
+        if (i == -1) {
+            DefaultTableModel mdl = (DefaultTableModel) instrumentTable.getModel();
+            mdl.addRow(new Object[]{"Beep", "(click)", "Beep()"});
+            DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+            app.addNamedGenerator("Beep", "Beep()");
+        } else {
+            DefaultTableModel mdl = (DefaultTableModel) instrumentTable.getModel();
+            mdl.addRow(new Object[]{instrumentTable.getValueAt(i, 0) + "'", "(click)", instrumentTable.getValueAt(i, 2)});
+            DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+            app.addNamedGenerator((String) instrumentTable.getValueAt(i, 0) + "'", (String) instrumentTable.getValueAt(i, 2));
+        }
+}//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        DrumsEmulationApp.getApplication().beep(1.f);
+}//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jToggleButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton1ActionPerformed
+        boolean on_air = DrumsEmulationApp.getApplication().setOn_air(jToggleButton1.isSelected());
+        jToggleButton1.setSelected(on_air);
+}//GEN-LAST:event_jToggleButton1ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton4ActionPerformed
+
+    private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void playModeTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playModeTableMouseClicked
+        int c = playModeTable.getSelectedColumn();
+
+        int i = playModeTable.getSelectedRow();
+        if (c == 1) {
+            if (evt.getButton() == MouseEvent.BUTTON1) {
+                DrumsEmulationApp.getApplication().mode_hit_button(i);
+            } else {
+                DrumsEmulationApp.getApplication().mode_hit_button2(i);
+            }
+        }
+    }//GEN-LAST:event_playModeTableMouseClicked
+
+    private void jLabel7MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel7MouseClicked
         int l = evt.getPoint().x;
-        if (l<4) {
+        if (l < 4) {
             l = 4;
-        } else if (l>104) {
+        } else if (l > 104) {
             l = 104;
         }
         DrumsEmulationApp app = DrumsEmulationApp.getApplication();
-        app.levelHitGenerator(instrumentTable.getSelectedRow(), ((float)l)/99.f);
-    }//GEN-LAST:event_jLabel2MouseClicked
+        app.levelHitMode(playModeTable.getSelectedRow(), ((float) l) / 99.f);
+    }//GEN-LAST:event_jLabel7MouseClicked
 
-    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
-        float p1 = ((float)evt.getPoint().x)/49.f;
-        float p2 = ((float)evt.getPoint().y)/49.f;
+    private void jLabel8MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel8MouseClicked
+        float p1 = ((float) evt.getPoint().x) / 49.f;
+        float p2 = ((float) evt.getPoint().y) / 49.f;
         DrumsEmulationApp app = DrumsEmulationApp.getApplication();
-        app.p2dHitGenerator(instrumentTable.getSelectedRow(), p1, p2);
-                
-    }//GEN-LAST:event_jLabel3MouseClicked
+    }//GEN-LAST:event_jLabel8MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable instrumentTable;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
+    private javax.swing.JTable playModeTable;
     // End of variables declaration//GEN-END:variables
     private final Timer messageTimer;
     private final Timer busyIconTimer;

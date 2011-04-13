@@ -8,12 +8,14 @@ package drumsemulation.abstraction;
 import drumsemulation.DrumsEmulationApp;
 import drumsemulation.snd.hitGenerator;
 import java.util.Random;
+import java.util.Scanner;
 
 /**
  *
  * @author immanuel
  */
 public class instrumentMode {
+
 
     String parameter;
     hitGenerator generator;
@@ -36,7 +38,6 @@ public class instrumentMode {
     }
 
     public instrumentMode(String parameter) {
-
         this.parameter = parameter;
 
         this.alpha_lvl = 0.f;
@@ -51,10 +52,40 @@ public class instrumentMode {
 
         this.rnd = new Random();
 
+        Scanner scan = new Scanner(parameter);
+        scan.useDelimiter(",");
+        while (scan.hasNext()) {
+            String parm = scan.next();
+            if (parm.contains("=")) {
+                int idx = parm.indexOf("=");
+                String pname = parm.substring(0, idx).trim();
+                String pval = parm.substring(idx + 1).trim();
+
+                if (pname.equals("hit")) {
+                    this.instrumentname = pval;
+                } else if (pname.equals("a")) {
+                    this.alpha_lvl = Float.parseFloat(pval);
+                } else if (pname.equals("b")) {
+                    this.beta_lvl = Float.parseFloat(pval);
+                } else if (pname.equals("p1")) {
+                    this.mu_1 = Float.parseFloat(pval);
+                } else if (pname.equals("p2")) {
+                    this.mu_2 = Float.parseFloat(pval);
+                } else if (pname.equals("2sig1")) {
+                    this.sigma_1 = Float.parseFloat(pval) / 2.f;
+                } else if (pname.equals("2sig2")) {
+                    this.sigma_2 = Float.parseFloat(pval) / 2.f;
+                } else if (pname.equals("2sig")) {
+                    this.sigma_lvl = Float.parseFloat(pval) / 2.f;
+                }
+            }
+        }
+
+
         findInstrument();
     }
     
-    void findInstrument() {
+    public void findInstrument() {
         generator = DrumsEmulationApp.getApplication().getGeneratorByName(instrumentname);
     }
 
@@ -63,6 +94,10 @@ public class instrumentMode {
         float p2 = clamp(((float)rnd.nextGaussian())*sigma_2 + mu_2);
         float lvl = clamp((float)rnd.nextGaussian()*sigma_lvl + alpha_lvl + beta_lvl*level);
         generator.hit2d(when, lvl, p1, p2);
+    }
+
+    public String getDescription() {
+        return parameter;
     }
 
 

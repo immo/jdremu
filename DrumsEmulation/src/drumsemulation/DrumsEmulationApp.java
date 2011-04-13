@@ -23,6 +23,7 @@
 
 package drumsemulation;
 
+import drumsemulation.abstraction.instrumentMode;
 import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -44,6 +45,9 @@ public class DrumsEmulationApp extends SingleFrameApplication {
     private ArrayList<String> hitGeneratorSetup;
     private ArrayList<String> names;
     private ArrayList<hitGenerator> generators;
+    private ArrayList<String> instrumentModeSetup;
+    private ArrayList<String> modenames;
+    private ArrayList<instrumentMode> instrumentmodes;
 
     float p1,p2,lvl;
 
@@ -58,8 +62,11 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         hitGeneratorSetup = new ArrayList<String>();
         names = new ArrayList<String>();
         generators = new ArrayList<hitGenerator>();
+        instrumentModeSetup = new ArrayList<String>();
+        modenames = new ArrayList<String>();
+        instrumentmodes = new ArrayList<instrumentMode>();
 
-        String setupFile = System.getProperty("user.home") + "/.jdremu.conf";
+        String setupFile = System.getProperty("user.home") + "/.jdremu-generators.conf";
         File f = new File(setupFile);
         boolean default_setup = true;
         if (f.exists()) {
@@ -112,6 +119,31 @@ public class DrumsEmulationApp extends SingleFrameApplication {
             hitGeneratorSetup.add("TestTomB=Tom(f=110,fo=13,d=170)");
             hitGeneratorSetup.add("TestTomC'=Tom(f=117,fo=13,d=165)");
         }
+        
+        setupFile = System.getProperty("user.home") + "/.jdremu-modes.conf";
+        f = new File(setupFile);
+        default_setup = true;
+        if (f.exists()) {
+            FileReader fr;
+            try {
+                fr = new FileReader(f);
+                Scanner lines = new Scanner(fr);
+
+                while (lines.hasNextLine()) {
+                    instrumentModeSetup.add(lines.nextLine());
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(DrumsEmulationApp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+        
+        if (default_setup) {
+            instrumentModeSetup.add("default=");
+        }
+
+
+
 
         Iterator<String> it = hitGeneratorSetup.iterator();
 
@@ -123,6 +155,18 @@ public class DrumsEmulationApp extends SingleFrameApplication {
                 hitGenerator generator = hitGenerator.getGeneratorByDesc(s.substring(idx+1));
                 generators.add(generator);
                 playback_driver.addGenerator(generator);
+            }
+        }
+
+        it = instrumentModeSetup.iterator();
+
+        while (it.hasNext()) {
+            String s = it.next();
+            if (s.contains("=")) {
+                int idx = s.indexOf("=");
+                modenames.add(s.substring(0, idx));
+                instrumentMode mode = new instrumentMode(s.substring(idx+1));
+                instrumentmodes.add(mode);
             }
         }
 
@@ -150,6 +194,8 @@ public class DrumsEmulationApp extends SingleFrameApplication {
 
     public void setGeneratorName(int index, String new_name) {
         names.set(index,new_name);
+
+        findInstrumentModes();
     }
 
     public hitGenerator getGenerator(int index) {
@@ -160,6 +206,8 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         playback_driver.delGenerator(generators.get(index));
         playback_driver.addGenerator(new_generator);
         generators.set(index,new_generator);
+
+        findInstrumentModes();
     }
 
      public void addNamedGenerator(String name, String params) {
@@ -167,6 +215,8 @@ public class DrumsEmulationApp extends SingleFrameApplication {
          names.add(name);
          generators.add(g);
          playback_driver.addGenerator(g);
+
+         findInstrumentModes();
      }
 
      public void delGenerator(int index) {
@@ -174,12 +224,67 @@ public class DrumsEmulationApp extends SingleFrameApplication {
          hitGenerator g = generators.get(index);
          playback_driver.delGenerator(g);
          generators.remove(index);
+
+         findInstrumentModes();
      }
+
+     public void findInstrumentModes() {
+         for (Iterator<instrumentMode> it=instrumentmodes.iterator();it.hasNext();){
+             it.next().findInstrument();
+         }
+     }
+
+     public int getModesCount() {
+        return modenames.size();
+    }
+
+    public String getModeName(int index) {
+        return modenames.get(index);
+    }
+
+    public instrumentMode getModeByName(String name) {
+        for (int i=0;i<modenames.size();++i) {
+            if (modenames.get(i).equals(name)) {
+                return instrumentmodes.get(i);
+            }
+        }
+        return new instrumentMode("");
+    }
+
+    public void setModeName(int index, String new_name) {
+        modenames.set(index,new_name);
+    }
+
+    public instrumentMode getMode(int index) {
+        return instrumentmodes.get(index);
+    }
+
+     public void setMode(int index, instrumentMode new_Mode) {
+        instrumentmodes.set(index,new_Mode);
+    }
+
+     public void addNamedMode(String name, String params) {
+         instrumentMode g = new instrumentMode(params);
+         modenames.add(name);
+         instrumentmodes.add(g);
+     }
+
+     public void delMode(int index) {
+         modenames.remove(index);
+         instrumentmodes.remove(index);
+     }
+
 
      public void levelHitGenerator(int index, float new_lvl) {
          lvl = new_lvl;
          generators.get(index).hit2d(playback_driver.get_elapsed(), lvl, p1, p2);
      }
+
+     public void levelHitMode(int index, float new_lvl) {
+
+         instrumentmodes.get(index).hit(playback_driver.get_elapsed(), new_lvl);
+     }
+
      public void p2dHitGenerator(int index, float new_p1, float new_p2) {
          p1 = new_p1;
          p2 = new_p2;
@@ -201,6 +306,15 @@ public class DrumsEmulationApp extends SingleFrameApplication {
     public void instrument_hit_button2(int i) {
         generators.get(i).hit(playback_driver.get_elapsed(), 0.5f);
      
+    }
+
+    public void mode_hit_button(int i) {
+        instrumentmodes.get(i).hit(playback_driver.get_elapsed(), 1.0f);
+    }
+
+    public void mode_hit_button2(int i) {
+        instrumentmodes.get(i).hit(playback_driver.get_elapsed(), 0.5f);
+
     }
 
     public int getSampleRate() {
