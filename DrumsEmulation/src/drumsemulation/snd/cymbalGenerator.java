@@ -31,14 +31,12 @@ public class cymbalGenerator extends hitGenerator {
     int rim_frequency;
     int bell_frequency;
     int zss_frequency;
-
     float bell_gain;
     float rim_gain;
     float whoosh_gain;
     float zzsssh_gain;
     float reso_gain;
     float ui_gain;
-    
     int hi_woosh;
     int lo_woosh;
     int hi_zssh;
@@ -53,7 +51,9 @@ public class cymbalGenerator extends hitGenerator {
     mfcNoiseGenerator zzsssh;
     resoOscillator lowresonant;
     resoOscillator lowresonant2;
-    
+    boolean p_bell, p_rim, p_bing, p_hirim,
+            p_whoosh, p_uiiich, p_zzsssh,
+            p_lowresonant, p_lowresonant2;
 
     public cymbalGenerator() {
         this("");
@@ -62,6 +62,16 @@ public class cymbalGenerator extends hitGenerator {
     public cymbalGenerator(String parms) {
         super();
         this.description = "Cymbal(" + parms + ")";
+
+        p_bell = true;
+        p_rim = true;
+        p_bing = true;
+        p_hirim = true;
+        p_whoosh = true;
+        p_uiiich = true;
+        p_zzsssh = true;
+        p_lowresonant = true;
+        p_lowresonant2 = true;
 
         bell_gain = 1.f;
         rim_gain = 1.f;
@@ -74,7 +84,7 @@ public class cymbalGenerator extends hitGenerator {
         rim_frequency = 2300;
         bell_frequency = 3100;
         zss_frequency = 5500;
-        
+
         hi_woosh = 12000;
         lo_woosh = 3200;
         hi_zssh = 9000;
@@ -128,44 +138,72 @@ public class cymbalGenerator extends hitGenerator {
                     ui_gain = Float.parseFloat(pval);
                 } else if (pname.equals("gr")) {
                     reso_gain = Float.parseFloat(pval);
+                } else if (pname.equals("no")) {
+                    p_bell = !pval.contains("bell");
+                    p_bing = !pval.contains("bing");
+                    p_hirim = !pval.contains("hi");
+                    p_lowresonant = !pval.contains("low");
+                    p_lowresonant2 = !pval.contains("lo2");
+                    p_rim = !pval.contains("rim");
+                    p_uiiich = !pval.contains("ui");
+                    p_zzsssh = !pval.contains("zsh");
+                    p_whoosh = !pval.contains("wh");
                 }
             }
         }
 
         bell = new cymbalBellGenerator("d=" + (decay / 6) + ",f=" + (bell_frequency * 2)
-                + ",g=" + utils.multiplyGainList(gain_factors, 0.4f*bell_gain));
+                + ",g=" + utils.multiplyGainList(gain_factors, 0.4f * bell_gain));
         bing = new cymbalBellGenerator("d=" + (decay / 15) + ",f=" + (bell_frequency * 4)
-                + ",g=" + utils.multiplyGainList(gain_factors, 0.4f*bell_gain));
+                + ",g=" + utils.multiplyGainList(gain_factors, 0.4f * bell_gain));
         rim = new cymbalRimGenerator("d=" + (decay / 2) + ",f=" + (rim_frequency)
-                + ",g=" + utils.multiplyGainList(gain_factors, 0.5f*rim_gain));
+                + ",g=" + utils.multiplyGainList(gain_factors, 0.5f * rim_gain));
         hirim = new cymbalRimGenerator("wave=sine,d=" + (decay * 4 / 3) + ",f=" + (rim_frequency * 5)
-                + ",g=" + utils.multiplyGainList(gain_factors, 0.5f*rim_gain));
+                + ",g=" + utils.multiplyGainList(gain_factors, 0.5f * rim_gain));
         whoosh = new contourNoiseGenerator("filter=band " + zss_frequency
-                + " 4,d=" + (decay / 2) + ",a=30" + ",g=" + utils.multiplyGainList(gain_factors, 0.3f*whoosh_gain));
+                + " 4,d=" + (decay / 2) + ",a=30" + ",g=" + utils.multiplyGainList(gain_factors, 0.3f * whoosh_gain));
         uiiich = new mfcNoiseGenerator("a=75,s=60,d=" + (decay / 5) + ",filter1=band " + lo_woosh
                 + " 4,filter2=band " + hi_woosh + " 2,f1=80,f12=160"
-                + ",g=" + utils.multiplyGainList(gain_factors, 0.9f*ui_gain));
+                + ",g=" + utils.multiplyGainList(gain_factors, 0.9f * ui_gain));
         zzsssh = new mfcNoiseGenerator("a=35,s=20,d=" + (decay / 15) + ",filter2=high " + lo_zssh
                 + " 4,filter1=band " + hi_zssh + " 2,f1=40,f12=35"
-                + ",g=" + utils.multiplyGainList(gain_factors, 0.7f*zzsssh_gain));
-        lowresonant = new resoOscillator("f=" + (rim_frequency / 3) + ",a=100,d=" + (decay * 5 / 6) + ",wave=sine,g=" + utils.multiplyGainList(gain_factors, 0.01f*reso_gain));
-        lowresonant2 = new resoOscillator("f=" + (bell_frequency / 4) + ",a=140,d=" + (decay) + ",wave=sine,g=" + utils.multiplyGainList(gain_factors, 0.02f*reso_gain));
-        
+                + ",g=" + utils.multiplyGainList(gain_factors, 0.7f * zzsssh_gain));
+        lowresonant = new resoOscillator("f=" + (rim_frequency / 3) + ",a=100,d=" + (decay * 5 / 6) + ",wave=sine,g=" + utils.multiplyGainList(gain_factors, 0.01f * reso_gain));
+        lowresonant2 = new resoOscillator("f=" + (bell_frequency / 4) + ",a=140,d=" + (decay) + ",wave=sine,g=" + utils.multiplyGainList(gain_factors, 0.02f * reso_gain));
+
     }
 
     @Override
     public void additiveSynthesis(long start_frame, int[] buffer, int channels, int frames, long lvl31) {
         synchronized (sync_token) {
-            bell.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
-            rim.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
-            whoosh.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
-            uiiich.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
-            hirim.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
-            lowresonant.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
-            lowresonant2.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
-            zzsssh.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
-            bing.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
-            
+            if (p_bell) {
+                bell.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
+            }
+            if (p_rim) {
+                rim.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
+            }
+            if (p_whoosh) {
+                whoosh.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
+            }
+            if (p_uiiich) {
+                uiiich.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
+            }
+            if (p_hirim) {
+                hirim.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
+            }
+            if (p_lowresonant) {
+                lowresonant.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
+            }
+            if (p_lowresonant2) {
+                lowresonant2.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
+            }
+            if (p_zzsssh) {
+                zzsssh.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
+            }
+            if (p_bing) {
+                bing.additiveSynthesis(start_frame, buffer, channels, frames, lvl31);
+            }
+
         }
     }
 
@@ -184,20 +222,38 @@ public class cymbalGenerator extends hitGenerator {
 
 
         synchronized (sync_token) {
-            lowresonant.hit(when, level);
-            lowresonant2.hit(when, level);
+            if (p_lowresonant) {
+                lowresonant.hit(when, level);
+            }
+            if (p_lowresonant2) {
+                lowresonant2.hit(when, level);
+            }
 
-            bell.hit(when, level * p1);
-            hirim.hit(when, level * p1);
+            if (p_bell) {
+                bell.hit(when, level * p1);
+            }
+            if (p_hirim) {
+                hirim.hit(when, level * p1);
+            }
 
-            rim.hit(when, level * (1.f - p1));
-            bing.hit(when, level * (1.f - p2));
+            if (p_rim) {
+                rim.hit(when, level * (1.f - p1));
+            }
+            if (p_bing) {
+                bing.hit(when, level * (1.f - p2));
+            }
 
-            zzsssh.hit(when, level*p2);
-            whoosh.hit(when, level*p2);
-            uiiich.hit(when, level*p2);
+            if (p_zzsssh) {
+                zzsssh.hit(when, level * p2);
+            }
+            if (p_whoosh) {
+                whoosh.hit(when, level * p2);
+            }
+            if (p_uiiich) {
+                uiiich.hit(when, level * p2);
+            }
 
-            
+
         }
     }
 }

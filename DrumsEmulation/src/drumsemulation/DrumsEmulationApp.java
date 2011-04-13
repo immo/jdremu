@@ -84,40 +84,45 @@ public class DrumsEmulationApp extends SingleFrameApplication {
 
         }
         if (default_setup) {
-            hitGeneratorSetup.add("Snare=Snare(g=1.3 1.3,f=160)");
+            hitGeneratorSetup.add("Snare=Snare(g=1.3 1.3,f=160,click=0.02)");
+            hitGeneratorSetup.add("DeadSnare=Snare(g=1.3 1.3,f=160,click=0.02,snare=0.1)");
             hitGeneratorSetup.add("Kick=Snare(g=1 1,d=400,f=31,fp=43,fpo=12,fq=38,fqo=22,snare=0.05,click=0.4,fc=8000,wave=cotri)");
-            hitGeneratorSetup.add("Floor=Snare(g=1 1,d=200,f=80,fp=83,fpo=12,fq=123,fqo=14,snare=0.05,click=0.1,fc=5000)");
-            hitGeneratorSetup.add("Mid=Snare(g=1 1,d=180,f=90,fp=93,fpo=12,fq=143,fqo=14,snare=0.05,click=0.1,fc=5200)");
-            hitGeneratorSetup.add("High=Snare(g=1 1,d=160,f=100,fp=103,fpo=12,fq=163,fqo=14,snare=0.05,click=0.1,fc=5400)");
+            hitGeneratorSetup.add("Floor=Snare(g=1 1,d=200,f=80,fp=83,fpo=12,fq=123,fqo=14,snare=0.05,click=0.05,fc=5000,g=0.7 1.1)");
+            hitGeneratorSetup.add("Mid=Snare(g=1 1,d=180,f=90,fp=93,fpo=12,fq=143,fqo=14,snare=0.05,click=0.05,fc=5200,g=1.0 0.8)");
+            hitGeneratorSetup.add("High=Snare(g=1 1,d=160,f=100,fp=103,fpo=12,fq=163,fqo=14,snare=0.05,click=0.05,fc=5400,g=1.2 0.7)");
+            hitGeneratorSetup.add("HiCrash=Cymbal(no=lowbellhirim,d=300,gf=0.3,f=2000,fb=5000,fh1=14000,fl1=3000,gb=0.3,gw=1.2,gz=1.4,gr=0.4,gb=0.4,g=0.7 1)");
+            hitGeneratorSetup.add("LoCrash=Cymbal(no=lowbellhirim,d=450,gf=0.3,f=1400,fb=4000,fh1=12000,fl1=2600,gb=0.3,gw=1.2,gz=1.4,gr=0.4,gb=0.4,g=0.9 0.8)");
+            hitGeneratorSetup.add("Ride=Cymbal(no=uiwhrimlo2,d=650,gf=0.15,f=2400,fb=6300,fh2=12000,fl2=2600,gw=0.7,gz=0.4,gr=0.2,gb=0.05,g=2.7 2.1)");
+            hitGeneratorSetup.add("RideBell=Cymbal(no=uiwhlo2zsh,d=650,gf=0.15,f=2400,fb=2000,fh2=12000,fl2=2600,gw=0.7,gz=0.4,gr=0.2,gb=0.3,g=1.0 0.8)");
             hitGeneratorSetup.add("TestCymbal=Cymbal()");
-            hitGeneratorSetup.add("HiCrash=Cymbal(d=300,gf=0.3,f=2000,fb=5000,fh1=14000,fl1=3000,gb=0.3,gw=1.2,gz=1.4,gr=0.4,gb=0.4)");
-            hitGeneratorSetup.add("LoCrash=Cymbal(d=450,gf=0.3,f=1400,fb=4000,fh1=12000,fl1=2600,gb=0.3,gw=1.2,gz=1.4,gr=0.4,gb=0.4)");
+            hitGeneratorSetup.add("HiTestCymbal=Cymbal(d=300,gf=0.3,f=2000,fb=5000,fh1=14000,fl1=3000,gb=0.3,gw=1.2,gz=1.4,gr=0.4,gb=0.4)");
+            hitGeneratorSetup.add("LoTestCymbal=Cymbal(d=450,gf=0.3,f=1400,fb=4000,fh1=12000,fl1=2600,gb=0.3,gw=1.2,gz=1.4,gr=0.4,gb=0.4)");
 
-            hitGeneratorSetup.add("Beep=Beep()");
-            hitGeneratorSetup.add("TestNet=delayNet()");
-            hitGeneratorSetup.add("TestNoise=asdNoise()");
-            hitGeneratorSetup.add("TestMfNoise=asdMfNoise()");
-            //hitGeneratorSetup.add("TestCymbals=Cymbal()");
-            hitGeneratorSetup.add("TestCymbalBell=CymbalBell()");
-            hitGeneratorSetup.add("TestCymbalRim=CymbalRim()");
-            
-            hitGeneratorSetup.add("TestSnare=Snare()");
-            hitGeneratorSetup.add("TestSnare2=Snare(reso=cotri)");
-            hitGeneratorSetup.add("TestSnare2=Snare(reso=cosaw)");
-            hitGeneratorSetup.add("TestSnare2=Snare(reso=cosquare)");
-            hitGeneratorSetup.add("TestSine=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cosine)");
-            hitGeneratorSetup.add("TestTri=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cotri)");
-            hitGeneratorSetup.add("TestSaw=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cosaw)");
-            hitGeneratorSetup.add("TestSquare=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cosquare)");
-            
-            hitGeneratorSetup.add("TestTomC=Tom(f=52,fo=13,d=200)");
-            hitGeneratorSetup.add("TestTomD=Tom(f=60,fo=13,d=195)");
-            hitGeneratorSetup.add("TestTomE=Tom(f=69,fo=13,d=190)");
-            hitGeneratorSetup.add("TestTomF=Tom(f=72,fo=13,d=185)");
-            hitGeneratorSetup.add("TestTomG=Tom(f=85,fo=13,d=180)");
-            hitGeneratorSetup.add("TestTomA=Tom(f=97,fo=13,d=175)");
-            hitGeneratorSetup.add("TestTomB=Tom(f=110,fo=13,d=170)");
-            hitGeneratorSetup.add("TestTomC'=Tom(f=117,fo=13,d=165)");
+//            hitGeneratorSetup.add("Beep=Beep()");
+//            hitGeneratorSetup.add("TestNet=delayNet()");
+//            hitGeneratorSetup.add("TestNoise=asdNoise()");
+//            hitGeneratorSetup.add("TestMfNoise=asdMfNoise()");
+//            hitGeneratorSetup.add("TestCymbals=Cymbal()");
+//            hitGeneratorSetup.add("TestCymbalBell=CymbalBell()");
+//            hitGeneratorSetup.add("TestCymbalRim=CymbalRim()");
+//
+//            hitGeneratorSetup.add("TestSnare=Snare()");
+//            hitGeneratorSetup.add("TestSnare2=Snare(reso=cotri)");
+//            hitGeneratorSetup.add("TestSnare2=Snare(reso=cosaw)");
+//            hitGeneratorSetup.add("TestSnare2=Snare(reso=cosquare)");
+//            hitGeneratorSetup.add("TestSine=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cosine)");
+//            hitGeneratorSetup.add("TestTri=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cotri)");
+//            hitGeneratorSetup.add("TestSaw=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cosaw)");
+//            hitGeneratorSetup.add("TestSquare=swOsc(f=1000,a=2,d=20,g=0.9 0.9,wave=cosquare)");
+//
+//            hitGeneratorSetup.add("TestTomC=Tom(f=52,fo=13,d=200)");
+//            hitGeneratorSetup.add("TestTomD=Tom(f=60,fo=13,d=195)");
+//            hitGeneratorSetup.add("TestTomE=Tom(f=69,fo=13,d=190)");
+//            hitGeneratorSetup.add("TestTomF=Tom(f=72,fo=13,d=185)");
+//            hitGeneratorSetup.add("TestTomG=Tom(f=85,fo=13,d=180)");
+//            hitGeneratorSetup.add("TestTomA=Tom(f=97,fo=13,d=175)");
+//            hitGeneratorSetup.add("TestTomB=Tom(f=110,fo=13,d=170)");
+//            hitGeneratorSetup.add("TestTomC'=Tom(f=117,fo=13,d=165)");
         }
         
         setupFile = System.getProperty("user.home") + "/.jdremu-modes.conf";
@@ -140,6 +145,21 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         
         if (default_setup) {
             instrumentModeSetup.add("default=");
+            instrumentModeSetup.add("kick1=hit=Kick,2sig1=0.01,2sig2=0.01,2sig=0,p1=0.93877554,p2=0.9183673");
+            instrumentModeSetup.add("kick2=hit=Kick,2sig1=0.01,2sig2=0.01,2sig=0,p1=0.93877554,p2=0.24489796");
+            instrumentModeSetup.add("snare=hit=Snare,p1=0.20408164,p2=0.1632653");
+            instrumentModeSetup.add("snarerim=hit=Snare,p1=0.9591837,p2=0.9591837");
+            instrumentModeSetup.add("snaredead=hit=DeadSnare,p1=0.20408164,p2=0.1632653");
+            instrumentModeSetup.add("floortom=hit=Floor,p1=0.9591837,p2=0.08163265");
+            instrumentModeSetup.add("floortomrim=hit=Floor,p1=0.06122449,p2=0.9591837");
+            instrumentModeSetup.add("tomtom=hit=Mid,p1=0.9591837,p2=0.08163265");
+            instrumentModeSetup.add("tomtomrim=hit=Mid,p1=0.06122449,p2=0.9591837");
+            instrumentModeSetup.add("hightom=hit=High,p1=0.9591837,p2=0.24489796");
+            instrumentModeSetup.add("hightomrim=hit=High,p1=0.06122449,p2=0.9591837");
+            instrumentModeSetup.add("crash=hit=LoCrash,p1=0.5102041,p2=0.9591837,2sig1=0.4,2sig=0.01");
+            instrumentModeSetup.add("hicrash=hit=HiCrash,p1=0.5102041,p2=0.9591837,2sig1=0.4,2sig=0.01");
+            instrumentModeSetup.add("ride=hit=Ride,2sig=0.03,p1=0.85714287,p2=0.24489796");
+            instrumentModeSetup.add("ridebell=hit=RideBell,2sig=0.03,p1=0.8979592,p2=0.26530612");
         }
 
 
