@@ -184,15 +184,19 @@ public class cymbalGenerator extends hitGenerator {
 
 
         synchronized (sync_token) {
-            bell.hit(when, level * p1);
-            rim.hit(when, level * (1.f - p1));
-            whoosh.hit(when, level * p2);
-            uiiich.hit(when, level * p2);
-            hirim.hit(when, level * (1.f - p1));
             lowresonant.hit(when, level);
             lowresonant2.hit(when, level);
-            zzsssh.hit(when, level * p2);
+
+            bell.hit(when, level * p1);
+            hirim.hit(when, level * p1);
+
+            rim.hit(when, level * (1.f - p1));
             bing.hit(when, level * (1.f - p2));
+
+            zzsssh.hit(when, level*p2);
+            whoosh.hit(when, level*p2);
+            uiiich.hit(when, level*p2);
+
             
         }
     }

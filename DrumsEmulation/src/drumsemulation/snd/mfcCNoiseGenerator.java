@@ -417,7 +417,7 @@ public class mfcCNoiseGenerator extends hitGenerator { //multi-filter contour no
     public void hit(long when, float level) {
         synchronized (sync_token) {
             hit_time[hit_round_robin] = when;
-            hit_amplitude31[hit_round_robin] = ft.level_to_amplitude31(level);
+            hit_amplitude31[hit_round_robin] = ft.level_to_amplitude31(level,6.f,0.f);
             hit_round_robin++;
             if (hit_round_robin == max_hits) {
                 hit_round_robin = 0;

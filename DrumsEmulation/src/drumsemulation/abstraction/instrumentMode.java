@@ -38,14 +38,14 @@ public class instrumentMode {
     }
 
     public instrumentMode(String parameter) {
-        this.parameter = parameter;
+        this.parameter = parameter.trim();
 
         this.alpha_lvl = 0.f;
         this.beta_lvl = 1.f;
         this.mu_1 = 0.5f;
-        this.sigma_1 = 0.2f;
+        this.sigma_1 = 0.02f;
         this.mu_2 = 0.5f;
-        this.sigma_2 = 0.2f;
+        this.sigma_2 = 0.02f;
         this.instrumentname="Snare";
         
         this.sigma_lvl = 0.005f;

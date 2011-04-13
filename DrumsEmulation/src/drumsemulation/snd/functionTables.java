@@ -269,6 +269,28 @@ public class functionTables {
         return (long)(Math.exp(3.f*(lvl-1.f))*(1l<<31));
     }
 
+    public final long level_to_amplitude31(float lvl,float steepness) {
+        if (lvl < 0.f) {
+            lvl = 0.f;
+        } else if (lvl > 3.f) {
+            lvl = 3.f;
+        }
+
+
+        return (long)(Math.exp(steepness*(lvl-1.f))*(1l<<31));
+    }
+
+    public final long level_to_amplitude31(float lvl,float steepness,float offset) {
+        if (lvl < 0.f) {
+            lvl = 0.f;
+        } else if (lvl > 3.f) {
+            lvl = 3.f;
+        }
+
+
+        return (long)((Math.exp(steepness*(lvl-1.f))-Math.exp(-steepness)+offset)*(1l<<31));
+    }
+
     public final int poke(long t, long length, long amplitude31) {
         if ((t < 0) || (t >= length)) {
             return Integer.MIN_VALUE;

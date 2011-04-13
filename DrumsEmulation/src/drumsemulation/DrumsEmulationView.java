@@ -33,6 +33,7 @@ import org.jdesktop.application.FrameView;
 import org.jdesktop.application.TaskMonitor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Scanner;
 import javax.swing.Timer;
 import javax.swing.Icon;
 import javax.swing.JDialog;
@@ -546,11 +547,26 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
 }//GEN-LAST:event_jToggleButton1ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
-        // TODO add your handling code here:
+       int i = instrumentTable.getSelectedRow();
+        DefaultTableModel mdl = (DefaultTableModel) playModeTable.getModel();
+        mdl.removeRow(i);
+        DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+        app.delMode(i);
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        // TODO add your handling code here:
+        int i = playModeTable.getSelectedRow();
+        if (i == -1) {
+            DefaultTableModel mdl = (DefaultTableModel) playModeTable.getModel();
+            mdl.addRow(new Object[]{"default", "(click)", ""});
+            DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+            app.addNamedMode("default", "");
+        } else {
+            DefaultTableModel mdl = (DefaultTableModel) playModeTable.getModel();
+            mdl.addRow(new Object[]{playModeTable.getValueAt(i, 0) + "'", "(click)", playModeTable.getValueAt(i, 2)});
+            DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+            app.addNamedMode((String) playModeTable.getValueAt(i, 0) + "'", (String) playModeTable.getValueAt(i, 2));
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void playModeTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_playModeTableMouseClicked
@@ -581,6 +597,50 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         float p1 = ((float) evt.getPoint().x) / 49.f;
         float p2 = ((float) evt.getPoint().y) / 49.f;
         DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+
+        int row = playModeTable.getSelectedRow();
+
+        String desc = app.getMode(row).getDescription();
+
+        String updated_desc = "";
+
+        boolean found_p1=false;
+        boolean found_p2=false;
+
+        Scanner scan = new Scanner(desc);
+        scan.useDelimiter(",");
+        while (scan.hasNext()) {
+            String parm = scan.next();
+            if (parm.contains("=")) {
+                int idx = parm.indexOf("=");
+                String pname = parm.substring(0, idx).trim();
+                String pval = parm.substring(idx + 1).trim();
+
+                if (pname.equals("p1")) {
+                    pval = Float.toString(p1);
+                    found_p1 = true;
+                } else if (pname.equals("p2")) {
+                    pval = Float.toString(p2);
+                    found_p2 = true;
+                }
+                updated_desc +=","+pname + "="+pval;
+            }
+        }
+
+        if (!found_p1) {
+            updated_desc +=",p1="+Float.toString(p1);
+        }
+
+        if (!found_p2) {
+            updated_desc += ",p2="+Float.toString(p2);
+        }
+        updated_desc = updated_desc.substring(1);
+
+        app.setMode(row, new instrumentMode(updated_desc));
+
+        playModeTable.getModel().setValueAt(updated_desc, row, 2);
+
+        app.mode_hit_button(row);
     }//GEN-LAST:event_jLabel8MouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
