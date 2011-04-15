@@ -54,7 +54,7 @@ public class poorDotGraph {
             intPair p = it.next();
             g.append("    v"+p.get(0)+" -> v"+p.get(1)+";\n");
         }
-        g.append("}");
+        g.append("}\n");
 
         return g.toString();
     }

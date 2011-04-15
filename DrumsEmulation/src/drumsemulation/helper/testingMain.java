@@ -19,19 +19,28 @@
 package drumsemulation.helper;
 
 import java.io.*;
+import java.util.*;
 
 /**
  *
  * @author immanuel
  */
 public class testingMain {
-     public static void main(String args[])
+
+    public static void main(String args[])
             throws java.io.IOException, java.io.FileNotFoundException {
-            poorDotGraph g = new poorDotGraph();
-            g.name = "PartI";
-            g.edges.add(new intPair(0,1));
-            g.nodes.add("snare!0.75@1.0");
-            g.nodes.add("snare!0.75@1.0");
-            System.out.println(g.toString());
-      }
+        poorDotGraph g = new poorDotGraph();
+        g.name = "PartI";
+        g.edges.add(new intPair(0, 1));
+        g.nodes.add("snare!0.75@1.0");
+        g.nodes.add("snare!0.75@1.0");
+        System.out.println(g.toString());
+
+
+
+        Scanner s = new Scanner("digraph UNNAMED { s [label=\"red\", pos=\"asdds\", sds]; q [label=Y]; s -> q [asd ,d,d]; subgraph { }; } strict digraph N { x -> y; } digraph K { }");
+        System.out.println(poorDotParser.parseFile(s));
+
+
+    }
 }
