@@ -2,16 +2,43 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package drumsemulation.helper;
 
+import java.io.IOException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author immanuel
  */
 public class poorDotParser {
+
+    public static ArrayList<poorDotGraph> parseThroughDot(String s) {
+        Process p;
+        try {
+            p = new ProcessBuilder("dot").start();
+
+            p.getOutputStream().write(s.getBytes());
+            p.getOutputStream().close();
+        } catch (IOException ex) {
+            Logger.getLogger(testingMain.class.getName()).log(Level.SEVERE, "dot not found or dysfunctional", ex);
+            return parseFile(new Scanner(s));
+        }
+
+        try {
+            p.waitFor();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(testingMain.class.getName()).log(Level.SEVERE, "dot not found or dysfunctional", ex);
+            return parseFile(new Scanner(s));
+        }
+
+        Scanner scnr = new Scanner(p.getInputStream());
+        System.out.println(scnr.next());
+
+        return parseFile(scnr);
+    }
 
     public static ArrayList<poorDotGraph> parseFile(Scanner s) {
         ArrayList<poorDotGraph> l = new ArrayList<poorDotGraph>();
@@ -41,8 +68,8 @@ public class poorDotParser {
             Scanner s2 = new Scanner(graph.toString());
             s2.useDelimiter("(\\{|\\}|;)");
             int nodecount = 0;
-            HashMap<String,Integer> nodenames = new HashMap<String,Integer>();
-            HashMap<Integer,String> nodelabels = new HashMap<Integer,String>();
+            HashMap<String, Integer> nodenames = new HashMap<String, Integer>();
+            HashMap<Integer, String> nodelabels = new HashMap<Integer, String>();
 
             while (s2.hasNext()) {
                 String pt = s2.next().trim();
@@ -50,9 +77,9 @@ public class poorDotParser {
                     g.name = pt.substring(7).trim();
                 } else if (pt.startsWith("strict")) { //strict digraph G
                     g.name = pt.substring(6).trim().substring(7).trim();
-                } else if ((pt.startsWith("subgraph"))||pt.isEmpty()||
-                        (pt.startsWith("graph"))||(pt.startsWith("node"))||
-                        (pt.startsWith("edge"))) {
+                } else if ((pt.startsWith("subgraph")) || pt.isEmpty()
+                        || (pt.startsWith("graph")) || (pt.startsWith("node"))
+                        || (pt.startsWith("edge"))) {
                     //ignore this
                 } else if (pt.contains("->")) {
                     //edge
@@ -75,7 +102,7 @@ public class poorDotParser {
                 } else {
                     int idx = pt.indexOf("[");
                     if (idx >= 0) {
-                        String options = pt.substring(idx+1);
+                        String options = pt.substring(idx + 1);
                         String name = pt.substring(0, idx).trim();
                         if (!nodenames.containsKey(name)) {
                             nodenames.put(name, nodecount);
@@ -89,14 +116,13 @@ public class poorDotParser {
                             String t = opts.next().trim();
                             if (t.startsWith("label")) {
                                 int eq = t.indexOf("=");
-                                String rhs = t.substring(eq+1).trim();
+                                String rhs = t.substring(eq + 1).trim();
 
                                 if (rhs.endsWith("]")) {
-                                    rhs = rhs.substring(0,rhs.length()-1).trim();
+                                    rhs = rhs.substring(0, rhs.length() - 1).trim();
                                 }
-                                if (rhs.startsWith("\""))
-                                {
-                                    label = rhs.substring(1, rhs.length()-1).trim();
+                                if (rhs.startsWith("\"")) {
+                                    label = rhs.substring(1, rhs.length() - 1).trim();
                                 } else {
                                     label = rhs;
                                 }
@@ -108,18 +134,19 @@ public class poorDotParser {
                 }
             }
 
-            for (int i=0;i<nodecount;++i) {
-                if (nodelabels.containsKey(i))
+            for (int i = 0; i < nodecount; ++i) {
+                if (nodelabels.containsKey(i)) {
                     g.nodes.add(nodelabels.get(i));
-                else
+                } else {
                     g.nodes.add("");
+                }
             }
-            
 
-            l.add(g);
+            if (nodecount > 0) {
+                l.add(g);
+            }
         }
 
         return l;
     }
-
 }

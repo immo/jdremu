@@ -20,6 +20,8 @@ package drumsemulation.helper;
 
 import java.io.*;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -41,6 +43,20 @@ public class testingMain {
         Scanner s = new Scanner("digraph UNNAMED { s [label=\"red\", pos=\"asdds\", sds]; q [label=Y]; s -> q [asd ,d,d]; subgraph { }; } strict digraph N { x -> y; } digraph K { }");
         System.out.println(poorDotParser.parseFile(s));
 
+
+        Process p = new ProcessBuilder("dot", "/home/immanuel/tmp/test.dot").start();
+        try {
+            p.waitFor();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(testingMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("exit="+p.exitValue());
+
+        Scanner scn = new Scanner(p.getInputStream());
+
+        System.out.println(scn.next());
+
+        System.out.println(poorDotParser.parseThroughDot("digraph G { x -> y -> z;}"));
 
     }
 }
