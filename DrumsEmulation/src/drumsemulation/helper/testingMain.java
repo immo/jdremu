@@ -27,11 +27,11 @@ import java.io.*;
 public class testingMain {
      public static void main(String args[])
             throws java.io.IOException, java.io.FileNotFoundException {
-            int testing = (123<<8)+22;
-            byte test2 = (byte) testing;
-            byte test1 = (byte) (testing>>8);
-            System.out.println("Int: "+testing);
-            System.out.println("Byte: "+test2);
-            System.out.println("HiByte: "+test1);
+            poorDotGraph g = new poorDotGraph();
+            g.name = "PartI";
+            g.edges.add(new intPair(0,1));
+            g.nodes.add("snare!0.75@1.0");
+            g.nodes.add("snare!0.75@1.0");
+            System.out.println(g.toString());
       }
 }
