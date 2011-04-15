@@ -18,6 +18,7 @@
  */
 package drumsemulation.helper;
 
+import drumsemulation.abstraction.abstractData;
 import java.io.*;
 import java.util.*;
 import java.util.logging.Level;
@@ -56,7 +57,17 @@ public class testingMain {
 
         System.out.println(scn.next());
 
-        System.out.println(poorDotParser.parseThroughDot("digraph G { x -> y -> z;}"));
+        System.out.println(poorDotParser.parseThroughDot("digraph \"3x\" { \"snare@\" -> \"a b c\" -> z;}"));
+
+        abstractData dta = new abstractData();
+
+        Set<String> st = new TreeSet<String>();
+        st.add("ab");
+        String q = " a \t  d";
+        System.out.println(q.replaceAll("\\s", ""));
+        if (st.contains(q+"b")) {
+            System.out.println("ab");
+        }
 
     }
 }

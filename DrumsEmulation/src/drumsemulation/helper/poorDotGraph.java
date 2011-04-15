@@ -14,14 +14,20 @@ import sun.applet.Main;
  */
 public class poorDotGraph {
 
-    String name;
-    ArrayList<String> nodes;
-    Set<intPair> edges; //.get(0) -> .get(1)
+    public String name;
+    public ArrayList<String> nodes;
+    public Set<intPair> edges; //.get(0) -> .get(1)
 
     public poorDotGraph() {
         nodes = new ArrayList<String>();
         edges = new TreeSet<intPair>();
         name = new String("G");
+    }
+
+    public poorDotGraph(poorDotGraph copy) {
+        nodes = new ArrayList<String>(copy.nodes);
+        edges = new TreeSet<intPair>(copy.edges);
+        name = new String(copy.name);
     }
 
     Map<Integer,Set<Integer>> getPrecursorNodes() {
@@ -43,7 +49,7 @@ public class poorDotGraph {
     public String toString() {
         int N = nodes.size();
         StringBuffer g  = new StringBuffer();
-        g.append("digraph " + name + " {\n");
+        g.append("digraph \"" + name + "\" {\n");
 
         for (int i=0;i<N;++i) {
             g.append("    v"+i+" [label=\""+nodes.get(i)+"\"];\n");

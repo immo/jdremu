@@ -35,7 +35,7 @@ public class poorDotParser {
         }
 
         Scanner scnr = new Scanner(p.getInputStream());
-        System.out.println(scnr.next());
+        
 
         return parseFile(scnr);
     }
@@ -74,7 +74,11 @@ public class poorDotParser {
             while (s2.hasNext()) {
                 String pt = s2.next().trim();
                 if (pt.startsWith("digraph")) {
-                    g.name = pt.substring(7).trim();
+                    String namepart = pt.substring(7).trim();
+                    if (namepart.startsWith("\"")) {
+                        namepart = namepart.substring(1,namepart.length()-1).trim();
+                    }
+                    g.name = namepart;
                 } else if (pt.startsWith("strict")) { //strict digraph G
                     g.name = pt.substring(6).trim().substring(7).trim();
                 } else if ((pt.startsWith("subgraph")) || pt.isEmpty()
@@ -89,11 +93,17 @@ public class poorDotParser {
                         String to = prms[1].trim();
                         if (!nodenames.containsKey(from)) {
                             nodenames.put(from, nodecount);
+                            if (from.startsWith("\"")) {
+                                nodelabels.put(nodecount, from.substring(1,from.length()-1).trim());
+                            } else
                             nodelabels.put(nodecount, from);
                             nodecount++;
                         }
                         if (!nodenames.containsKey(to)) {
                             nodenames.put(to, nodecount);
+                            if (to.startsWith("\"")) {
+                                nodelabels.put(nodecount, to.substring(1,from.length()-1).trim());
+                            } else
                             nodelabels.put(nodecount, to);
                             nodecount++;
                         }
@@ -109,6 +119,9 @@ public class poorDotParser {
                             nodecount++;
                         }
                         String label = name;
+                        if (label.startsWith("\"")) {
+                            label = label.substring(1,label.length()-1).trim();
+                        }
 
                         Scanner opts = new Scanner(options);
                         opts.useDelimiter(",");

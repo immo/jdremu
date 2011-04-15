@@ -157,6 +157,12 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         playModeTable = new javax.swing.JTable();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jDotCodePane = new javax.swing.JEditorPane();
+        jLabel4 = new javax.swing.JLabel();
+        jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
@@ -305,7 +311,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
                         .addComponent(jButton3))
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 215, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
@@ -419,18 +425,66 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jButton5)
                                 .addComponent(jButton4))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel6))))
+                            .addComponent(jLabel6)))
                     .addComponent(jLabel7))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 218, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jLabel8)
                 .addContainerGap())
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
+
+        jPanel4.setName("jPanel4"); // NOI18N
+
+        jScrollPane3.setName("jScrollPane3"); // NOI18N
+
+        jDotCodePane.setFont(resourceMap.getFont("jDotCodePane.font")); // NOI18N
+        jDotCodePane.setName("jDotCodePane"); // NOI18N
+        jScrollPane3.setViewportView(jDotCodePane);
+
+        jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
+        jLabel4.setName("jLabel4"); // NOI18N
+
+        jButton6.setText(resourceMap.getString("jButton6.text")); // NOI18N
+        jButton6.setName("jButton6"); // NOI18N
+
+        jButton7.setText(resourceMap.getString("jButton7.text")); // NOI18N
+        jButton7.setName("jButton7"); // NOI18N
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addComponent(jLabel4)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 337, Short.MAX_VALUE)
+                .addComponent(jButton7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton6))
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel4))
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton6)
+                        .addComponent(jButton7)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab(resourceMap.getString("jPanel4.TabConstraints.tabTitle"), jPanel4); // NOI18N
 
         jPanel3.setName("jPanel3"); // NOI18N
 
@@ -442,7 +496,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 264, Short.MAX_VALUE)
+            .addGap(0, 271, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel3.TabConstraints.tabTitle"), jPanel3); // NOI18N
@@ -455,7 +509,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -643,6 +697,12 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         app.mode_hit_button(row);
     }//GEN-LAST:event_jLabel8MouseClicked
 
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+        app.getData().build(jDotCodePane.getText());
+        
+    }//GEN-LAST:event_jButton7ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable instrumentTable;
     private javax.swing.JButton jButton1;
@@ -650,17 +710,23 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JEditorPane jDotCodePane;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JPanel mainPanel;

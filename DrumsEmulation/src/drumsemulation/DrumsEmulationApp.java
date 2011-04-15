@@ -23,6 +23,7 @@
 
 package drumsemulation;
 
+import drumsemulation.abstraction.abstractData;
 import drumsemulation.abstraction.instrumentMode;
 import java.io.FileNotFoundException;
 import java.util.logging.Level;
@@ -32,9 +33,7 @@ import org.jdesktop.application.SingleFrameApplication;
 import drumsemulation.snd.*;
 import java.io.File;
 import java.io.FileReader;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * The main class of the application.
@@ -49,12 +48,23 @@ public class DrumsEmulationApp extends SingleFrameApplication {
     private ArrayList<String> modenames;
     private ArrayList<instrumentMode> instrumentmodes;
 
+    private abstractData data;
+
     float p1,p2,lvl;
+
+    public abstractData getData() {
+        return data;
+    }
+
+    public Set<String> allKnownModes() {
+        return new TreeSet<String>(modenames);
+    }
 
     /**
      * At startup create and show the main frame of the application.
      */
     @Override protected void startup() {
+        data = new abstractData();
         p1 = 0.5f;
         p2 = 0.5f;
         lvl = 1.f;
