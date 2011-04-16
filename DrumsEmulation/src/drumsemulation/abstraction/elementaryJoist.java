@@ -23,7 +23,7 @@ public class elementaryJoist extends joist {
     }
 
     @Override
-    public void enter(long when, float t) {
+    public void enter(long when) {
         mode.hit(when, level);
     }
 
