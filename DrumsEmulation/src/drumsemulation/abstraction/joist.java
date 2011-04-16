@@ -32,4 +32,8 @@ public class joist {
 
     public void prepareLayout() { ///called before the joist is used the first time
     }
+
+    public joist getGoodCopy() {
+        return this;
+    }
 }

@@ -52,7 +52,7 @@ public class testingMain {
         } catch (InterruptedException ex) {
             Logger.getLogger(testingMain.class.getName()).log(Level.SEVERE, null, ex);
         }
-        System.out.println("exit="+p.exitValue());
+        System.out.println("exit=" + p.exitValue());
 
         Scanner scn = new Scanner(p.getInputStream());
 
@@ -66,7 +66,7 @@ public class testingMain {
         st.add("ab");
         String q = " a \t  d";
         System.out.println(q.replaceAll("\\s", ""));
-        if (st.contains(q+"b")) {
+        if (st.contains(q + "b")) {
             System.out.println("ab");
         }
 
@@ -81,8 +81,8 @@ public class testingMain {
         scf.bind("v0", scf2);
         scf.bind("v1", scf2);
 
-        System.out.println(scf);
-        
-
+        System.out.println(new String("(").contains("("));
+        System.out.println(
+                drumsemulation.DrumsEmulationApp.getApplication().getData().evaluateTerm("snare rim"));
     }
 }

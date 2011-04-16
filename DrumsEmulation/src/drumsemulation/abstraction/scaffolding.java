@@ -201,4 +201,10 @@ public class scaffolding extends joist {
         }
 
     }
+
+    @Override
+    public joist getGoodCopy() {
+        return new scaffolding(this);
+    }
+
 }
