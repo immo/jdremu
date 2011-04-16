@@ -57,37 +57,44 @@ public class abstractData {
                 return new elementaryJoist(varname, 0.85f, 1.f);
             }
             joist j = joists.get(varname).getGoodCopy();
-            
-            scaffolding scaff = (scaffolding)j;
+
+            scaffolding scaff = (scaffolding) j;
 
             String other = s.substring(idx);
             ArrayList<ArrayList<String>> tokens = poorTokenizer.tokenize(other);
             Iterator<ArrayList<String>> itoken;
-            for (itoken=tokens.iterator();itoken.hasNext();){
+            for (itoken = tokens.iterator(); itoken.hasNext();) {
                 ArrayList<String> parameters = itoken.next();
                 Iterator<String> parm = parameters.iterator();
                 String type = parm.next();
                 if (type.equals("(")) {
-                    for(;parm.hasNext();) {
+                    for (; parm.hasNext();) {
                         String t = parm.next();
                         int eq = t.indexOf("=");
                         if (eq >= 0) {
-                            String name = t.substring(0,eq).trim();
-                            String term = t.substring(idx+1).trim();
+                            String name = t.substring(0, eq).trim();
+                            String term = t.substring(idx + 1).trim();
                             scaff.bind(name, evaluateTerm(term));
+                        } else {
+                            Iterator<String> freetor = scaff.getUnbound().iterator();
+                            if (freetor.hasNext()) {
+                                String name = freetor.next();
+                                String term = t.trim();
+                                scaff.bind(name, evaluateTerm(term));
+                            }
                         }
                     }
                 } else if (type.equals("[")) {
-                    for(;parm.hasNext();) {
+                    for (; parm.hasNext();) {
                         String t = parm.next();
                         int eq = t.indexOf("=");
                         if (eq >= 0) {
-                            String name = t.substring(0,eq).trim();
-                            String term = t.substring(idx+1).trim();
+                            String name = t.substring(0, eq).trim();
+                            String term = t.substring(idx + 1).trim();
                             scaff.rename(name, term);
                         }
                     }
-                    
+
                 }
             }
             return scaff;
@@ -126,11 +133,11 @@ public class abstractData {
                 }
             }
         }
-        
+
     }
 
     public void buildVars(String s) {
-        joists = new TreeMap<String, joist>();
+        joists = new TreeMap<String, joist>(scaffoldings);
 
         Scanner sc = new Scanner(s);
         sc.useDelimiter(";");
@@ -142,11 +149,16 @@ public class abstractData {
 
                 String name = line.substring(0, eq).trim();
                 String value = line.substring(eq + 1).trim();
+                joists.put(name, evaluateTerm(value));
             }
         }
     }
 
     public String scaffoldingsContent() {
         return scaffoldings.toString();
+    }
+
+    public String joistsContent() {
+        return joists.toString();
     }
 }

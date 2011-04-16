@@ -231,16 +231,6 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
             }
         });
         jScrollPane1.setViewportView(instrumentTable);
-        {javax.swing.table.DefaultTableModel mdl = (javax.swing.table.DefaultTableModel)instrumentTable.getModel();
-            DrumsEmulationApp app = DrumsEmulationApp.getApplication();
-            for (int i=0;i<app.getGeneratorsCount();++i) {
-                mdl.addRow(new Object[]{app.getGeneratorName(i),"(click)",app.getGenerator(i).getDescription()});
-            }
-            instrumentTable.getColumnModel().getColumn(2).setPreferredWidth(400);
-            instrumentTable.getColumnModel().getColumn(0).setPreferredWidth(80);
-            instrumentTable.getColumnModel().getColumn(1).setPreferredWidth(50);
-
-            mdl.addTableModelListener(this);}
 
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
@@ -332,7 +322,6 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         });
 
         jButton5.setText(resourceMap.getString("jButton5.text")); // NOI18N
-        jButton5.setName("jButton5"); // NOI18N
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -454,6 +443,11 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
 
         jButton6.setText(resourceMap.getString("jButton6.text")); // NOI18N
         jButton6.setName("jButton6"); // NOI18N
+        jButton6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton6ActionPerformed(evt);
+            }
+        });
 
         jButton7.setText(resourceMap.getString("jButton7.text")); // NOI18N
         jButton7.setName("jButton7"); // NOI18N
@@ -504,6 +498,11 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
 
         jButton8.setText(resourceMap.getString("jButton8.text")); // NOI18N
         jButton8.setName("jButton8"); // NOI18N
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
 
         jButton9.setText(resourceMap.getString("jButton9.text")); // NOI18N
         jButton9.setName("jButton9"); // NOI18N
@@ -748,6 +747,16 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         DrumsEmulationApp app = DrumsEmulationApp.getApplication();
         app.getData().buildVars(jBindingsText.getText());
     }//GEN-LAST:event_jButton9ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+        System.out.println(app.getData().joistsContent());
+    }//GEN-LAST:event_jButton8ActionPerformed
+
+    private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
+       DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+        System.out.println(app.getData().scaffoldingsContent());
+    }//GEN-LAST:event_jButton6ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable instrumentTable;
