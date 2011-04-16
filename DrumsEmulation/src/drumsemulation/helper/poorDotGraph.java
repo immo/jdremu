@@ -30,7 +30,7 @@ public class poorDotGraph {
         name = new String(copy.name);
     }
 
-    Map<Integer,Set<Integer>> getPrecursorNodes() {
+    public Map<Integer,Set<Integer>> getPrecursorNodes() {
         int N = nodes.size();
         Map<Integer,Set<Integer>> map = new TreeMap<Integer,Set<Integer>>();
         for (int i=0;i<N;++i) {

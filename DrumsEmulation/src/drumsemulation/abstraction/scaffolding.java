@@ -161,7 +161,44 @@ public class scaffolding extends joist {
             jt.next().prepareLayout();
         }
 
+        Map<Integer,Set<Integer>> precursors = g.getPrecursorNodes();
 
+        Set<Integer> needAdjustment = new TreeSet<Integer>(bindings.keySet());
+        while (!needAdjustment.isEmpty()) {
+            Iterator<Integer> i;
+            Set<Integer> justAdjusted = new TreeSet<Integer>();
+            for (i=needAdjustment.iterator();i.hasNext();){
+                Integer t = i.next();
+                TreeSet needed = new TreeSet<Integer>(precursors.get(t));
+                needed.retainAll(needAdjustment);
+                if (needed.isEmpty()) {
+                    float start = 0.f;
+                    Iterator<Integer> j;
+                    for (j=precursors.get(t).iterator();j.hasNext();) {
+                        float t2 = stop_times.get(j.next());
+                        if (t2 > start) {
+                            start = t2;
+                        }
+                    }
+
+                    start_times.put(t, start);
+                    stop_times.put(t,start + bindings.get(t).duration());
+
+                    justAdjusted.add(t);
+                }
+            }
+            needAdjustment.removeAll(justAdjusted);
+        }
+
+        prepared = true;
+        _duration = 0.f;
+        Iterator<Integer> i;
+        for (i=stop_times.keySet().iterator();i.hasNext();) {
+            float t2 = stop_times.get(i.next());
+            if (t2 > _duration) {
+                _duration = t2;
+            }
+        }
 
     }
 }
