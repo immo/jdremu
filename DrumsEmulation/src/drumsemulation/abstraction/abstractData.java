@@ -152,6 +152,13 @@ public class abstractData {
                 joists.put(name, evaluateTerm(value));
             }
         }
+
+        Iterator<String> is;
+        for (is=joists.keySet().iterator();is.hasNext();) {
+            String name = is.next();
+            joists.get(name).prepareLayout();
+            System.out.println(name+" = "+joists.get(name).duration());
+        }
     }
 
     public String scaffoldingsContent() {
