@@ -6,6 +6,7 @@ package drumsemulation.abstraction;
 
 import drumsemulation.helper.poorDotGraph;
 import drumsemulation.helper.poorDotParser;
+import drumsemulation.helper.poorTokenizer;
 import java.util.*;
 
 /**
@@ -52,8 +53,44 @@ public class abstractData {
                 idx = s.indexOf("[");
             }
             String varname = s.substring(0, idx).trim();
+            if (!joists.containsKey(varname)) {
+                return new elementaryJoist(varname, 0.85f, 1.f);
+            }
+            joist j = joists.get(varname).getGoodCopy();
+            
+            scaffolding scaff = (scaffolding)j;
+
             String other = s.substring(idx);
-            System.out.println(varname + "::" + other);
+            ArrayList<ArrayList<String>> tokens = poorTokenizer.tokenize(other);
+            Iterator<ArrayList<String>> itoken;
+            for (itoken=tokens.iterator();itoken.hasNext();){
+                ArrayList<String> parameters = itoken.next();
+                Iterator<String> parm = parameters.iterator();
+                String type = parm.next();
+                if (type.equals("(")) {
+                    for(;parm.hasNext();) {
+                        String t = parm.next();
+                        int eq = t.indexOf("=");
+                        if (eq >= 0) {
+                            String name = t.substring(0,eq).trim();
+                            String term = t.substring(idx+1).trim();
+                            scaff.bind(name, evaluateTerm(term));
+                        }
+                    }
+                } else if (type.equals("[")) {
+                    for(;parm.hasNext();) {
+                        String t = parm.next();
+                        int eq = t.indexOf("=");
+                        if (eq >= 0) {
+                            String name = t.substring(0,eq).trim();
+                            String term = t.substring(idx+1).trim();
+                            scaff.rename(name, term);
+                        }
+                    }
+                    
+                }
+            }
+            return scaff;
         } else {
             if (joists.containsKey(s)) {
                 return joists.get(s).getGoodCopy();
@@ -89,7 +126,7 @@ public class abstractData {
                 }
             }
         }
-        return null;
+        
     }
 
     public void buildVars(String s) {

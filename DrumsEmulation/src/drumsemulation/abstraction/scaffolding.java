@@ -118,6 +118,16 @@ public class scaffolding extends joist {
         bound.put(name, to);
     }
 
+    public void rename(String old, String newname) {
+        int N = g.nodes.size();
+        for (int i = 0; i < N; ++i) {
+            if (g.nodes.get(i).equals(old)) {
+                g.nodes.set(i, newname);
+            }
+        }
+        
+    }
+
     @Override
     public String toString() {
         StringBuffer out = new StringBuffer();

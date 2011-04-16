@@ -82,7 +82,6 @@ public class testingMain {
         scf.bind("v1", scf2);
 
         System.out.println(new String("(").contains("("));
-        System.out.println(
-                drumsemulation.DrumsEmulationApp.getApplication().getData().evaluateTerm("snare rim"));
+        System.out.println(drumsemulation.DrumsEmulationApp.getApplication().getData().evaluateTerm("G(x=S(x=snarerim))[y=x]"));
     }
 }
