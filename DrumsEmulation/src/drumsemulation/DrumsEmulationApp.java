@@ -25,6 +25,7 @@ package drumsemulation;
 
 import drumsemulation.abstraction.abstractData;
 import drumsemulation.abstraction.instrumentMode;
+import drumsemulation.abstraction.noInstrumentMode;
 import java.io.FileNotFoundException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -49,6 +50,7 @@ public class DrumsEmulationApp extends SingleFrameApplication {
     private ArrayList<instrumentMode> instrumentmodes;
 
     private abstractData data;
+    private instrumentMode pauseMode;
 
     float p1,p2,lvl;
 
@@ -60,10 +62,7 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         return new TreeSet<String>(modenames);
     }
 
-    /**
-     * At startup create and show the main frame of the application.
-     */
-    @Override protected void startup() {
+    public void initializeMe() {
         data = new abstractData();
         p1 = 0.5f;
         p2 = 0.5f;
@@ -75,6 +74,7 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         instrumentModeSetup = new ArrayList<String>();
         modenames = new ArrayList<String>();
         instrumentmodes = new ArrayList<instrumentMode>();
+        pauseMode = new noInstrumentMode();
 
         String setupFile = System.getProperty("user.home") + "/.jdremu-generators.conf";
         File f = new File(setupFile);
@@ -134,7 +134,7 @@ public class DrumsEmulationApp extends SingleFrameApplication {
 //            hitGeneratorSetup.add("TestTomB=Tom(f=110,fo=13,d=170)");
 //            hitGeneratorSetup.add("TestTomC'=Tom(f=117,fo=13,d=165)");
         }
-        
+
         setupFile = System.getProperty("user.home") + "/.jdremu-modes.conf";
         f = new File(setupFile);
         default_setup = true;
@@ -152,7 +152,7 @@ public class DrumsEmulationApp extends SingleFrameApplication {
             }
 
         }
-        
+
         if (default_setup) {
             instrumentModeSetup.add("default=");
             instrumentModeSetup.add("kick1=hit=Kick,2sig1=0.01,2sig2=0.01,2sig=0,p1=0.93877554,p2=0.9183673");
@@ -201,6 +201,13 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         }
 
 
+    }
+
+    /**
+     * At startup create and show the main frame of the application.
+     */
+    @Override protected void startup() {
+        initializeMe();
 
         show(new DrumsEmulationView(this));
     }
@@ -278,7 +285,7 @@ public class DrumsEmulationApp extends SingleFrameApplication {
                 return instrumentmodes.get(i);
             }
         }
-        return new instrumentMode("");
+        return pauseMode;
     }
 
     public void setModeName(int index, String new_name) {

@@ -29,8 +29,12 @@ public class joist {
 
     }
 
-    public boolean tick(long when, float t) { ///called every tick during the joist duration, also called with t=0.f after enter().
-        return t<_duration;
+    public void tick(long when, float t, float next_t) { ///called every tick during the joist duration, may called with t=0.f after enter().
+        
+    }
+
+    public void prepareLayout() { ///called before the joist is used the first time
+
     }
     
 }

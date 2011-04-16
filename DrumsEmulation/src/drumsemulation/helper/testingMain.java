@@ -19,6 +19,7 @@
 package drumsemulation.helper;
 
 import drumsemulation.abstraction.abstractData;
+import drumsemulation.abstraction.scaffolding;
 import java.io.*;
 import java.util.*;
 import java.util.logging.Level;
@@ -68,6 +69,20 @@ public class testingMain {
         if (st.contains(q+"b")) {
             System.out.println("ab");
         }
+
+        System.out.println();
+
+        drumsemulation.DrumsEmulationApp.getApplication().initializeMe();
+
+        scaffolding scf = new scaffolding("digraph G { v0 -> v1; \"snare rim\"; \"snare\" }");
+
+        scaffolding scf2 = new scaffolding("digraph OTHER { x; }");
+
+        scf.bind("v0", scf2);
+        scf.bind("v1", scf2);
+
+        System.out.println(scf);
+        
 
     }
 }

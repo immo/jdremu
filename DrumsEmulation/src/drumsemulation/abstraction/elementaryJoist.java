@@ -23,6 +23,11 @@ public class elementaryJoist extends joist {
     }
 
     @Override
+    public void enter(long when) {
+        mode.hit(when, level);
+    }
+
+    @Override
     public String toString() {
         return trigger +"!"+level+"@"+_duration;
     }
