@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package drumsemulation.helper;
 
 /**
@@ -10,18 +9,27 @@ package drumsemulation.helper;
  * @author immanuel
  */
 public class intPair implements Comparable {
-    int p,q;
+
+    int p, q;
 
     public intPair(int p, int q) {
         this.p = p;
         this.q = q;
     }
 
-    int get(int c) {
-        if (c!=0) {
+    public int get(int c) {
+        if (c != 0) {
             return q;
         }
         return p;
+    }
+
+    public void set(int c, int value) {
+        if (c != 0) {
+            q = value;
+        } else {
+            p = value;
+        }
     }
 
     boolean inDelta() {
@@ -48,7 +56,7 @@ public class intPair implements Comparable {
 
     @Override
     public int hashCode() {
-        return 53*this.p + this.q;
+        return 53 * this.p + this.q;
     }
 
     public int compareTo(Object t) {
@@ -66,7 +74,6 @@ public class intPair implements Comparable {
 
     @Override
     public String toString() {
-        return "(" + this.p + ", " + this.q +")";
+        return "(" + this.p + ", " + this.q + ")";
     }
-
 }

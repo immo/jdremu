@@ -74,14 +74,24 @@ public class testingMain {
 
         drumsemulation.DrumsEmulationApp.getApplication().initializeMe();
 
-        scaffolding scf = new scaffolding("digraph G { v0 -> v1; \"snare rim\"; \"snare\" }");
+        scaffolding scf = new scaffolding("digraph G { v0 -> v1; v2 -> v3 -> v4 -> v5 -> v6; \"snare rim\" -> \"snare\" }");
 
         scaffolding scf2 = new scaffolding("digraph OTHER { x; }");
 
         scf.bind("v0", scf2);
         scf.bind("v1", scf2);
 
+
+
         System.out.println(new String("(").contains("("));
         System.out.println(drumsemulation.DrumsEmulationApp.getApplication().getData().evaluateTerm("G(x=S(x=snarerim))[y=x]"));
+
+        Set<Integer> ids = new TreeSet<Integer>();
+        System.out.println("scf="+scf.describeGraph());
+        ids.add(2);
+        ids.add(3);
+        scf.g.removeNodes(ids);
+        System.out.println("scf="+scf.describeGraph());
+        System.out.println(scf.g.getPredAndSuccNodes(3));
     }
 }

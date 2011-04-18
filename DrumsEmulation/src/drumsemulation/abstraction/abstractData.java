@@ -58,6 +58,10 @@ public class abstractData {
             }
             joist j = joists.get(varname).getGoodCopy();
 
+            if (!(j instanceof scaffolding)) {
+                return j;
+            }
+
             scaffolding scaff = (scaffolding) j;
 
             String other = s.substring(idx);
@@ -69,18 +73,20 @@ public class abstractData {
                 String type = parm.next();
                 if (type.equals("(")) {
                     for (; parm.hasNext();) {
-                        String t = parm.next();
+                        String t = parm.next().trim();
                         int eq = t.indexOf("=");
                         if (eq >= 0) {
                             String name = t.substring(0, eq).trim();
                             String term = t.substring(idx + 1).trim();
                             scaff.bind(name, evaluateTerm(term));
                         } else {
-                            Iterator<String> freetor = scaff.getUnbound().iterator();
-                            if (freetor.hasNext()) {
-                                String name = freetor.next();
-                                String term = t.trim();
-                                scaff.bind(name, evaluateTerm(term));
+                            if (!t.isEmpty()) {
+                                Iterator<String> freetor = scaff.getUnbound().iterator();
+                                if (freetor.hasNext()) {
+                                    String name = freetor.next();
+                                    String term = t.trim();
+                                    scaff.bind(name, evaluateTerm(term));
+                                }
                             }
                         }
                     }
@@ -154,18 +160,40 @@ public class abstractData {
         }
 
         Iterator<String> is;
-        for (is=joists.keySet().iterator();is.hasNext();) {
+        for (is = joists.keySet().iterator(); is.hasNext();) {
             String name = is.next();
             joists.get(name).prepareLayout();
-            System.out.println(name+" = "+joists.get(name).duration());
+            System.out.println(name + " = " + joists.get(name).duration());
         }
     }
 
     public String scaffoldingsContent() {
-        return scaffoldings.toString();
+        StringBuffer s = new StringBuffer();
+        s.append(scaffoldings.toString());
+        Iterator<String> it;
+        for (it = scaffoldings.keySet().iterator(); it.hasNext();) {
+            s.append("\n");
+            s.append(scaffoldings.get(it.next()).g.toString());
+        }
+        return s.toString();
     }
 
     public String joistsContent() {
-        return joists.toString();
+        StringBuffer s = new StringBuffer();
+        s.append(joists.toString());
+        s.append("\n\n");
+        Iterator<String> it;
+        for (it = joists.keySet().iterator(); it.hasNext();) {
+            String name = it.next();
+            joist j = joists.get(name);
+            if (j instanceof scaffolding) {
+                scaffolding sc = (scaffolding) j;
+                s.append("\n");
+                s.append(name + " := " + sc.g.toString() + " & " + j.toString());
+            }
+
+        }
+        return s.toString();
+
     }
 }
