@@ -6,7 +6,7 @@
 package drumsemulation.helper;
 
 import java.util.*;
-import sun.applet.Main;
+
 
 /**
  *
@@ -119,6 +119,17 @@ public class poorDotGraph {
         for (it = sorted_del.iterator();it.hasNext();) {
             Integer i = it.next();
             removeNode(i);
+        }
+    }
+
+    public void addGraph(poorDotGraph g2) {
+        int N = nodes.size();
+        nodes.addAll(g2.nodes);
+        Iterator<intPair> it;
+        for (it=g2.edges.iterator();it.hasNext();)
+        {
+            intPair p = it.next();
+            edges.add(new intPair(p.get(0)+N,p.get(1)+N));
         }
     }
 

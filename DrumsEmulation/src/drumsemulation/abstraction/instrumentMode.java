@@ -24,6 +24,7 @@ public class instrumentMode {
     float sigma_1,sigma_2;
     float alpha_lvl,beta_lvl;
     float sigma_lvl;
+    float sigma_t;
     Random rnd;
 
 
@@ -47,6 +48,7 @@ public class instrumentMode {
         this.mu_2 = 0.5f;
         this.sigma_2 = 0.02f;
         this.instrumentname="Snare";
+        this.sigma_t = (0.5f*DrumsEmulationApp.getApplication().getSampleRate())/1000.f;
         
         this.sigma_lvl = 0.005f;
 
@@ -77,6 +79,8 @@ public class instrumentMode {
                     this.sigma_2 = Float.parseFloat(pval) / 2.f;
                 } else if (pname.equals("2sig")) {
                     this.sigma_lvl = Float.parseFloat(pval) / 2.f;
+                } else if (pname.equals("4sig")) {
+                    this.sigma_t =(Float.parseFloat(pval) / 4.f)*DrumsEmulationApp.getApplication().getSampleRate()/1000.f;
                 }
             }
         }
@@ -93,7 +97,8 @@ public class instrumentMode {
         float p1 = clamp(((float)rnd.nextGaussian())*sigma_1 + mu_1);
         float p2 = clamp(((float)rnd.nextGaussian())*sigma_2 + mu_2);
         float lvl = clamp((float)rnd.nextGaussian()*sigma_lvl + alpha_lvl + beta_lvl*level);
-        generator.hit2d(when, lvl, p1, p2);
+        long t_offset = Math.round(rnd.nextGaussian()*sigma_t);
+        generator.hit2d(when + t_offset, lvl, p1, p2);
     }
 
     public String getDescription() {

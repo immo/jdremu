@@ -77,7 +77,7 @@ public class abstractData {
                         int eq = t.indexOf("=");
                         if (eq >= 0) {
                             String name = t.substring(0, eq).trim();
-                            String term = t.substring(idx + 1).trim();
+                            String term = t.substring(eq + 1).trim();
                             scaff.bind(name, evaluateTerm(term));
                         } else {
                             if (!t.isEmpty()) {
@@ -95,9 +95,21 @@ public class abstractData {
                         String t = parm.next();
                         int eq = t.indexOf("=");
                         if (eq >= 0) {
-                            String name = t.substring(0, eq).trim();
-                            String term = t.substring(idx + 1).trim();
-                            scaff.rename(name, term);
+                            if (t.substring(0, eq).endsWith(":")) { // := --> insert
+
+                                String name = t.substring(0, eq-1).trim();
+                                String term = t.substring(eq + 1).trim();
+                                joist insert = evaluateTerm(term);
+                                if (insert instanceof scaffolding) {
+                                    scaff.insert(name, (scaffolding)insert);
+                                } else {
+                                    scaff.bind(name,insert);
+                                }
+                            } else { // = --> rename
+                                String name = t.substring(0, eq).trim();
+                                String term = t.substring(eq + 1).trim();
+                                scaff.rename(name, term);
+                            }
                         }
                     }
 

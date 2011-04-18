@@ -169,6 +169,14 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         jLabel5 = new javax.swing.JLabel();
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
+        jPanel5 = new javax.swing.JPanel();
+        jPlayToggle = new javax.swing.JToggleButton();
+        jSlider1 = new javax.swing.JSlider();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        jPlaybackTerm = new javax.swing.JEditorPane();
+        jButton10 = new javax.swing.JButton();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
@@ -223,7 +231,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
                 return canEdit [columnIndex];
             }
         });
-        instrumentTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        instrumentTable.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_LAST_COLUMN);
         instrumentTable.setName("instrumentTable"); // NOI18N
         instrumentTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -231,6 +239,16 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
             }
         });
         jScrollPane1.setViewportView(instrumentTable);
+        {javax.swing.table.DefaultTableModel mdl = (javax.swing.table.DefaultTableModel)instrumentTable.getModel();
+            DrumsEmulationApp app = DrumsEmulationApp.getApplication();
+            for (int i=0;i<app.getGeneratorsCount();++i) {
+                mdl.addRow(new Object[]{app.getGeneratorName(i),"(click)",app.getGenerator(i).getDescription()});
+            }
+            instrumentTable.getColumnModel().getColumn(2).setPreferredWidth(400);
+            instrumentTable.getColumnModel().getColumn(0).setPreferredWidth(80);
+            instrumentTable.getColumnModel().getColumn(1).setPreferredWidth(50);
+
+            mdl.addTableModelListener(this);}
 
         jLabel1.setText(resourceMap.getString("jLabel1.text")); // NOI18N
         jLabel1.setName("jLabel1"); // NOI18N
@@ -541,6 +559,62 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel3.TabConstraints.tabTitle"), jPanel3); // NOI18N
 
+        jPanel5.setName("jPanel5"); // NOI18N
+
+        jPlayToggle.setText(resourceMap.getString("jPlayToggle.text")); // NOI18N
+        jPlayToggle.setName("jPlayToggle"); // NOI18N
+
+        jSlider1.setName("jSlider1"); // NOI18N
+
+        jLabel9.setText(resourceMap.getString("jLabel9.text")); // NOI18N
+        jLabel9.setName("jLabel9"); // NOI18N
+
+        jLabel10.setText(resourceMap.getString("jLabel10.text")); // NOI18N
+        jLabel10.setName("jLabel10"); // NOI18N
+
+        jScrollPane5.setName("jScrollPane5"); // NOI18N
+
+        jPlaybackTerm.setFont(resourceMap.getFont("jPlaybackTerm.font")); // NOI18N
+        jPlaybackTerm.setName("jPlaybackTerm"); // NOI18N
+        jScrollPane5.setViewportView(jPlaybackTerm);
+
+        jButton10.setText(resourceMap.getString("jButton10.text")); // NOI18N
+        jButton10.setName("jButton10"); // NOI18N
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(jPlayToggle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel9)
+                .addGap(5, 5, 5)
+                .addComponent(jSlider1, javax.swing.GroupLayout.DEFAULT_SIZE, 414, Short.MAX_VALUE))
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(jLabel10)
+                .addGap(349, 349, 349)
+                .addComponent(jButton10)
+                .addContainerGap())
+            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPlayToggle)
+                    .addComponent(jLabel9)
+                    .addComponent(jSlider1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel10)
+                    .addComponent(jButton10))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab(resourceMap.getString("jPanel5.TabConstraints.tabTitle"), jPanel5); // NOI18N
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
@@ -762,6 +836,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
     private javax.swing.JTable instrumentTable;
     private javax.swing.JEditorPane jBindingsText;
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton10;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
@@ -772,6 +847,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
     private javax.swing.JButton jButton9;
     private javax.swing.JEditorPane jDotCodePane;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -779,14 +855,20 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JToggleButton jPlayToggle;
+    private javax.swing.JEditorPane jPlaybackTerm;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JSlider jSlider1;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JPanel mainPanel;
