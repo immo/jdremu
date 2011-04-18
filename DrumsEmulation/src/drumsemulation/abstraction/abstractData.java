@@ -18,12 +18,22 @@ public class abstractData {
     Map<String, scaffolding> scaffoldings;
     Map<String, joist> joists;
 
+    joist master_joist;
+
     public abstractData() {
         scaffoldings = new TreeMap<String, scaffolding>();
         joists = new TreeMap<String, joist>();
+        master_joist = new joist();
     }
 
-    public void build(String s) {
+    public synchronized void tick(long when, float t, float next_t, float previous_t) {
+        if ((previous_t < 0.f)&&(0.f<=t))
+            master_joist.enter(when);
+        
+        master_joist.tick(when, t, next_t, previous_t);
+    }
+
+    public synchronized void build(String s) {
         scaffoldings.clear();
 
         ArrayList<poorDotGraph> gs = poorDotParser.parseThroughDot(s);
@@ -37,7 +47,11 @@ public class abstractData {
         System.out.println(scaffoldings);
     }
 
-    public joist evaluateTerm(String s) {
+    public synchronized void setMaster(joist m) {
+        master_joist = m;
+    }
+
+    public synchronized joist evaluateTerm(String s) {
 
         s = s.trim();
         if (s.contains("(") || s.contains("[")) {
@@ -53,10 +67,16 @@ public class abstractData {
                 idx = s.indexOf("[");
             }
             String varname = s.substring(0, idx).trim();
+            joist j;
             if (!joists.containsKey(varname)) {
-                return new elementaryJoist(varname, 0.85f, 1.f);
+                if (!scaffoldings.containsKey(varname)) {
+                    return new elementaryJoist(varname, 0.85f, 1.f);
+                } else  {
+                    j = scaffoldings.get(varname).getGoodCopy();
+                }
+            } else {
+             j = joists.get(varname).getGoodCopy();
             }
-            joist j = joists.get(varname).getGoodCopy();
 
             if (!(j instanceof scaffolding)) {
                 return j;
@@ -154,7 +174,7 @@ public class abstractData {
 
     }
 
-    public void buildVars(String s) {
+    public synchronized void buildVars(String s) {
         joists = new TreeMap<String, joist>(scaffoldings);
 
         Scanner sc = new Scanner(s);
@@ -179,7 +199,7 @@ public class abstractData {
         }
     }
 
-    public String scaffoldingsContent() {
+    public synchronized String scaffoldingsContent() {
         StringBuffer s = new StringBuffer();
         s.append(scaffoldings.toString());
         Iterator<String> it;
@@ -190,7 +210,7 @@ public class abstractData {
         return s.toString();
     }
 
-    public String joistsContent() {
+    public synchronized String joistsContent() {
         StringBuffer s = new StringBuffer();
         s.append(joists.toString());
         s.append("\n\n");

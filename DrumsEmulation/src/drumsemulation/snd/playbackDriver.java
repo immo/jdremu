@@ -18,6 +18,7 @@
  */
 package drumsemulation.snd;
 
+import drumsemulation.abstraction.abstractData;
 import java.util.*;
 import java.util.logging.*;
 import javax.sound.sampled.*;
@@ -47,6 +48,16 @@ public class playbackDriver implements LineListener, Runnable {
 
     public hitGenerator beep;
 
+    public long tick_offset;
+
+    public abstractData data;
+    boolean playback;
+    long current_t0;
+    public float frame_rate;
+    public float bps;
+
+
+
     public playbackDriver() {
         this.on_air = false;
         this.line_nbr = 0;
@@ -64,8 +75,31 @@ public class playbackDriver implements LineListener, Runnable {
         this.random_generator = new Random();
         this.beep = new beepGenerator();
         this.total_lvl31 = (1l << 29); /* 1l <<31 equals 0dB */
+
+        this.playback = false;
+        this.current_t0 = 0;
+        this.data = null;
+        this.frame_rate = 44100;
+        this.tick_offset = 4410;
+        this.bps = 144/60.f;
         
         addGenerator(beep);
+    }
+
+    public boolean isPlayback() {
+        return this.playback;
+    }
+
+    public void setPlayback(boolean on) {
+
+        synchronized (this) {
+            this.playback = on;
+        }
+
+    }
+
+    public void resetT0() {
+        this.current_t0 = this.frames_elapsed;
     }
 
     public void update(LineEvent le) {
@@ -114,6 +148,12 @@ public class playbackDriver implements LineListener, Runnable {
         int count = out_line.available() / byte_count;
         int int_count = buffer_frames * channels;
         long local_lvl31=0;
+        long local_t0=0;
+        long rel_elapsed =0;
+        long local_tickoffset=0;
+        float local_bps = 1.f;
+        
+        boolean local_playback = false;
 
         for (int idx = 0; idx < int_count; ++idx) {
             i_buffer[idx] = 0;
@@ -134,6 +174,17 @@ public class playbackDriver implements LineListener, Runnable {
             for (int idx = 0; idx < int_count; ++idx) {
                 i_buffer[idx] = 0;
             }
+
+            if (local_playback) {
+                rel_elapsed = frames_elapsed - local_t0;
+                float beat_rate = frame_rate / local_bps;
+                float t = rel_elapsed / beat_rate;
+                float next_t = (rel_elapsed + buffer_frames) / beat_rate;
+                float prev_t = (rel_elapsed - buffer_frames) / beat_rate;
+
+                data.tick(frames_elapsed + local_tickoffset, t, next_t, prev_t);
+            }
+
             synchronized (generators_lock) {
                 Iterator<soundGenerator> it = generators.iterator();
                 while (it.hasNext()) {
@@ -156,6 +207,15 @@ public class playbackDriver implements LineListener, Runnable {
             synchronized (this) {
                 local_writing_thread_copy = this.writing_thread;
                 local_lvl31 = this.total_lvl31;
+
+                if (!local_playback) {
+                    current_t0 += buffer_frames;
+                }
+
+                local_playback = this.playback;
+                local_t0 = this.current_t0;
+                local_tickoffset = this.tick_offset;
+                local_bps = this.bps;
             }
         }
 

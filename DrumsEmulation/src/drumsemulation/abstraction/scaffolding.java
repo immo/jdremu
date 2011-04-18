@@ -38,12 +38,16 @@ public class scaffolding extends joist {
 
     public scaffolding(scaffolding copy) {
         this.g = new poorDotGraph(copy.g);
-        this.bindings = new HashMap<Integer, joist>(copy.bindings);
-        this.bound = new TreeMap<String, joist>(copy.bound);
+        this.bindings = new HashMap<Integer, joist>();
+        this.bindings.putAll(copy.bindings);
+        this.bound = new TreeMap<String, joist>();
+        this.bound.putAll(copy.bound);
         this.canonical = new TreeSet<String>(copy.canonical);
         this.prepared = copy.prepared;
-        this.start_times = new TreeMap<Integer, Float>(copy.start_times);
-        this.stop_times = new TreeMap<Integer, Float>(copy.stop_times);
+        this.start_times = new TreeMap<Integer, Float>();
+        this.start_times.putAll(copy.start_times);
+        this.stop_times = new TreeMap<Integer, Float>();
+        this.stop_times.putAll(copy.stop_times);
         this.joist_count = copy.joist_count;
     }
 
@@ -74,6 +78,15 @@ public class scaffolding extends joist {
             if (!b.contains(i)) {
                 continue;
             }
+
+            if (start_times == null) {
+                System.out.println("ST===0!!!");
+            }
+
+            if (!start_times.containsKey(i)) {
+                System.out.println("NO KEY ="+i);
+            }
+            
             float start = start_times.get(i);
             float stop = stop_times.get(i);
             joist j = bindings.get(i);
@@ -296,6 +309,9 @@ public class scaffolding extends joist {
         }
 
         Map<Integer, Set<Integer>> precursors = g.getPrecursorNodes();
+
+        start_times = new TreeMap<Integer,Float>();
+        stop_times = new TreeMap<Integer,Float>();
 
         Set<Integer> needAdjustment = new TreeSet<Integer>(bindings.keySet());
         while (!needAdjustment.isEmpty()) {

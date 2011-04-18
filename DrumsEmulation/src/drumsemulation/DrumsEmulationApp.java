@@ -25,6 +25,7 @@ package drumsemulation;
 
 import drumsemulation.abstraction.abstractData;
 import drumsemulation.abstraction.instrumentMode;
+import drumsemulation.abstraction.joist;
 import drumsemulation.abstraction.noInstrumentMode;
 import java.io.FileNotFoundException;
 import java.util.logging.Level;
@@ -68,6 +69,8 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         p2 = 0.5f;
         lvl = 1.f;
         playback_driver = new playbackDriver();
+        playback_driver.data = data;
+        playback_driver.frame_rate = getSampleRate();
         hitGeneratorSetup = new ArrayList<String>();
         names = new ArrayList<String>();
         generators = new ArrayList<hitGenerator>();
@@ -330,6 +333,16 @@ public class DrumsEmulationApp extends SingleFrameApplication {
 
     public boolean setOn_air(boolean on_air) {
         return playback_driver.setOn_air(on_air);
+    }
+
+    public void setPlayback(boolean on) {
+        playback_driver.setPlayback(on);
+    }
+
+    public void reSetMaster(joist j) {
+        
+        data.setMaster(j);
+        playback_driver.resetT0();
     }
 
     public void beep(float lvl) {

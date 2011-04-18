@@ -22,7 +22,10 @@
  */
 package drumsemulation;
 
+import drumsemulation.abstraction.abstractData;
 import drumsemulation.abstraction.instrumentMode;
+import drumsemulation.abstraction.joist;
+import drumsemulation.abstraction.scaffolding;
 import drumsemulation.snd.hitGenerator;
 import java.awt.event.MouseEvent;
 import javax.swing.event.TableModelEvent;
@@ -563,6 +566,11 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
 
         jPlayToggle.setText(resourceMap.getString("jPlayToggle.text")); // NOI18N
         jPlayToggle.setName("jPlayToggle"); // NOI18N
+        jPlayToggle.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jPlayToggleActionPerformed(evt);
+            }
+        });
 
         jSlider1.setName("jSlider1"); // NOI18N
 
@@ -580,6 +588,11 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
 
         jButton10.setText(resourceMap.getString("jButton10.text")); // NOI18N
         jButton10.setName("jButton10"); // NOI18N
+        jButton10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton10ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -831,6 +844,24 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
        DrumsEmulationApp app = DrumsEmulationApp.getApplication();
         System.out.println(app.getData().scaffoldingsContent());
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jPlayToggleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPlayToggleActionPerformed
+        boolean on = jPlayToggle.isSelected();
+
+        DrumsEmulationApp.getApplication().setPlayback(on);
+    }//GEN-LAST:event_jPlayToggleActionPerformed
+
+    private void jButton10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton10ActionPerformed
+        abstractData dta = DrumsEmulationApp.getApplication().getData();
+        joist eval = dta.evaluateTerm(jPlaybackTerm.getText());
+        System.out.println(eval);
+        if (eval instanceof scaffolding) {
+            ((scaffolding)eval).disprepare();
+        }
+        eval.prepareLayout();
+        System.out.println(eval);
+        DrumsEmulationApp.getApplication().reSetMaster(eval);
+    }//GEN-LAST:event_jButton10ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable instrumentTable;
