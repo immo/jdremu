@@ -21,7 +21,7 @@ package drumsemulation.snd;
 import java.util.*;
 import java.util.logging.*;
 import javax.sound.sampled.*;
-
+import drumsemulation.helper.*;
 /**
  *
  * @author immanuel
@@ -60,14 +60,14 @@ public class fResoOscillator extends hitGenerator {
                 if (pname.equals("f")) {
                     this.frequency = Integer.parseInt(pval);
                 } else if (pname.equals("a")) { //attack, ms
-                    this.poke_length = (int) (((float) drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * Float.parseFloat(pval)) / 1000.0f);
+                    this.poke_length = (int) (((float) drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * poorInputParser.parseFloat(pval)) / 1000.0f);
                 } else if (pname.equals("phase")) { //phase, ms
-                    this.phase_frame = -(int) (((float) drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * Float.parseFloat(pval)) / 1000.0f);
+                    this.phase_frame = -(int) (((float) drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * poorInputParser.parseFloat(pval)) / 1000.0f);
 
                 } else if (pname.equals("ar")) { //failed attack poke release, ms
-                    this.poke_miss_release_length = (int) (((float) drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * Float.parseFloat(pval)) / 1000.0f);
+                    this.poke_miss_release_length = (int) (((float) drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * poorInputParser.parseFloat(pval)) / 1000.0f);
                 } else if (pname.equals("d")) { //decay (well, 1/2 value), ms
-                    float half_ms = Float.parseFloat(pval);
+                    float half_ms = poorInputParser.parseFloat(pval);
                     int steps = (int) (drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * half_ms) / 1000;
                     double x = Math.exp(-0.69314718055994529 / steps); //e^(ln(1/2)/steps)
                     damping31 = (long) (((1l << 31) * x));
@@ -78,7 +78,7 @@ public class fResoOscillator extends hitGenerator {
                     while (pscan.hasNext()) {
                         String v = pscan.next().trim();
                         if (!v.isEmpty()) {
-                            chan_gain.add((long) (Float.parseFloat(v) * (1l << 31)));
+                            chan_gain.add((long) (poorInputParser.parseFloat(v) * (1l << 31)));
                         }
                     }
                     c_lvl31 = new long[chan_gain.size()];

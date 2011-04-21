@@ -7,7 +7,7 @@ package drumsemulation.snd;
 
 import java.util.ArrayList;
 import java.util.Scanner;
-
+import drumsemulation.helper.*;
 /**
  *
  * @author immanuel
@@ -47,14 +47,14 @@ public class cymbalRimGenerator extends hitGenerator  {
                     gvals.useDelimiter(" ");
                     gain_factors.clear();
                     while (gvals.hasNext()) {
-                        float f = Float.parseFloat(gvals.next().trim());
+                        float f = poorInputParser.parseFloat(gvals.next().trim());
                         gain_factors.add(f);
                     }
                 } else if (pname.equals("f")) {
                     frequency = Integer.parseInt(pval);
 
                 }else if (pname.equals("d")) {
-                    decay = Float.parseFloat(pval);
+                    decay = poorInputParser.parseFloat(pval);
 
                 }else if (pname.equals("wave")) {
                     wave = pval;

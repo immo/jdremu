@@ -21,7 +21,7 @@ package drumsemulation.snd;
 import java.util.*;
 import java.util.logging.*;
 import javax.sound.sampled.*;
-
+import drumsemulation.helper.*;
 /**
  *
  * @author immanuel
@@ -138,7 +138,7 @@ public class delayNetwork extends hitGenerator {
                     while (pscan.hasNext()) {
                         String v = pscan.next().trim();
                         if (!v.isEmpty()) {
-                            chan_gain.add((long) (Float.parseFloat(v) * (1l << 31)));
+                            chan_gain.add((long) (poorInputParser.parseFloat(v) * (1l << 31)));
                         }
                     }
                     c_lvl31 = new long[chan_gain.size()];

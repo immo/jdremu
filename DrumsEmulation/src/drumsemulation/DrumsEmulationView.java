@@ -166,12 +166,14 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         jLabel4 = new javax.swing.JLabel();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
+        jButton11 = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane4 = new javax.swing.JScrollPane();
         jBindingsText = new javax.swing.JEditorPane();
         jLabel5 = new javax.swing.JLabel();
         jButton8 = new javax.swing.JButton();
         jButton9 = new javax.swing.JButton();
+        jButton12 = new javax.swing.JButton();
         jPanel5 = new javax.swing.JPanel();
         jPlayToggle = new javax.swing.JToggleButton();
         jSlider1 = new javax.swing.JSlider();
@@ -458,6 +460,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         jDotCodePane.setFont(resourceMap.getFont("jDotCodePane.font")); // NOI18N
         jDotCodePane.setName("jDotCodePane"); // NOI18N
         jScrollPane3.setViewportView(jDotCodePane);
+        jDotCodePane.setText(DrumsEmulationApp.getStringFromConfFile("scaffoldings"));
 
         jLabel4.setText(resourceMap.getString("jLabel4.text")); // NOI18N
         jLabel4.setName("jLabel4"); // NOI18N
@@ -478,6 +481,14 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
             }
         });
 
+        jButton11.setText(resourceMap.getString("jButton11.text")); // NOI18N
+        jButton11.setName("jButton11"); // NOI18N
+        jButton11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton11ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
@@ -485,7 +496,9 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
             .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jLabel4)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 337, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton11)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 145, Short.MAX_VALUE)
                 .addComponent(jButton7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton6))
@@ -499,7 +512,8 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
                         .addComponent(jLabel4))
                     .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jButton6)
-                        .addComponent(jButton7)))
+                        .addComponent(jButton7)
+                        .addComponent(jButton11)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE))
         );
@@ -513,6 +527,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         jBindingsText.setFont(resourceMap.getFont("jBindingsText.font")); // NOI18N
         jBindingsText.setName("jBindingsText"); // NOI18N
         jScrollPane4.setViewportView(jBindingsText);
+        jBindingsText.setText(DrumsEmulationApp.getStringFromConfFile("scaffoldings-bindings"));
 
         jLabel5.setText(resourceMap.getString("jLabel5.text")); // NOI18N
         jLabel5.setName("jLabel5"); // NOI18N
@@ -533,6 +548,14 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
             }
         });
 
+        jButton12.setText(resourceMap.getString("jButton12.text")); // NOI18N
+        jButton12.setName("jButton12"); // NOI18N
+        jButton12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton12ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
@@ -540,7 +563,9 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
             .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addComponent(jLabel5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 265, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton12)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addComponent(jButton9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton8))
@@ -552,7 +577,8 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jButton8)
-                            .addComponent(jButton9))
+                            .addComponent(jButton9)
+                            .addComponent(jButton12))
                         .addGap(9, 9, 9))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel5)
@@ -863,11 +889,21 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         DrumsEmulationApp.getApplication().reSetMaster(eval);
     }//GEN-LAST:event_jButton10ActionPerformed
 
+    private void jButton12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton12ActionPerformed
+       DrumsEmulationApp.setConfFile("scaffoldings-bindings", jBindingsText.getText());
+    }//GEN-LAST:event_jButton12ActionPerformed
+
+    private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
+        DrumsEmulationApp.setConfFile("scaffoldings", jDotCodePane.getText());
+    }//GEN-LAST:event_jButton11ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable instrumentTable;
     private javax.swing.JEditorPane jBindingsText;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton10;
+    private javax.swing.JButton jButton11;
+    private javax.swing.JButton jButton12;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;

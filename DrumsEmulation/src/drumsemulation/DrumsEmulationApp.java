@@ -20,7 +20,6 @@
 /*
  * DrumsEmulationApp.java
  */
-
 package drumsemulation;
 
 import drumsemulation.abstraction.abstractData;
@@ -28,13 +27,16 @@ import drumsemulation.abstraction.instrumentMode;
 import drumsemulation.abstraction.joist;
 import drumsemulation.abstraction.noInstrumentMode;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SingleFrameApplication;
 import drumsemulation.snd.*;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.*;
 
 /**
@@ -49,11 +51,9 @@ public class DrumsEmulationApp extends SingleFrameApplication {
     private ArrayList<String> instrumentModeSetup;
     private ArrayList<String> modenames;
     private ArrayList<instrumentMode> instrumentmodes;
-
     private abstractData data;
     private instrumentMode pauseMode;
-
-    float p1,p2,lvl;
+    float p1, p2, lvl;
 
     public abstractData getData() {
         return data;
@@ -61,6 +61,47 @@ public class DrumsEmulationApp extends SingleFrameApplication {
 
     public Set<String> allKnownModes() {
         return new TreeSet<String>(modenames);
+    }
+
+    static public String getStringFromConfFile(String fname) {
+        String setupFile = System.getProperty("user.home") + "/." + fname;
+        File f = new File(setupFile);
+        try {
+            FileReader fr = new FileReader(f);
+            StringBuffer buf = new StringBuffer((int) f.length());
+            int num_read = 0;
+            char[] cb = new char[1024];
+            while ((num_read = fr.read(cb)) != -1) {
+                buf.append(String.valueOf(cb, 0, num_read));
+            }
+            fr.close();
+            return buf.toString();
+        } catch (IOException ex) {
+            return "";
+        }
+
+    }
+
+    static public void setConfFile(String fname, String contents) {
+        String setupFile = System.getProperty("user.home") + "/." + fname;
+        File f = new File(setupFile);
+
+        BufferedWriter output=null;
+        
+        try {
+            output = new BufferedWriter(new FileWriter(f));
+            output.write(contents);
+        } catch (IOException ex) {
+            Logger.getLogger(DrumsEmulationApp.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                output.close();
+            } catch (IOException ex) {
+                Logger.getLogger(DrumsEmulationApp.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+
     }
 
     public void initializeMe() {
@@ -97,16 +138,19 @@ public class DrumsEmulationApp extends SingleFrameApplication {
 
         }
         if (default_setup) {
-            hitGeneratorSetup.add("Snare=Snare(g=1.3 1.3,f=160,click=0.02)");
-            hitGeneratorSetup.add("DeadSnare=Snare(g=1.3 1.3,f=160,click=0.02,snare=0.1)");
-            hitGeneratorSetup.add("Kick=Snare(g=1 1,d=400,f=31,fp=43,fpo=12,fq=38,fqo=22,snare=0.05,click=0.4,fc=8000,wave=cotri)");
+            hitGeneratorSetup.add("Snare=Snare(g=2.4 2.4,f=160,click=0.1,db=1/3,dp=2/3,d=180)");
+            hitGeneratorSetup.add("DeadSnare=Snare(g=2.4 2.4,f=160,click=0.1,db=1/3,dp=2/3,snare=0.1,d=180)");
+            hitGeneratorSetup.add("Kick=Snare(g=1.2 1.2,d=400,f=31,fp=43,fpo=12,fq=38,fqo=22,snare=0.05,click=0.75,fc=6300,wave=cotri,dp=1/3,db=1/3,dq=1/2)");
             hitGeneratorSetup.add("Floor=Snare(g=1 1,d=200,f=80,fp=83,fpo=12,fq=123,fqo=14,snare=0.05,click=0.05,fc=5000,g=0.7 1.1)");
             hitGeneratorSetup.add("Mid=Snare(g=1 1,d=180,f=90,fp=93,fpo=12,fq=143,fqo=14,snare=0.05,click=0.05,fc=5200,g=1.0 0.8)");
             hitGeneratorSetup.add("High=Snare(g=1 1,d=160,f=100,fp=103,fpo=12,fq=163,fqo=14,snare=0.05,click=0.05,fc=5400,g=1.2 0.7)");
-            hitGeneratorSetup.add("HiCrash=Cymbal(no=lowbellhirim,d=300,gf=0.3,f=2000,fb=5000,fh1=14000,fl1=3000,gb=0.3,gw=1.2,gz=1.4,gr=0.4,gb=0.4,g=0.7 1)");
-            hitGeneratorSetup.add("LoCrash=Cymbal(no=lowbellhirim,d=450,gf=0.3,f=1400,fb=4000,fh1=12000,fl1=2600,gb=0.3,gw=1.2,gz=1.4,gr=0.4,gb=0.4,g=0.9 0.8)");
-            hitGeneratorSetup.add("Ride=Cymbal(no=uiwhrimlo2,d=650,gf=0.15,f=2400,fb=6300,fh2=12000,fl2=2600,gw=0.7,gz=0.4,gr=0.2,gb=0.05,g=2.7 2.1)");
-            hitGeneratorSetup.add("RideBell=Cymbal(no=uiwhlo2zsh,d=650,gf=0.15,f=2400,fb=2000,fh2=12000,fl2=2600,gw=0.7,gz=0.4,gr=0.2,gb=0.3,g=1.0 0.8)");
+            hitGeneratorSetup.add("HiCrash=Cymbal(no=lowbellhirim,d=300,gf=0.3,f=2000,fb=5000,fh1=14000,fl1=3000,dl2=1/3,gb=0.3,gw=1.2,gz=1.4,gr=0.4,gb=0.4,g=0.35 0.5)");
+            hitGeneratorSetup.add("LoCrash=Cymbal(no=lowbellhirim,d=450,gf=0.3,f=1400,fb=4000,fh1=12000,fl1=2600,dl2=1/3,gb=0.3,gw=1.2,gz=1.4,gr=0.4,gb=0.4,g=0.45 0.4)");
+            //hitGeneratorSetup.add("Ride=Cymbal(no=uiwhrimlo2,d=650,gf=0.15,f=2400,fb=6300,fh2=12000,fl2=2600,gw=0.7,gz=0.4,gr=0.2,gb=0.05,g=2.7 2.1)");
+            hitGeneratorSetup.add("Ride=Cymbal(no=uiwhrimlo2,d=650,gf=0.15,f=2400,fb=3500,fh2=4500,fl2=2600,gw=0.7,gz=0.4,gr=0.2,gb=0.05,dlo=1/3,dhr=1/12,dbe=1/6,dzs=1/8,dbi=1/9,g=4.7 4.1)");
+
+            //hitGeneratorSetup.add("RideBell=Cymbal(no=uiwhlo2zsh,d=650,gf=0.15,f=2400,fb=2000,fh2=12000,fl2=2600,gw=0.7,gz=0.4,gr=0.2,gb=0.3,g=1.0 0.8)");
+            hitGeneratorSetup.add("RideBell=Cymbal(no=uiwhlo2zsh,d=650,gf=0.15,dhr=1/3,dri=1/4,dlo=1/4,dbe=1/12,f=1800,fb=2000,fh2=5000,fl2=2600,gw=0.7,gz=0.4,gr=0.2,gb=0.3,g=2.3 2.0)");
             hitGeneratorSetup.add("TestCymbal=Cymbal()");
             hitGeneratorSetup.add("HiTestCymbal=Cymbal(d=300,gf=0.3,f=2000,fb=5000,fh1=14000,fl1=3000,gb=0.3,gw=1.2,gz=1.4,gr=0.4,gb=0.4)");
             hitGeneratorSetup.add("LoTestCymbal=Cymbal(d=450,gf=0.3,f=1400,fb=4000,fh1=12000,fl1=2600,gb=0.3,gw=1.2,gz=1.4,gr=0.4,gb=0.4)");
@@ -185,7 +229,7 @@ public class DrumsEmulationApp extends SingleFrameApplication {
             if (s.contains("=")) {
                 int idx = s.indexOf("=");
                 names.add(s.substring(0, idx));
-                hitGenerator generator = hitGenerator.getGeneratorByDesc(s.substring(idx+1));
+                hitGenerator generator = hitGenerator.getGeneratorByDesc(s.substring(idx + 1));
                 generators.add(generator);
                 playback_driver.addGenerator(generator);
             }
@@ -198,10 +242,14 @@ public class DrumsEmulationApp extends SingleFrameApplication {
             if (s.contains("=")) {
                 int idx = s.indexOf("=");
                 modenames.add(s.substring(0, idx));
-                instrumentMode mode = new instrumentMode(s.substring(idx+1));
+                instrumentMode mode = new instrumentMode(s.substring(idx + 1));
                 instrumentmodes.add(mode);
             }
         }
+
+
+        data.build(getStringFromConfFile("scaffoldings"));
+        data.buildVars(getStringFromConfFile("scaffoldings-bindings"));
 
 
     }
@@ -209,7 +257,8 @@ public class DrumsEmulationApp extends SingleFrameApplication {
     /**
      * At startup create and show the main frame of the application.
      */
-    @Override protected void startup() {
+    @Override
+    protected void startup() {
         initializeMe();
 
         show(new DrumsEmulationView(this));
@@ -224,7 +273,7 @@ public class DrumsEmulationApp extends SingleFrameApplication {
     }
 
     public hitGenerator getGeneratorByName(String name) {
-        for (int i=0;i<names.size();++i) {
+        for (int i = 0; i < names.size(); ++i) {
             if (names.get(i).equals(name)) {
                 return generators.get(i);
             }
@@ -233,7 +282,7 @@ public class DrumsEmulationApp extends SingleFrameApplication {
     }
 
     public void setGeneratorName(int index, String new_name) {
-        names.set(index,new_name);
+        names.set(index, new_name);
 
         findInstrumentModes();
     }
@@ -242,39 +291,39 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         return generators.get(index);
     }
 
-     public void setGenerator(int index, hitGenerator new_generator) {
+    public void setGenerator(int index, hitGenerator new_generator) {
         playback_driver.delGenerator(generators.get(index));
         playback_driver.addGenerator(new_generator);
-        generators.set(index,new_generator);
+        generators.set(index, new_generator);
 
         findInstrumentModes();
     }
 
-     public void addNamedGenerator(String name, String params) {
-         hitGenerator g = hitGenerator.getGeneratorByDesc(params);
-         names.add(name);
-         generators.add(g);
-         playback_driver.addGenerator(g);
+    public void addNamedGenerator(String name, String params) {
+        hitGenerator g = hitGenerator.getGeneratorByDesc(params);
+        names.add(name);
+        generators.add(g);
+        playback_driver.addGenerator(g);
 
-         findInstrumentModes();
-     }
+        findInstrumentModes();
+    }
 
-     public void delGenerator(int index) {
-         names.remove(index);
-         hitGenerator g = generators.get(index);
-         playback_driver.delGenerator(g);
-         generators.remove(index);
+    public void delGenerator(int index) {
+        names.remove(index);
+        hitGenerator g = generators.get(index);
+        playback_driver.delGenerator(g);
+        generators.remove(index);
 
-         findInstrumentModes();
-     }
+        findInstrumentModes();
+    }
 
-     public void findInstrumentModes() {
-         for (Iterator<instrumentMode> it=instrumentmodes.iterator();it.hasNext();){
-             it.next().findInstrument();
-         }
-     }
+    public void findInstrumentModes() {
+        for (Iterator<instrumentMode> it = instrumentmodes.iterator(); it.hasNext();) {
+            it.next().findInstrument();
+        }
+    }
 
-     public int getModesCount() {
+    public int getModesCount() {
         return modenames.size();
     }
 
@@ -283,7 +332,7 @@ public class DrumsEmulationApp extends SingleFrameApplication {
     }
 
     public instrumentMode getModeByName(String name) {
-        for (int i=0;i<modenames.size();++i) {
+        for (int i = 0; i < modenames.size(); ++i) {
             if (modenames.get(i).equals(name)) {
                 return instrumentmodes.get(i);
             }
@@ -292,44 +341,43 @@ public class DrumsEmulationApp extends SingleFrameApplication {
     }
 
     public void setModeName(int index, String new_name) {
-        modenames.set(index,new_name);
+        modenames.set(index, new_name);
     }
 
     public instrumentMode getMode(int index) {
         return instrumentmodes.get(index);
     }
 
-     public void setMode(int index, instrumentMode new_Mode) {
-        instrumentmodes.set(index,new_Mode);
+    public void setMode(int index, instrumentMode new_Mode) {
+        instrumentmodes.set(index, new_Mode);
     }
 
-     public void addNamedMode(String name, String params) {
-         instrumentMode g = new instrumentMode(params);
-         modenames.add(name);
-         instrumentmodes.add(g);
-     }
+    public void addNamedMode(String name, String params) {
+        instrumentMode g = new instrumentMode(params);
+        modenames.add(name);
+        instrumentmodes.add(g);
+    }
 
-     public void delMode(int index) {
-         modenames.remove(index);
-         instrumentmodes.remove(index);
-     }
+    public void delMode(int index) {
+        modenames.remove(index);
+        instrumentmodes.remove(index);
+    }
 
+    public void levelHitGenerator(int index, float new_lvl) {
+        lvl = new_lvl;
+        generators.get(index).hit2d(playback_driver.get_elapsed(), lvl, p1, p2);
+    }
 
-     public void levelHitGenerator(int index, float new_lvl) {
-         lvl = new_lvl;
-         generators.get(index).hit2d(playback_driver.get_elapsed(), lvl, p1, p2);
-     }
+    public void levelHitMode(int index, float new_lvl) {
 
-     public void levelHitMode(int index, float new_lvl) {
+        instrumentmodes.get(index).hit(playback_driver.get_elapsed(), new_lvl);
+    }
 
-         instrumentmodes.get(index).hit(playback_driver.get_elapsed(), new_lvl);
-     }
-
-     public void p2dHitGenerator(int index, float new_p1, float new_p2) {
-         p1 = new_p1;
-         p2 = new_p2;
-         generators.get(index).hit2d(playback_driver.get_elapsed(), lvl, p1, p2);
-     }
+    public void p2dHitGenerator(int index, float new_p1, float new_p2) {
+        p1 = new_p1;
+        p2 = new_p2;
+        generators.get(index).hit2d(playback_driver.get_elapsed(), lvl, p1, p2);
+    }
 
     public boolean setOn_air(boolean on_air) {
         return playback_driver.setOn_air(on_air);
@@ -340,7 +388,7 @@ public class DrumsEmulationApp extends SingleFrameApplication {
     }
 
     public void reSetMaster(joist j) {
-        
+
         data.setMaster(j);
         playback_driver.resetT0();
     }
@@ -355,7 +403,7 @@ public class DrumsEmulationApp extends SingleFrameApplication {
 
     public void instrument_hit_button2(int i) {
         generators.get(i).hit(playback_driver.get_elapsed(), 0.5f);
-     
+
     }
 
     public void mode_hit_button(int i) {
@@ -376,7 +424,8 @@ public class DrumsEmulationApp extends SingleFrameApplication {
      * Windows shown in our application come fully initialized from the GUI
      * builder, so this additional configuration is not needed.
      */
-    @Override protected void configureWindow(java.awt.Window root) {
+    @Override
+    protected void configureWindow(java.awt.Window root) {
     }
 
     /**

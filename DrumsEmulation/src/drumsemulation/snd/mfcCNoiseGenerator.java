@@ -21,7 +21,7 @@ package drumsemulation.snd;
 import java.util.*;
 import java.util.logging.*;
 import javax.sound.sampled.*;
-
+import drumsemulation.helper.*;
 /**
  *
  * @author immanuel
@@ -101,7 +101,7 @@ public class mfcCNoiseGenerator extends hitGenerator { //multi-filter contour no
                 String pval = parm.substring(idx + 1).trim();
 
                 if (pname.equals("d")) { //decay (well, 1/2 value), ms
-                    float half_ms = Float.parseFloat(pval);
+                    float half_ms = poorInputParser.parseFloat(pval);
                     int steps = (int) (drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * half_ms) / 1000;
                     double x = Math.exp(-0.69314718055994529 / steps); //e^(ln(1/2)/steps)
                     damping31 = (long) (((1l << 31) * x));
@@ -112,7 +112,7 @@ public class mfcCNoiseGenerator extends hitGenerator { //multi-filter contour no
                     while (pscan.hasNext()) {
                         String v = pscan.next().trim();
                         if (!v.isEmpty()) {
-                            chan_gain.add((long) (Float.parseFloat(v) * (1l << 31)));
+                            chan_gain.add((long) (poorInputParser.parseFloat(v) * (1l << 31)));
                         }
                     }
                     c_lvl31 = new long[chan_gain.size()];
@@ -123,15 +123,15 @@ public class mfcCNoiseGenerator extends hitGenerator { //multi-filter contour no
                 } else if (pname.equals("filter1")) {
                     this.setFilter(pval);
                 } else if (pname.equals("a")) { //attack in ms
-                    attack = (long) ((drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * Float.parseFloat(pval)) / 1000.f);
+                    attack = (long) ((drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * poorInputParser.parseFloat(pval)) / 1000.f);
                 } else if (pname.equals("s")) { //sustain in ms
-                    sustain = (long) ((drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * Float.parseFloat(pval)) / 1000.f);
+                    sustain = (long) ((drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * poorInputParser.parseFloat(pval)) / 1000.f);
                 } else if (pname.equals("filter2")) {
                     this.setFilter2(pval);
                 } else if (pname.equals("f1")) { //initial filter in ms
-                    sf1 = (long) ((drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * Float.parseFloat(pval)) / 1000.f);
+                    sf1 = (long) ((drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * poorInputParser.parseFloat(pval)) / 1000.f);
                 } else if (pname.equals("f12")) { //filter transition in ms
-                    sf12 = (long) ((drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * Float.parseFloat(pval)) / 1000.f);
+                    sf12 = (long) ((drumsemulation.DrumsEmulationApp.getApplication().getSampleRate() * poorInputParser.parseFloat(pval)) / 1000.f);
                 }
 
             }

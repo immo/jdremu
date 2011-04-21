@@ -9,6 +9,7 @@ import drumsemulation.DrumsEmulationApp;
 import drumsemulation.snd.hitGenerator;
 import java.util.Random;
 import java.util.Scanner;
+import drumsemulation.helper.*;
 
 /**
  *
@@ -66,21 +67,21 @@ public class instrumentMode {
                 if (pname.equals("hit")) {
                     this.instrumentname = pval;
                 } else if (pname.equals("a")) {
-                    this.alpha_lvl = Float.parseFloat(pval);
+                    this.alpha_lvl = poorInputParser.parseFloat(pval);
                 } else if (pname.equals("b")) {
-                    this.beta_lvl = Float.parseFloat(pval);
+                    this.beta_lvl = poorInputParser.parseFloat(pval);
                 } else if (pname.equals("p1")) {
-                    this.mu_1 = Float.parseFloat(pval);
+                    this.mu_1 = poorInputParser.parseFloat(pval);
                 } else if (pname.equals("p2")) {
-                    this.mu_2 = Float.parseFloat(pval);
+                    this.mu_2 = poorInputParser.parseFloat(pval);
                 } else if (pname.equals("2sig1")) {
-                    this.sigma_1 = Float.parseFloat(pval) / 2.f;
+                    this.sigma_1 = poorInputParser.parseFloat(pval) / 2.f;
                 } else if (pname.equals("2sig2")) {
-                    this.sigma_2 = Float.parseFloat(pval) / 2.f;
+                    this.sigma_2 = poorInputParser.parseFloat(pval) / 2.f;
                 } else if (pname.equals("2sig")) {
-                    this.sigma_lvl = Float.parseFloat(pval) / 2.f;
+                    this.sigma_lvl = poorInputParser.parseFloat(pval) / 2.f;
                 } else if (pname.equals("4sig")) {
-                    this.sigma_t =(Float.parseFloat(pval) / 4.f)*DrumsEmulationApp.getApplication().getSampleRate()/1000.f;
+                    this.sigma_t =(poorInputParser.parseFloat(pval) / 4.f)*DrumsEmulationApp.getApplication().getSampleRate()/1000.f;
                 }
             }
         }

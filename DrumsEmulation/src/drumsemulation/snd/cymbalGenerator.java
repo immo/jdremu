@@ -21,7 +21,7 @@ package drumsemulation.snd;
 import java.util.*;
 import java.util.logging.*;
 import javax.sound.sampled.*;
-
+import drumsemulation.helper.*;
 /**
  *
  * @author immanuel
@@ -37,6 +37,15 @@ public class cymbalGenerator extends hitGenerator {
     float zzsssh_gain;
     float reso_gain;
     float ui_gain;
+    float bell_dec;
+    float bing_dec;
+    float rim_dec;
+    float hirim_dec;
+    float whoosh_dec;
+    float zzsssh_dec;
+    float reso_dec;
+    float reso2_dec;
+    float ui_dec;
     int hi_woosh;
     int lo_woosh;
     int hi_zssh;
@@ -81,6 +90,17 @@ public class cymbalGenerator extends hitGenerator {
         ui_gain = 1.f;
 
 
+        bell_dec = 1.f/6.f;
+        bing_dec = 1.f/15.f;
+        rim_dec = 1.f/2.f;
+        hirim_dec = 4.f/3.f;
+        whoosh_dec = 1.f/2.f;
+        ui_dec = 1.f/5.f;
+        zzsssh_dec = 1.f/15.f;
+        reso_dec = 5.f/6.f;
+        reso2_dec = 1.f;
+
+
         rim_frequency = 2300;
         bell_frequency = 3100;
         zss_frequency = 5500;
@@ -107,7 +127,7 @@ public class cymbalGenerator extends hitGenerator {
                     gvals.useDelimiter(" ");
                     gain_factors.clear();
                     while (gvals.hasNext()) {
-                        float f = Float.parseFloat(gvals.next().trim());
+                        float f = poorInputParser.parseFloat(gvals.next().trim());
                         gain_factors.add(f);
                     }
                 } else if (pname.equals("f")) {
@@ -125,19 +145,19 @@ public class cymbalGenerator extends hitGenerator {
                 } else if (pname.equals("fl2")) {
                     lo_zssh = Integer.parseInt(pval);
                 } else if (pname.equals("d")) {
-                    decay = Float.parseFloat(pval);
+                    decay = poorInputParser.parseFloat(pval);
                 } else if (pname.equals("gf")) {
-                    rim_gain = Float.parseFloat(pval);
+                    rim_gain = poorInputParser.parseFloat(pval);
                 } else if (pname.equals("gb")) {
-                    bell_gain = Float.parseFloat(pval);
+                    bell_gain = poorInputParser.parseFloat(pval);
                 } else if (pname.equals("gw")) {
-                    whoosh_gain = Float.parseFloat(pval);
+                    whoosh_gain = poorInputParser.parseFloat(pval);
                 } else if (pname.equals("gz")) {
-                    zzsssh_gain = Float.parseFloat(pval);
+                    zzsssh_gain = poorInputParser.parseFloat(pval);
                 } else if (pname.equals("gu")) {
-                    ui_gain = Float.parseFloat(pval);
+                    ui_gain = poorInputParser.parseFloat(pval);
                 } else if (pname.equals("gr")) {
-                    reso_gain = Float.parseFloat(pval);
+                    reso_gain = poorInputParser.parseFloat(pval);
                 } else if (pname.equals("no")) {
                     p_bell = !pval.contains("bell");
                     p_bing = !pval.contains("bing");
@@ -148,28 +168,48 @@ public class cymbalGenerator extends hitGenerator {
                     p_uiiich = !pval.contains("ui");
                     p_zzsssh = !pval.contains("zsh");
                     p_whoosh = !pval.contains("wh");
+                } else if (pname.equals("dbe")) {
+                    bell_dec = poorInputParser.parseFloat(pval);
+                } else if (pname.equals("dbi")) {
+                    bing_dec = poorInputParser.parseFloat(pval);
+                } else if (pname.equals("dri")) {
+                    rim_dec = poorInputParser.parseFloat(pval);
+                } else if (pname.equals("dhr")) {
+                    hirim_dec = poorInputParser.parseFloat(pval);
+                } else if (pname.equals("dwh")) {
+                    whoosh_dec = poorInputParser.parseFloat(pval);
+                } else if (pname.equals("dui")) {
+                    ui_dec = poorInputParser.parseFloat(pval);
+                } else if (pname.equals("dzs")) {
+                    zzsssh_dec = poorInputParser.parseFloat(pval);
+                } else if (pname.equals("dlo")) {
+                    reso_dec = poorInputParser.parseFloat(pval);
+                } else if (pname.equals("dl2")) {
+                    reso2_dec = poorInputParser.parseFloat(pval);
                 }
             }
         }
 
-        bell = new cymbalBellGenerator("d=" + (decay / 6) + ",f=" + (bell_frequency * 2)
+
+
+        bell = new cymbalBellGenerator("d=" + (decay*bell_dec) + ",f=" + (bell_frequency * 2)
                 + ",g=" + utils.multiplyGainList(gain_factors, 0.4f * bell_gain));
-        bing = new cymbalBellGenerator("d=" + (decay / 15) + ",f=" + (bell_frequency * 4)
+        bing = new cymbalBellGenerator("d=" + (decay*bing_dec) + ",f=" + (bell_frequency * 4)
                 + ",g=" + utils.multiplyGainList(gain_factors, 0.4f * bell_gain));
-        rim = new cymbalRimGenerator("d=" + (decay / 2) + ",f=" + (rim_frequency)
+        rim = new cymbalRimGenerator("d=" + (decay*rim_dec) + ",f=" + (rim_frequency)
                 + ",g=" + utils.multiplyGainList(gain_factors, 0.5f * rim_gain));
-        hirim = new cymbalRimGenerator("wave=sine,d=" + (decay * 4 / 3) + ",f=" + (rim_frequency * 5)
+        hirim = new cymbalRimGenerator("wave=sine,d=" + (decay * hirim_dec) + ",f=" + (rim_frequency * 5)
                 + ",g=" + utils.multiplyGainList(gain_factors, 0.5f * rim_gain));
         whoosh = new contourNoiseGenerator("filter=band " + zss_frequency
-                + " 4,d=" + (decay / 2) + ",a=30" + ",g=" + utils.multiplyGainList(gain_factors, 0.3f * whoosh_gain));
-        uiiich = new mfcNoiseGenerator("a=75,s=60,d=" + (decay / 5) + ",filter1=band " + lo_woosh
+                + " 4,d=" + (decay*whoosh_dec) + ",a=30" + ",g=" + utils.multiplyGainList(gain_factors, 0.3f * whoosh_gain));
+        uiiich = new mfcNoiseGenerator("a=75,s=60,d=" + (decay*ui_dec) + ",filter1=band " + lo_woosh
                 + " 4,filter2=band " + hi_woosh + " 2,f1=80,f12=160"
                 + ",g=" + utils.multiplyGainList(gain_factors, 0.9f * ui_gain));
-        zzsssh = new mfcNoiseGenerator("a=35,s=20,d=" + (decay / 15) + ",filter2=high " + lo_zssh
+        zzsssh = new mfcNoiseGenerator("a=35,s=20,d=" + (decay*zzsssh_dec) + ",filter2=high " + lo_zssh
                 + " 4,filter1=band " + hi_zssh + " 2,f1=40,f12=35"
                 + ",g=" + utils.multiplyGainList(gain_factors, 0.7f * zzsssh_gain));
-        lowresonant = new resoOscillator("f=" + (rim_frequency / 3) + ",a=100,d=" + (decay * 5 / 6) + ",wave=sine,g=" + utils.multiplyGainList(gain_factors, 0.01f * reso_gain));
-        lowresonant2 = new resoOscillator("f=" + (bell_frequency / 4) + ",a=140,d=" + (decay) + ",wave=sine,g=" + utils.multiplyGainList(gain_factors, 0.02f * reso_gain));
+        lowresonant = new resoOscillator("f=" + (rim_frequency / 3) + ",a=100,d=" + (decay * reso_dec) + ",wave=sine,g=" + utils.multiplyGainList(gain_factors, 0.01f * reso_gain));
+        lowresonant2 = new resoOscillator("f=" + (bell_frequency / 2) + ",a=140,d=" + (decay * reso2_dec) + ",wave=sine,g=" + utils.multiplyGainList(gain_factors, 0.02f * reso_gain));
 
     }
 

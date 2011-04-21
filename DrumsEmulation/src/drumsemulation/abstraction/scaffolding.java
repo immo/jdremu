@@ -4,10 +4,7 @@
  */
 package drumsemulation.abstraction;
 
-import drumsemulation.helper.greaterThanComparator;
-import drumsemulation.helper.intPair;
-import drumsemulation.helper.poorDotGraph;
-import drumsemulation.helper.poorDotParser;
+import drumsemulation.helper.*;
 import java.util.*;
 
 /**
@@ -119,16 +116,16 @@ public class scaffolding extends joist {
                         int excl = r.indexOf("!");
                         String e = r.substring(excl + 1);
                         r = r.substring(0, excl);
-                        bind(binder, new elementaryJoist(n, Float.parseFloat(e), Float.parseFloat(r)));
+                        bind(binder, new elementaryJoist(n, poorInputParser.parseFloat(e), poorInputParser.parseFloat(r)));
                         canonical.add(binder);
                     } else if (n.contains("!")) {
                         int excl = n.indexOf("!");
                         String e = n.substring(excl + 1);
                         n = n.substring(0, excl);
-                        bind(binder, new elementaryJoist(n, Float.parseFloat(e), Float.parseFloat(r)));
+                        bind(binder, new elementaryJoist(n, poorInputParser.parseFloat(e), poorInputParser.parseFloat(r)));
                         canonical.add(binder);
                     } else {
-                        bind(binder, new elementaryJoist(n, 0.85f, Float.parseFloat(r)));
+                        bind(binder, new elementaryJoist(n, 0.85f, poorInputParser.parseFloat(r)));
                         canonical.add(binder);
                     }
 
@@ -136,7 +133,7 @@ public class scaffolding extends joist {
                     int excl = n.indexOf("!");
                     String e = n.substring(excl + 1);
                     n = n.substring(0, excl);
-                    bind(binder, new elementaryJoist(n, Float.parseFloat(e), 1.f));
+                    bind(binder, new elementaryJoist(n, poorInputParser.parseFloat(e), 1.f));
                     canonical.add(binder);
                 } else {
                     if (modes.contains(n)) {
@@ -263,6 +260,18 @@ public class scaffolding extends joist {
 
     public void disprepare() {
         prepared = false;
+        Set<joist> children = new HashSet<joist>();
+        Iterator<String> it;
+        for (it = bound.keySet().iterator(); it.hasNext();) {
+            children.add(bound.get(it.next()));
+        }
+        Iterator<joist> jt;
+        for (jt = children.iterator(); jt.hasNext();) {
+            joist j = jt.next();
+            if (j instanceof scaffolding) {
+                ((scaffolding)j).disprepare();
+            }
+        }
     }
 
     @Override

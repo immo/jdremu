@@ -4,11 +4,9 @@
  */
 package drumsemulation.abstraction;
 
-import drumsemulation.helper.poorDotGraph;
-import drumsemulation.helper.poorDotParser;
-import drumsemulation.helper.poorTokenizer;
-import java.util.*;
 
+import java.util.*;
+import drumsemulation.helper.*;
 /**
  *
  * @author immanuel
@@ -151,21 +149,21 @@ public class abstractData {
                         int excl = r.indexOf("!");
                         String e = r.substring(excl + 1);
                         r = r.substring(0, excl);
-                        return new elementaryJoist(n, Float.parseFloat(e), Float.parseFloat(r));
+                        return new elementaryJoist(n, poorInputParser.parseFloat(e), poorInputParser.parseFloat(r));
                     } else if (n.contains("!")) {
                         int excl = n.indexOf("!");
                         String e = n.substring(excl + 1);
                         n = n.substring(0, excl);
-                        return new elementaryJoist(n, Float.parseFloat(e), Float.parseFloat(r));
+                        return new elementaryJoist(n, poorInputParser.parseFloat(e), poorInputParser.parseFloat(r));
                     } else {
-                        return new elementaryJoist(n, 0.85f, Float.parseFloat(r));
+                        return new elementaryJoist(n, 0.85f, poorInputParser.parseFloat(r));
                     }
 
                 } else if (n.contains("!")) {
                     int excl = n.indexOf("!");
                     String e = n.substring(excl + 1);
                     n = n.substring(0, excl);
-                    return new elementaryJoist(n, Float.parseFloat(e), 1.f);
+                    return new elementaryJoist(n, poorInputParser.parseFloat(e), 1.f);
                 } else {
                     return new elementaryJoist(n, 0.85f, 1.f);
                 }

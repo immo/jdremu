@@ -93,5 +93,7 @@ public class testingMain {
         scf.g.removeNodes(ids);
         System.out.println("scf="+scf.describeGraph());
         System.out.println(scf.g.getPredAndSuccNodes(3));
+
+        System.out.println(drumsemulation.DrumsEmulationApp.getStringFromConfFile("y2log"));
     }
 }

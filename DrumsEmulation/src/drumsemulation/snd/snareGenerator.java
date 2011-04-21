@@ -21,6 +21,7 @@ package drumsemulation.snd;
 import java.util.*;
 import java.util.logging.*;
 import javax.sound.sampled.*;
+import drumsemulation.helper.*;
 
 /**
  *
@@ -37,18 +38,17 @@ public class snareGenerator extends hitGenerator {
     int frequency;
     int click_frequency;
     float decay;
+    float dec_b, dec_p, dec_q;
     int db2, dp2, dp3, dq2, dq3;
     int dsnares;
     float snare_factor;
     float click_gain;
     String waveform;
 
-    
-
     public snareGenerator(String parms) {
         super();
         this.description = "Snare(" + parms + ")";
-        
+
         waveform = "cosine";
 
         ArrayList<Float> gain_factors = new ArrayList<Float>();
@@ -68,7 +68,10 @@ public class snareGenerator extends hitGenerator {
         click_frequency = 5200;
         click_gain = 0.4f;
         snare_factor = 1.f;
-        
+        dec_b = 1.f;
+        dec_p = 1.f;
+        dec_q = 1.f;
+
 
         Scanner scan = new Scanner(parms);
         scan.useDelimiter(",");
@@ -92,7 +95,13 @@ public class snareGenerator extends hitGenerator {
                 } else if (pname.equals("fqo")) {
                     q_shift = Integer.parseInt(pval);
                 } else if (pname.equals("d")) {
-                    decay = (Float.parseFloat(pval));
+                    decay = (poorInputParser.parseFloat(pval));
+                } else if (pname.equals("db")) {
+                    dec_b = (poorInputParser.parseFloat(pval));
+                } else if (pname.equals("dp")) {
+                    dec_p = (poorInputParser.parseFloat(pval));
+                } else if (pname.equals("dq")) {
+                    dec_q = (poorInputParser.parseFloat(pval));
                 } else if (pname.equals("fc")) {
                     click_frequency = Integer.parseInt(pval);
                 } else if (pname.equals("g")) {
@@ -100,41 +109,41 @@ public class snareGenerator extends hitGenerator {
                     gvals.useDelimiter(" ");
                     gain_factors.clear();
                     while (gvals.hasNext()) {
-                        float f = Float.parseFloat(gvals.next().trim());
+                        float f = poorInputParser.parseFloat(gvals.next().trim());
                         gain_factors.add(f);
                     }
                 } else if (pname.equals("click")) {
-                    click_gain = Float.parseFloat(pval);
+                    click_gain = poorInputParser.parseFloat(pval);
                 } else if (pname.equals("snare")) {
-                    snare_factor = Float.parseFloat(pval);
+                    snare_factor = poorInputParser.parseFloat(pval);
                 }
             }
         }
-        String rstr=",wave="+waveform;
+        String rstr = ",wave=" + waveform;
 
         db2 = (rate * 5 * 31) / (frequency * 1000);
         dp2 = (rate * 5 * 31) / ((p_base + p_shift) * 1000);
         dq2 = (rate * 5 * 31) / ((q_base + q_shift) * 1000);
         dp3 = (rate * 7 * 31) / ((p_base + p_shift) * 1000);
         dq3 = (rate * 7 * 31) / ((q_base + q_shift) * 1000);
-        dsnares = (rate * 13 * 31) / (frequency*1000);
-        
+        dsnares = (rate * 13 * 31) / (frequency * 1000);
 
-        b1 = new swingOscillator("f="+frequency+",a=2,d="+decay+",g="+utils.multiplyGainList(gain_factors, 0.3f));
-        b2 = new swingOscillator("f="+((int)(frequency*1.835))+",a=2,d="+(decay/2)+",g="+utils.multiplyGainList(gain_factors, 0.3f));
-        p1 = new swingOscillator("f=" + (p_base + p_shift) + ",a=2,d="+(decay/3)+",g="+utils.multiplyGainList(gain_factors, 0.15f)+rstr);
-        p2 = new swingOscillator("f=" + (2 * p_base + p_shift) + ",a=2,d="+(decay/4)+",g="+utils.multiplyGainList(gain_factors, 0.15f)+rstr);
-        p3 = new swingOscillator("f=" + (3 * p_base + p_shift) + ",a=2,d="+(decay/6)+",g="+utils.multiplyGainList(gain_factors, 0.15f)+rstr);
-        q1 = new swingOscillator("f=" + (q_base + q_shift) + ",a=2,d="+(decay/2)+",g="+utils.multiplyGainList(gain_factors, 0.15f)+rstr);
-        q2 = new swingOscillator("f=" + (2 * q_base + q_shift) + ",a=2,d="+(decay/4)+",g="+utils.multiplyGainList(gain_factors, 0.15f)+rstr);
-        q3 = new swingOscillator("f=" + (3 * q_base + q_shift) + ",a=2,d="+(decay/6)+",g="+utils.multiplyGainList(gain_factors, 0.15f)+rstr);
-        click = new swingOscillator("f="+click_frequency+",a=2,ar=0.5,d=1,g="+utils.multiplyGainList(gain_factors, click_gain));
+
+        b1 = new swingOscillator("f=" + frequency + ",a=2,d=" + (decay * dec_b) + ",g=" + utils.multiplyGainList(gain_factors, 0.3f));
+        b2 = new swingOscillator("f=" + ((int) (frequency * 1.835)) + ",a=2,d=" + (decay * dec_b / 2) + ",g=" + utils.multiplyGainList(gain_factors, 0.3f));
+        p1 = new swingOscillator("f=" + (p_base + p_shift) + ",a=2,d=" + (decay * dec_p / 3) + ",g=" + utils.multiplyGainList(gain_factors, 0.15f) + rstr);
+        p2 = new swingOscillator("f=" + (2 * p_base + p_shift) + ",a=2,d=" + (decay * dec_p / 4) + ",g=" + utils.multiplyGainList(gain_factors, 0.15f) + rstr);
+        p3 = new swingOscillator("f=" + (3 * p_base + p_shift) + ",a=2,d=" + (decay * dec_p / 6) + ",g=" + utils.multiplyGainList(gain_factors, 0.15f) + rstr);
+        q1 = new swingOscillator("f=" + (q_base + q_shift) + ",a=2,d=" + (decay * dec_q / 2) + ",g=" + utils.multiplyGainList(gain_factors, 0.15f) + rstr);
+        q2 = new swingOscillator("f=" + (2 * q_base + q_shift) + ",a=2,d=" + (decay * dec_q / 4) + ",g=" + utils.multiplyGainList(gain_factors, 0.15f) + rstr);
+        q3 = new swingOscillator("f=" + (3 * q_base + q_shift) + ",a=2,d=" + (decay * dec_q / 6) + ",g=" + utils.multiplyGainList(gain_factors, 0.15f) + rstr);
+        click = new swingOscillator("f=" + click_frequency + ",a=2,ar=0.5,d=1,g=" + utils.multiplyGainList(gain_factors, click_gain));
         if (snare_factor > 0.f) {
-            snares = new contourNoiseGenerator("filter=low 5000 2,g="+utils.multiplyGainList(gain_factors, 0.45f*snare_factor)+",a="+(decay/12)+",s="+(decay/16)+",d="+(decay/9));
+            snares = new contourNoiseGenerator("filter=low 5000 2,g=" + utils.multiplyGainList(gain_factors, 0.45f * snare_factor) + ",a=" + (decay / 12) + ",s=" + (decay / 16) + ",d=" + (decay / 9));
         } else {
             snares = null;
         }
-        
+
     }
 
     public snareGenerator() {
@@ -162,34 +171,32 @@ public class snareGenerator extends hitGenerator {
 
     @Override
     public void hit(long when, float level) {
-        hit2d(when,level,0.5f,0.5f);
+        hit2d(when, level, 0.5f, 0.5f);
     }
 
     @Override
     public void hit1d(long when, float level, float p1) {
-        hit2d(when,level,p1,0.5f);
-        
+        hit2d(when, level, p1, 0.5f);
+
     }
 
     @Override
     public void hit2d(long when, float level, float p1, float p2) {
-        
+
 
         synchronized (sync_token) {
             b1.hit(when, level);
             b2.hit(when + db2, level);
-            this.p1.hit(when, level*p1);
-            this.p2.hit(when + dp2, level*p1);
-            p3.hit(when + dp2 + dp3, level*p1);
-            q1.hit(when, level*p2);
-            q2.hit(when + dq2, level*p2);
-            q3.hit(when + dq2 + dq3, level*p2);
+            this.p1.hit(when, level * p1);
+            this.p2.hit(when + dp2, level * p1);
+            p3.hit(when + dp2 + dp3, level * p1);
+            q1.hit(when, level * p2);
+            q2.hit(when + dq2, level * p2);
+            q3.hit(when + dq2 + dq3, level * p2);
             click.hit(when, level);
             if (snares != null) {
-                snares.hit(when+dsnares,level);
+                snares.hit(when + dsnares, level);
             }
         }
     }
-
-
 }
