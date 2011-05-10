@@ -21,6 +21,7 @@ public class scaffolding extends joist {
     public Map<Integer, Float> start_times;
     public Map<Integer, Float> stop_times;
     public int joist_count;
+    public float time_factor;
 
     public scaffolding() {
         this.g = new poorDotGraph();
@@ -31,6 +32,7 @@ public class scaffolding extends joist {
         this.start_times = new TreeMap<Integer, Float>();
         this.stop_times = new TreeMap<Integer, Float>();
         this.joist_count = 0;
+        this.time_factor = 1.f;
     }
 
     public scaffolding(scaffolding copy) {
@@ -46,6 +48,7 @@ public class scaffolding extends joist {
         this.stop_times = new TreeMap<Integer, Float>();
         this.stop_times.putAll(copy.stop_times);
         this.joist_count = copy.joist_count;
+        this.time_factor = copy.time_factor;
     }
 
     public scaffolding(String dotCode) {
@@ -68,7 +71,11 @@ public class scaffolding extends joist {
     }
 
     @Override
-    public void tick(long when, float t, float next_t, float previous_t) {
+    public void tick(long when, float t_abs, float next_t_abs, float previous_t_abs) {
+        float t = t_abs * time_factor;
+        float next_t = next_t_abs * time_factor;
+        float previous_t = previous_t_abs * time_factor;
+
         Set<Integer> b = bindings.keySet();
 
         for (int i = 0; i < joist_count; ++i) {
@@ -151,6 +158,16 @@ public class scaffolding extends joist {
         return unbound;
     }
 
+    public void set_time_factor(float new_factor) {
+        _duration = _duration * time_factor / new_factor;
+        time_factor = new_factor;
+    }
+
+    public void multiply_time_factor(float new_factor) {
+        _duration = _duration  / new_factor;
+        time_factor *= new_factor;
+    }
+
     public void bind(String name, joist to) {
         int N = g.nodes.size();
 
@@ -162,6 +179,8 @@ public class scaffolding extends joist {
             }
         }
         bound.put(name, to);
+
+
     }
 
     public void rename(String old, String newname) {
@@ -360,6 +379,8 @@ public class scaffolding extends joist {
         }
 
         joist_count = g.nodes.size();
+
+        _duration = _duration / time_factor;
 
     }
 

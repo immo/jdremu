@@ -93,10 +93,19 @@ public class abstractData {
                     for (; parm.hasNext();) {
                         String t = parm.next().trim();
                         int eq = t.indexOf("=");
-                        if (eq >= 0) {
+                        int max_eq1 = (t+"[").indexOf("[");
+                        int max_eq2 = (t+"(").indexOf("(");
+
+                        if ((eq >= 0)&&(eq<max_eq1)&&(eq<max_eq2)) {
                             String name = t.substring(0, eq).trim();
                             String term = t.substring(eq + 1).trim();
-                            scaff.bind(name, evaluateTerm(term));
+                            if (name.equals("speed")) {
+                                scaff.set_time_factor(Float.parseFloat(term));
+                            } else if (name.equals("speed*")) {
+                                scaff.multiply_time_factor(Float.parseFloat(term));
+                            } else {
+                                scaff.bind(name, evaluateTerm(term));
+                            }
                         } else {
                             if (!t.isEmpty()) {
                                 Iterator<String> freetor = scaff.getUnbound().iterator();
@@ -112,7 +121,10 @@ public class abstractData {
                     for (; parm.hasNext();) {
                         String t = parm.next();
                         int eq = t.indexOf("=");
-                        if (eq >= 0) {
+                        int max_eq1 = (t+"[").indexOf("[");
+                        int max_eq2 = (t+"(").indexOf("(");
+                        
+                        if ((eq >= 0)&&(eq<max_eq1)&&(eq<max_eq2)) {
                             if (t.substring(0, eq).endsWith(":")) { // := --> insert
 
                                 String name = t.substring(0, eq-1).trim();
