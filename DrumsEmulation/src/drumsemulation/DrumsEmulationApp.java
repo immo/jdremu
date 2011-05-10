@@ -387,6 +387,10 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         playback_driver.setPlayback(on);
     }
 
+    public void setPlaybackSpeed(float speed_factor) {
+        playback_driver.set_bps(speed_factor*144.f/60.f);
+    }
+
     public void reSetMaster(joist j) {
 
         data.setMaster(j);

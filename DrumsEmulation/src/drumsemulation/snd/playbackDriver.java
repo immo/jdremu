@@ -139,6 +139,21 @@ public class playbackDriver implements LineListener, Runnable {
         return frames_elapsed;
     }
 
+    public void set_bps(float new_bps) {
+        System.out.println("new_bps="+new_bps);
+        synchronized (this) {
+            long frames_el = this.frames_elapsed;
+            float elapsed = frames_el - this.current_t0;
+            float beat_rate = frame_rate / this.bps;
+            float t = elapsed / beat_rate;
+
+            this.bps = new_bps;
+            beat_rate = frame_rate / this.bps;
+
+            this.current_t0 = frames_el - (long)(t*beat_rate);
+        }
+    }
+
     public void run() {
         Thread local_writing_thread_copy;
         synchronized (this) {

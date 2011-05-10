@@ -598,7 +598,17 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
             }
         });
 
+        jSlider1.setMajorTickSpacing(50);
+        jSlider1.setMaximum(200);
+        jSlider1.setMinorTickSpacing(2);
+        jSlider1.setPaintTicks(true);
+        jSlider1.setValue(100);
         jSlider1.setName("jSlider1"); // NOI18N
+        jSlider1.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                jSlider1StateChanged(evt);
+            }
+        });
 
         jLabel9.setText(resourceMap.getString("jLabel9.text")); // NOI18N
         jLabel9.setName("jLabel9"); // NOI18N
@@ -649,7 +659,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
                     .addComponent(jLabel10)
                     .addComponent(jButton10))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 202, Short.MAX_VALUE))
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel5.TabConstraints.tabTitle"), jPanel5); // NOI18N
@@ -896,6 +906,19 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
     private void jButton11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton11ActionPerformed
         DrumsEmulationApp.setConfFile("scaffoldings", jDotCodePane.getText());
     }//GEN-LAST:event_jButton11ActionPerformed
+
+    private void jSlider1StateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSlider1StateChanged
+        float pos = jSlider1.getValue();
+        if (pos == 100) {
+            DrumsEmulationApp.getApplication().setPlaybackSpeed(1.f);
+        } else if (pos < 100) {
+            pos /= 100.f;
+            DrumsEmulationApp.getApplication().setPlaybackSpeed(pos*0.7f + 0.3f);
+        } else {
+            pos /= 100.f;
+            DrumsEmulationApp.getApplication().setPlaybackSpeed(pos*0.7f + 0.3f);
+        }
+    }//GEN-LAST:event_jSlider1StateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable instrumentTable;
