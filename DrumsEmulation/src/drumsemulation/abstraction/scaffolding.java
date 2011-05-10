@@ -313,6 +313,12 @@ public class scaffolding extends joist {
                 out.append(bound.get(varname).toString());
             }
         }
+        if (time_factor != 1.f) {
+            if (sep) {
+                out.append(", ");
+                out.append("speed="+time_factor);
+            }
+        }
         out.append(")");
         return out.toString();
     }
