@@ -202,8 +202,8 @@ public class DrumsEmulationApp extends SingleFrameApplication {
 
         if (default_setup) {
             instrumentModeSetup.add("default=");
-            instrumentModeSetup.add("kick1=hit=Kick,2sig1=0.01,2sig2=0.01,2sig=0,p1=0.93877554,p2=0.9183673");
-            instrumentModeSetup.add("kick2=hit=Kick,2sig1=0.01,2sig2=0.01,2sig=0,p1=0.93877554,p2=0.24489796");
+            instrumentModeSetup.add("kick1=hit=Kick,2sig1=0.01,2sig2=0.01,2sig=0,p1=0.93877554,p2=0.9183673,r=0.05,rd=1/12");
+            instrumentModeSetup.add("kick2=hit=Kick,2sig1=0.01,2sig2=0.01,2sig=0,p1=0.93877554,p2=0.24489796,r=0.05,rd=1/12");
             instrumentModeSetup.add("snare=hit=Snare,p1=0.20408164,p2=0.1632653");
             instrumentModeSetup.add("snarerim=hit=Snare,p1=0.9591837,p2=0.9591837");
             instrumentModeSetup.add("snaredead=hit=DeadSnare,p1=0.20408164,p2=0.1632653");
