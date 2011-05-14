@@ -140,7 +140,7 @@ public class playbackDriver implements LineListener, Runnable {
     }
 
     public void set_bps(float new_bps) {
-        System.out.println("new_bps="+new_bps);
+        
         synchronized (this) {
             long frames_el = this.frames_elapsed;
             float elapsed = frames_el - this.current_t0;

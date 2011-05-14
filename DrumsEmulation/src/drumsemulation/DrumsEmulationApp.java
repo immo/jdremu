@@ -140,7 +140,7 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         if (default_setup) {
             hitGeneratorSetup.add("Snare=Snare(g=2.4 2.4,f=160,click=0.0,db=1/3,dp=2/3,d=180)");
             hitGeneratorSetup.add("DeadSnare=Snare(g=2.4 2.4,f=160,click=0.0,db=1/3,dp=2/3,snare=0.1,d=180)");
-            hitGeneratorSetup.add("Kick=Snare(g=1.2 1.2,d=400,f=31,fp=43,fpo=12,fq=38,fqo=22,snare=0.05,click=0.75,fc=6300,wave=cotri,dp=1/3,db=1/3,dq=1/2)");
+            hitGeneratorSetup.add("Kick=Snare(g=0.6 0.6,d=400,f=31,fp=43,fpo=12,fq=38,fqo=22,snare=0.05,click=1.9,fc=7900,wave=cotri,dp=1/3,db=1/3,dq=1/2)");
             hitGeneratorSetup.add("Floor=Snare(g=1 1,d=200,f=80,fp=83,fpo=12,fq=123,fqo=14,snare=0.05,click=0.05,fc=5000,g=0.7 1.1)");
             hitGeneratorSetup.add("Mid=Snare(g=1 1,d=180,f=90,fp=93,fpo=12,fq=143,fqo=14,snare=0.05,click=0.05,fc=5200,g=1.0 0.8)");
             hitGeneratorSetup.add("High=Snare(g=1 1,d=160,f=100,fp=103,fpo=12,fq=163,fqo=14,snare=0.05,click=0.05,fc=5400,g=1.2 0.7)");
