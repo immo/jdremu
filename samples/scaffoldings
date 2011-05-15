@@ -1,0 +1,178 @@
+digraph "seq" {
+ v0 -> v1 -> v2 -> v3 -> v4 -> v5 -> v6 -> v7;
+}
+
+digraph "syn" {
+ v0; v1; v2; v3; v4; v5; v6; v7;
+}
+
+digraph "2x" {
+  x0 [label="x"];
+  x1 [label="x"];
+
+ x0->x1;
+}
+
+digraph "3x" {
+  x0 [label="x"];
+  x1 [label="x"];
+  x2 [label="x"];
+ x0->x1->x2;
+}
+
+digraph "4x" {
+  x0 [label="x"];
+  x1 [label="x"];
+  x2 [label="x"];
+  x3 [label="x"];
+ x0->x1->x2->x3;
+
+}
+
+digraph "5x" {
+  x0 [label="x"];
+  x1 [label="x"];
+  x2 [label="x"];
+  x3 [label="x"];
+  x4 [label="x"];
+ x0->x1->x2->x3->x4;
+}
+
+
+digraph "6x" {
+  x0 [label="x"];
+  x1 [label="x"];
+  x2 [label="x"];
+  x3 [label="x"];
+  x4 [label="x"];
+  x5 [label="x"];
+ x0->x1->x2->x3->x4->x5;
+}
+
+digraph "7x" {
+  x0 [label="x"];
+  x1 [label="x"];
+  x2 [label="x"];
+  x3 [label="x"];
+  x4 [label="x"];
+  x5 [label="x"];
+  x6 [label="x"];
+ x0->x1->x2->x3->x4->x5->x6;
+}
+
+digraph "8x" {
+  x0 [label="x"];
+  x1 [label="x"];
+  x2 [label="x"];
+  x3 [label="x"];
+  x4 [label="x"];
+  x5 [label="x"];
+  x6 [label="x"];
+  x7 [label="x"];
+ x0->x1->x2->x3->x4->x5->x6->x7;
+}
+
+digraph "9x" {
+  x0 [label="x"];
+  x1 [label="x"];
+  x2 [label="x"];
+  x3 [label="x"];
+  x4 [label="x"];
+  x5 [label="x"];
+  x6 [label="x"];
+  x7 [label="x"];
+  x8 [label="x"];
+ x0->x1->x2->x3->x4->x5->x6->x7->x8;
+}
+
+
+digraph "blast1" {
+  v0 [label="k1"];
+  v1 [label="k2"];
+  v2 [label="k1"];
+  v3 [label="k2"];
+  v4 [label="s"];
+  v5 [label="z"];
+  v0 -> v1 -> v2 -> v3;
+  v4 -> v5;
+  v1 -> v5;
+  v4 -> v2;
+}
+
+digraph "blast1b" {
+  v0 [label="k1"];
+  v1 [label="k2"];
+  v2 [label="k1"];
+  v3 [label="k2"];
+  v4 [label="z"];
+  v5 [label="s"];
+  v0 -> v1 -> v2 -> v3;
+  v4 -> v5;
+  v1 -> v5;
+  v4 -> v2;
+}
+
+
+digraph "blast2" {
+  v0 [label="k1"];
+  v1 [label="k2"];
+  v2 [label="k1"];
+  v3 [label="k2"];
+  v4 [label="s"];
+  v5 [label="z"];
+  v6 [label="z"];
+  v0 -> v1 -> v2 -> v3;
+  v6 -> v5;
+  v4 -> v5;
+  v1 -> v5;
+  v4 -> v2;
+  v6 -> v2;
+}
+
+digraph "blast2b" {
+  v0 [label="k1"];
+  v1 [label="k2"];
+  v2 [label="k1"];
+  v3 [label="k2"];
+  v4 [label="z"];
+  v5 [label="s"];
+  v6 [label="z"];
+  v0 -> v1 -> v2 -> v3;
+  v4 -> v5;
+  v4 -> v6;
+  v1 -> v5;
+  v1 -> v6;
+  v4 -> v2;
+}
+
+digraph "blast2c" {
+  v0 [label="k1"];
+  v1 [label="k2"];
+  v2 [label="k1"];
+  v3 [label="k2"];
+  v4 [label="s"];
+  v5 [label="z1"];
+  v6 [label="z2"];
+  v0 -> v1 -> v2 -> v3;
+  v6 -> v5;
+  v4 -> v5;
+  v1 -> v5;
+  v4 -> v2;
+  v6 -> v2;
+}
+
+digraph "blast2bc" {
+  v0 [label="k1"];
+  v1 [label="k2"];
+  v2 [label="k1"];
+  v3 [label="k2"];
+  v4 [label="z1"];
+  v5 [label="s"];
+  v6 [label="z2"];
+  v0 -> v1 -> v2 -> v3;
+  v4 -> v5;
+  v4 -> v6;
+  v1 -> v5;
+  v1 -> v6;
+  v4 -> v2;
+}

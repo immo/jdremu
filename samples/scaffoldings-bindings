@@ -1,0 +1,16 @@
+snr = snare@0.25;
+cym = crash@0.25;
+hic = hicrash@0.25;
+kck1 = kick1@0.25;
+kck2 = kick2@0.25;
+snr8=seq(snr,snr,snr,snr,snr,snr,snr,snr);
+kick16=seq(kck,kck,kck,kck, kck,kck,kck,kck);
+snkick=syn(snr8,kick16);
+beat1=blast1(kck1,kck2,snr,cym);
+beat1b=blast1b(kck1,kck2,snr,cym);
+beat2=blast2c(kck1,kck2,snr,cym,hic);
+beat2b=blast2bc(kck1,kck2,snr,cym,hic);
+beat3=blast1(kck1,kck2,seq(snr,snr,speed=2.),hic);
+beat4=blast1(syn(kck1,snr,speed=2.),syn(kck2,snr,speed=2.),cym,hic);
+beat5=blast1(syn(kck1,snr,speed=2.),kck2,cym,hic);
+x = seq(8x(beat5),8x(beat4));
