@@ -100,9 +100,9 @@ public class abstractData {
                             String name = t.substring(0, eq).trim();
                             String term = t.substring(eq + 1).trim();
                             if (name.equals("speed")) {
-                                scaff.set_time_factor(Float.parseFloat(term));
+                                scaff.set_time_factor(poorInputParser.parseFloat(term));
                             } else if (name.equals("speed*")) {
-                                scaff.multiply_time_factor(Float.parseFloat(term));
+                                scaff.multiply_time_factor(poorInputParser.parseFloat(term));
                             } else {
                                 scaff.bind(name, evaluateTerm(term));
                             }

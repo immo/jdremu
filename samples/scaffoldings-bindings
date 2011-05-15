@@ -12,5 +12,35 @@ beat2=blast2c(kck1,kck2,snr,cym,hic);
 beat2b=blast2bc(kck1,kck2,snr,cym,hic);
 beat3=blast1(kck1,kck2,seq(snr,snr,speed=2.),hic);
 beat4=blast1(syn(kck1,snr,speed=2.),syn(kck2,snr,speed=2.),cym,hic);
-beat5=blast1(syn(kck1,snr,speed=2.),kck2,cym,hic);
+beat5=blast1(syn(kck1,snr,speed=2.),kck2,ride@0.25,ridebell@0.25);
 x = seq(8x(beat5),8x(beat4));
+c4=seq(@4.0,ride,ride,ride,ride);
+
+rde = ride@0.25;
+bel = ridebell@0.25;
+
+bia1_1=seq(syn(snare,kick,hic),
+           kick1@0.5,syn(kick1@0.5,snare,cym),
+           kick1@0.5,syn(kick2,rde),
+           kick1@0.5,syn(kick1@0.5,snare,cym),
+           kick1@0.5,syn(kick2,rde),
+           kick1@0.5,syn(kick1@0.5,snare,cym,speed=2),
+           kick1@0.5,kick2@0.5,syn(kick1,rde),
+           kick1@0.5,syn(kick1@0.5,snare,cym),@0.5
+         );
+
+bia1=seq(kick1@0.5,kick2@0.5,kick1@0.5);
+
+bia2=seq(@2.,kck1,kck2,kck1,kck2);
+bia2_1= seq(syn(snare!0.9,
+                seq(kck1,kck2,kck1,kck2,kck1,kck2),
+                seq(hicrash@0.5,ride@0.5,ride@0.5)),
+            syn(snare,
+                seq(kck1,kck2,kck1,kck2,kck1,kck2),
+                seq(crash@0.5,ride@0.5,ride@0.5)),
+            syn(snare,
+                seq(kck1,kck2,kck1,kck2),
+                seq(crash@0.5,ride@0.5)));
+
+bia=seq(seq(speed=90/144, c4, bia1, 4x(bia1_1), bia2),
+             4x(seq(speed=180/144, 4x(bia2_1))));
