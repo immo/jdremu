@@ -100,7 +100,7 @@ public class playbackDriver implements LineListener, Runnable {
     }
 
     public void resetT0() {
-        this.current_t0 = this.frames_elapsed;
+        this.current_t0 = this.frames_elapsed + this.tick_offset;
     }
 
     public void update(LineEvent le) {
