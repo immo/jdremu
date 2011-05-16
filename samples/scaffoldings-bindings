@@ -48,6 +48,19 @@ bia2_3= 3x(speed=170/144,8x(seq(
                       syn(seq(kck1,kck2),snare@0.5!0.9,crash@0.5),
                       3x(syn(seq(kck1,kck2),snare@0.5!0.9,ride@0.5)))));
 
+bia2_2b= 2x(speed=180/144,6x(blast1(kck1,kck2,snare@0.5!0.9,cym)));
+
 bia=seq(seq(speed=90/144, c4, bia1, 4x(bia1_1), bia2),
              4x(seq(speed=180/144, 4x(bia2_1))),
-           bia2_2, bia2_3);
+           bia2_2, bia2_3,
+
+       seq(speed=70/144, c4, bia1, 4x(bia1_1)),
+        seq(bia2,speed=90/144),
+         5x(seq(speed=180/144, 4x(bia2_1))),
+        bia2_2, bia2_2b,
+         bia2_3,
+
+       seq(speed=50/144, c4, bia1, 4x(bia1_1)),
+       seq(bia2,speed=195/288),
+       4x(seq(speed=195/144, 4x(bia2_1)))
+);
