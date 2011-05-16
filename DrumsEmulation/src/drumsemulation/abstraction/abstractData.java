@@ -49,6 +49,12 @@ public class abstractData {
         master_joist = m;
     }
 
+    public synchronized joist getNamedJoist(String name) {
+        if (joists.containsKey(name)) {
+            return joists.get(name);
+        } else return null;
+    }
+
     public synchronized joist evaluateTerm(String s) {
 
         s = s.trim();

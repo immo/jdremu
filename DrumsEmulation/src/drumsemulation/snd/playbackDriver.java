@@ -65,7 +65,8 @@ public class playbackDriver implements LineListener, Runnable {
         this.format = new AudioFormat(new Float(drumsemulation.DrumsEmulationApp.getApplication().getSampleRate()), 32, channels, true, true);
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
         lines = AudioSystem.getSourceLineInfo(info);
-        this.buffer_frames = 256;
+        
+        this.buffer_frames = 1024;
         this.b_buffer = new byte[channels * 4 * buffer_frames];
         this.i_buffer = new int[channels * buffer_frames];
         this.frames_elapsed = 0;
@@ -80,7 +81,7 @@ public class playbackDriver implements LineListener, Runnable {
         this.current_t0 = 0;
         this.data = null;
         this.frame_rate = 44100;
-        this.tick_offset = 4410;
+        this.tick_offset = 512;//4410;
         this.bps = 144/60.f;
         
         addGenerator(beep);
@@ -253,8 +254,10 @@ public class playbackDriver implements LineListener, Runnable {
                     //starts
                     synchronized (this) {
                         this.out_line = (SourceDataLine) AudioSystem.getLine(lines[line_nbr]);
+                        
                         out_line.addLineListener(this);
-                        out_line.open(format);
+                        out_line.open(format,1024*16);
+                        System.out.println("Outline buffer size="+out_line.getBufferSize());
                         writing_thread = new Thread(this);
                         writing_thread.setName("WritingThread");
                         writing_thread.start();

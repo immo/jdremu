@@ -88,6 +88,51 @@ digraph "9x" {
  x0->x1->x2->x3->x4->x5->x6->x7->x8;
 }
 
+digraph "10x" {
+  x0 [label="x"];
+  x1 [label="x"];
+  x2 [label="x"];
+  x3 [label="x"];
+  x4 [label="x"];
+  x5 [label="x"];
+  x6 [label="x"];
+  x7 [label="x"];
+  x8 [label="x"];
+  x9 [label="x"];
+ x0->x1->x2->x3->x4->x5->x6->x7->x8->x9;
+}
+
+digraph "11x" {
+  x0 [label="x"];
+  x1 [label="x"];
+  x2 [label="x"];
+  x3 [label="x"];
+  x4 [label="x"];
+  x5 [label="x"];
+  x6 [label="x"];
+  x7 [label="x"];
+  x8 [label="x"];
+  x9 [label="x"];
+  y0 [label="x"];
+ x0->x1->x2->x3->x4->x5->x6->x7->x8->x9->y0;
+}
+
+digraph "12x" {
+  x0 [label="x"];
+  x1 [label="x"];
+  x2 [label="x"];
+  x3 [label="x"];
+  x4 [label="x"];
+  x5 [label="x"];
+  x6 [label="x"];
+  x7 [label="x"];
+  x8 [label="x"];
+  x9 [label="x"];
+  y0 [label="x"];
+  y1 [label="x"];
+ x0->x1->x2->x3->x4->x5->x6->x7->x8->x9->y0->y1;
+}
+
 
 digraph "blast1" {
   v0 [label="k1"];
@@ -178,4 +223,12 @@ digraph "blast2bc" {
   v1 -> v5;
   v1 -> v6;
   v4 -> v2;
+}
+
+digraph "tri" {
+  a;
+  b[label="b"];
+  c[label="b"];
+  d[label="b"];
+  b -> c -> d;
 }

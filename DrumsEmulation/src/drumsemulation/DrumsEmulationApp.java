@@ -423,6 +423,10 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         return 44100;
     }
 
+    public void keyDOWN(char key) {
+
+    }
+
     /**
      * This method is to initialize the specified window by injecting resources.
      * Windows shown in our application come fully initialized from the GUI

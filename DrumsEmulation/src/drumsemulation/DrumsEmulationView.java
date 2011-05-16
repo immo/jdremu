@@ -182,6 +182,9 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         jScrollPane5 = new javax.swing.JScrollPane();
         jPlaybackTerm = new javax.swing.JEditorPane();
         jButton10 = new javax.swing.JButton();
+        jPanel6 = new javax.swing.JPanel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
         menuBar = new javax.swing.JMenuBar();
         javax.swing.JMenu fileMenu = new javax.swing.JMenu();
         javax.swing.JMenuItem exitMenuItem = new javax.swing.JMenuItem();
@@ -664,6 +667,34 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel5.TabConstraints.tabTitle"), jPanel5); // NOI18N
 
+        jPanel6.setName("jPanel6"); // NOI18N
+
+        jScrollPane6.setName("jScrollPane6"); // NOI18N
+
+        jTextArea1.setColumns(20);
+        jTextArea1.setFont(resourceMap.getFont("jTextArea1.font")); // NOI18N
+        jTextArea1.setRows(5);
+        jTextArea1.setName("jTextArea1"); // NOI18N
+        jTextArea1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                jTextArea1KeyPressed(evt);
+            }
+        });
+        jScrollPane6.setViewportView(jTextArea1);
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 264, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab(resourceMap.getString("jPanel6.TabConstraints.tabTitle"), jPanel6); // NOI18N
+
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
@@ -920,6 +951,23 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         }
     }//GEN-LAST:event_jSlider1StateChanged
 
+    private void jTextArea1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyPressed
+        String bind_name = "key-"+Character.toLowerCase(evt.getKeyChar());
+        joist j = DrumsEmulationApp.getApplication().getData().getNamedJoist(bind_name);
+        System.out.println("key-down="+bind_name);
+        if (j!=null) {
+            System.out.println("key-down!!");
+            joist eval = DrumsEmulationApp.getApplication().getData().evaluateTerm(bind_name);
+            System.out.println(eval);
+            if (eval instanceof scaffolding) {
+                ((scaffolding)eval).disprepare();
+            }
+            eval.prepareLayout();
+            System.out.println(eval);
+            DrumsEmulationApp.getApplication().reSetMaster(eval);
+            }
+    }//GEN-LAST:event_jTextArea1KeyPressed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable instrumentTable;
     private javax.swing.JEditorPane jBindingsText;
@@ -951,6 +999,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
     private javax.swing.JToggleButton jPlayToggle;
     private javax.swing.JEditorPane jPlaybackTerm;
     private javax.swing.JScrollPane jScrollPane1;
@@ -958,8 +1007,10 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JSlider jSlider1;
     private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JToggleButton jToggleButton1;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;

@@ -3,10 +3,12 @@ cym = crash@0.25;
 hic = hicrash@0.25;
 kck1 = kick1@0.25;
 kck2 = kick2@0.25;
+
 snr8=seq(snr,snr,snr,snr,snr,snr,snr,snr);
 kick16=seq(kck,kck,kck,kck, kck,kck,kck,kck);
 snkick=syn(snr8,kick16);
 beat1=blast1(kck1,kck2,snr,cym);
+beat1_1=blast1(kck1,kck2,snare@0.25!0.9,syn(snare@0.25!0.9,ride@0.25));
 beat1b=blast1b(kck1,kck2,snr,cym);
 beat2=blast2c(kck1,kck2,snr,cym,hic);
 beat2b=blast2bc(kck1,kck2,snr,cym,hic);
@@ -73,6 +75,7 @@ drbc1 = syn(crash, seq(kck1, kck2, kck1));
 drbc2 = syn(hicrash, seq(kck1, kck2, kck1));
 drbc =  syn(hicrash, snare!0.9, seq(kck1, kck2, kck1));
 rest = @1;
+rest2 = @0.5;
 drbh1 = seq(drb1, rest);
 drbh2 = seq(drb2, rest);
 drbh = seq(drb, rest);
@@ -81,7 +84,45 @@ drbch1 = seq(drbc1, rest);
 drbch2 = seq(drbc2, rest);
 drbch = seq(drbc, rest);
 
-cd1_1 = seq( drbch1, drbh1, drbch2, drbh2, drbch);
-cd1_2 = seq( drbc1, drb1, drbc2, drbh2, drbch, rest, drbch);
-cd1 = seq(seq(c4, speed=0.5), cd1_1, cd1_2, cd1_1, cd1_2, speed=180/144);
+cd1_1 = seq( drbch1, drbh1, drbch2, drbh2, drbch,rest, speed=1.5);
 
+cd1_2 = seq( drbc1, drb1, drbc2, drbh2, drbch, drbch, speed=1.5);
+
+cd1_1 = seq(4x(tri(snare,kck1)),tri(syn(snare,hicrash),kck1),rest);
+
+cd1_2 = seq(3x(tri(snare,kck1)), 
+           tri(snare,kck1),rest,
+           tri(snare,kck1),rest,rest2,
+           tri(snare,kck1),rest,rest,rest,rest,rest,snare);
+
+cd1_3 = seq(3x(tri(snare,kck1)), 
+           tri(snare,kck1),rest,
+           tri(snare,kck1),rest,rest,rest
+           tri(snare,kck1),rest,rest,rest,rest,rest);
+cd1 = seq(seq(c4, speed=0.5), cd1_1, cd1_2,  speed=180/144);
+
+cd = seq(c4, 8x(beat1),8x(beat1_1),8x(beat1),8x(beat1_1),
+             8x(beat1),8x(beat1_1),8x(beat1),8x(beat1_1));
+
+test= seq(c4, snare@0.5,snare@0.5,snare@0.5,snare@0.5,
+              snare,
+              2x(seq(snare@0.5,snare@0.5,snare@0.5,snare@0.5,
+	      rest,snare,rest,snare,rest)),
+              2x(seq(snare,snare,snare@0.5,snare@0.5)));
+
+snr8=snare@0.5;
+snr4=snare@1.0;
+snr4.=snare@1.5;
+snr4*=snare@1.25;
+
+test2 = seq(c4, snr8,snr8,snr8,snr8,snr4,snr8,snr8,snr8,snr4,snr4*,snr4*);
+
+cdf1 = 8x(8x(blast1(kck1,kck2,snare!0.9@0.25,hicrash@0.25)));
+cdf2 = 8x(8x(2x(blast1(kck1,kck2,snare!0.9@0.25,ride@0.25),speed=2)));
+
+
+cdfree = seq(c4,  cdf1, cdf2, c4, 4x(bia2_1), speed=160/144);
+cdfree2 = seq(c4,  cdf1, cdf2, c4, 4x(bia2_1), speed=160/144);
+
+cal_drems=seq(cd1,cdfree,cd1,cdfree2);
+key-n=syn(snare!0.9,hicrash,ride!0.93,kick1!0.9);
