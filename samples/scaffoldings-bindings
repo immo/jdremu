@@ -70,13 +70,18 @@ drb2 = syn(ridebell, seq(kck1, kck2, kck1));
 drb =  syn(ride, snare!0.9, seq(kck1, kck2, kck1));
 
 drbc1 = syn(crash, seq(kck1, kck2, kck1));
-drbc2 = syn(crash, seq(kck1, kck2, kck1));
+drbc2 = syn(hicrash, seq(kck1, kck2, kck1));
 drbc =  syn(hicrash, snare!0.9, seq(kck1, kck2, kck1));
+rest = @1;
+drbh1 = seq(drb1, rest);
+drbh2 = seq(drb2, rest);
+drbh = seq(drb, rest);
 
-drbh1 = seq(drb1, @1.0);
-drbh2 = seq(drb2, @1.0);
-drbh = seq(drb, @1.0);
+drbch1 = seq(drbc1, rest);
+drbch2 = seq(drbc2, rest);
+drbch = seq(drbc, rest);
 
-drbch1 = seq(drbc1, @1.0);
-drbch2 = seq(drbc2, @1.0);
-drbch = seq(drbc, @1.0);
+cd1_1 = seq( drbch1, drbh1, drbch2, drbh2, drbch);
+cd1_2 = seq( drbc1, drb1, drbc2, drbh2, drbch, rest, drbch);
+cd1 = seq(seq(c4, speed=0.5), cd1_1, cd1_2, cd1_1, cd1_2, speed=180/144);
+
