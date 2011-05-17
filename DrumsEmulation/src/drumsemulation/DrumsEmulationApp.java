@@ -379,6 +379,10 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         generators.get(index).hit2d(playback_driver.get_elapsed(), lvl, p1, p2);
     }
 
+    public void setRequestBufferSize(int size)  {
+        playback_driver.request_buffer_size = size;
+    }
+
     public boolean setOn_air(boolean on_air) {
         return playback_driver.setOn_air(on_air);
     }
