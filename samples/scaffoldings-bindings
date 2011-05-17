@@ -125,4 +125,4 @@ cdfree = seq(c4,  cdf1, cdf2, c4, 4x(bia2_1), speed=160/144);
 cdfree2 = seq(c4,  cdf1, cdf2, c4, 4x(bia2_1), speed=160/144);
 
 cal_drems=seq(cd1,cdfree,cd1,cdfree2);
-key-n=syn(snare!0.9,hicrash,ride!0.93,kick1!0.9);
+key-n-0=syn(snare!0.9,hicrash,ride!0.93,kick1!0.9);

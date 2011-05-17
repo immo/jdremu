@@ -49,6 +49,8 @@ import javax.swing.table.DefaultTableModel;
  */
 public class DrumsEmulationView extends FrameView implements TableModelListener {
 
+    public int bank=0;
+
     public DrumsEmulationView(SingleFrameApplication app) {
         super(app);
 
@@ -952,7 +954,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
     }//GEN-LAST:event_jSlider1StateChanged
 
     private void jTextArea1KeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextArea1KeyPressed
-        String bind_name = "key-"+Character.toLowerCase(evt.getKeyChar());
+        String bind_name = "key-"+Character.toLowerCase(evt.getKeyChar())+"-"+bank;
         joist j = DrumsEmulationApp.getApplication().getData().getNamedJoist(bind_name);
         System.out.println("key-down="+bind_name);
         if (j!=null) {
