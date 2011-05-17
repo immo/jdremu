@@ -386,6 +386,10 @@ public class DrumsEmulationApp extends SingleFrameApplication {
     public boolean setOn_air(boolean on_air) {
         return playback_driver.setOn_air(on_air);
     }
+    
+    public void set_total_lvl(float dB) {
+        playback_driver.set_total_lvl((long) (Math.exp(dB)*(double)(1l << 31)));
+    }
 
     public void setPlayback(boolean on) {
         playback_driver.setPlayback(on);
