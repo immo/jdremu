@@ -1,3 +1,5 @@
+16x = 2x[8x];
+
 snr = snare@0.25;
 cym = crash@0.25;
 hic = hicrash@0.25;
@@ -194,3 +196,74 @@ key-c-1=4x(seq(rhtm3, rhtm3, rhtm4, rhtm4, rhtm1, rhtm1, rhtm2, rhtm2,speed=180/
 key-z-1=4x(seq(rhtm6, rhtm6, rhtm6b, rhtm6b));
 key-n-1=4x(seq(2x(rhtm7,speed=120/144),2x(rhtm8,speed=120/144)));
 key-p-1=4x(seq(rhtm8,rhtm7,rhtm8,rhtm7,rhtm8,rhtm8,speed=160/144));
+
+
+kick4th = 2x(seq(kick1@4/16,kick2@4/16));
+kick4thcym = 2x(syn(seq(kick1@4/16,kick2@4/16),crash@4/8));
+kick4thcymb = 2x(syn(seq(kick1@4/16,kick2@4/16),hicrash!0.95@4/8));
+slow1 = seq(kick4thcym,syn(kick4thcym,snare));
+slow1b = seq(kick4thcymb,syn(kick4thcym,snare));
+slow2 = seq(kick4thcym,syn(kick4thcym,seq(snare@4/8,snare@4/8)));
+
+rslo1 = 4x(seq(slow1b,slow1,slow1,slow2));
+
+
+
+kick4thcym2 = 2x(syn(kick1!0.9@4/16,crash@4/8));
+kick4thcym1 = syn(kick1!0.9@4/16,2x(crash@4/8));
+cym8_4 = 2x(crash@4/8);
+
+
+rslo2 = 4x(seq(kick4thcymb, kick4thcym2 , kick4thcym1 ,syn(snare,kick4thcym2)));
+
+rslo3 = seq(syn(4x(kick4th),snare,seq(hicrash,crash,crash,crash)),
+            syn(4x(kick4th),snare,seq(crash,crash,crash,ride)),
+            syn(4x(kick4th),snare,seq(ridebell,ride,ride,ride)),
+            syn(4x(kick4th),snare,seq(ridebell,ride,ride,ride)));
+
+key-^-2= seq(1x(rslo1,speed=90/144),1x(rslo2,speed=120/144),3x(rslo3,speed=160/144),4x(8x(beat1,speed=180/144)),4x(8x(beat1_1,speed=180/144)),
+         8x(16x(syn(snare@1/4,kick1@1/4,crash@1/4)),speed=200/144),
+         8x(16x(syn(snarerim@1/4,kick2@1/4,hicrash@1/4)),speed=200/144),snare!0.95,snare!0.95);
+key-s-2= seq(4x(8x(beat1,speed=180/144)),4x(8x(beat1_1,speed=180/144)),
+         8x(16x(syn(snare@1/4,kick1@1/4,crash@1/4)),speed=200/144));
+key-c-2= seq(2x(rslo2,speed=90/144),3x(rslo3,speed=180/144),1x(rslo1,speed=90/144));
+key-z-2= seq(4x(seq(4x(8x(beat1,speed=180/144)),4x(8x(beat1_1,speed=180/144)),4x(8x(beat1,speed=140/144)),4x(8x(beat1_1,speed=140/144)))),
+             syn(ride!0.9,seq(snare!0.95,syn(snare!0.95,hicrash!0.9))));
+key-n-2= seq(4x(seq(4x(8x(beat5,speed=120/144)),4x(8x(beat4,speed=120/144)),4x(8x(beat1_1,speed=180/144)),4x(8x(beat4,speed=180/144)))),
+             syn(ride!0.9,seq(snare!0.95,syn(snare!0.95,hicrash!0.9))));;
+key-p-2= syn(ride!0.9,seq(snare!0.95,syn(snare!0.95,hicrash!0.9)));
+
+key-^-3=;
+key-s-3=;
+key-c-3=;
+key-z-3=;
+key-n-3=;
+key-p-3=;
+
+key-^-4=;
+key-s-4=;
+key-c-4=;
+key-z-4=;
+key-n-4=;
+key-p-4=;
+
+key-^-5=;
+key-s-5=;
+key-c-5=;
+key-z-5=;
+key-n-5=;
+key-p-5=;
+
+key-^-6=;
+key-s-6=;
+key-c-6=;
+key-z-6=;
+key-n-6=;
+key-p-6=;
+
+key-^-7=;
+key-s-7=;
+key-c-7=;
+key-z-7=;
+key-n-7=;
+key-p-7=;
