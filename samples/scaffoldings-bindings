@@ -233,12 +233,48 @@ key-n-2= seq(4x(seq(4x(8x(beat5,speed=120/144)),4x(8x(beat4,speed=120/144)),4x(8
              syn(ride!0.9,seq(snare!0.95,syn(snare!0.95,hicrash!0.9))));;
 key-p-2= syn(ride!0.9,seq(snare!0.95,syn(snare!0.95,hicrash!0.9)));
 
-key-^-3=;
-key-s-3=;
-key-c-3=;
-key-z-3=;
-key-n-3=;
-key-p-3=;
+
+cr4s = seq(crash!0.9@0.5,crash@0.5);
+rd4s = seq(ride!0.9@0.5,ride@0.5);
+ki4s = seq(kick1@0.25,kick2@0.25,kick1@0.25,kick2@0.25);
+ki2s = seq(kick1@0.5,kick2@0.5);
+
+core1 = seq(syn(kick1,cr4s),cr4s,syn(snare!0.9,cr4s),cr4s,
+            syn(ki4s,cr4s),cr4s,syn(snare!0.9,cr4s),cr4s,
+            syn(ki2s,cr4s),cr4s,syn(snare!0.9,cr4s),cr4s,
+            syn(ki4s,cr4s),cr4s,syn(seq(snare@0.5,snare@0.5),cr4s),cr4s);
+
+core1k = seq(syn(kick1,cr4s),syn(ki2s,cr4s),syn(snare!0.9,cr4s,kick1),syn(ki2s,cr4s),
+            syn(ki4s,cr4s),syn(ki2s,cr4s),syn(snare!0.9,cr4s,ki2s),syn(ki4s,cr4s),
+            syn(ki2s,cr4s),syn(ki2s,cr4s),syn(snare!0.9,cr4s,ki2s),syn(ki4s,cr4s),
+            syn(ki4s,cr4s),syn(ki2s,cr4s),syn(seq(snare@0.5,snare@0.5),cr4s,ki4s),syn(kick1,cr4s));
+
+core2 = seq(syn(kick1,rd4s),rd4s,syn(snare!0.9,rd4s),rd4s,
+            syn(ki4s,rd4s),rd4s,syn(snare!0.9,rd4s),rd4s,
+            syn(ki2s,rd4s),rd4s,syn(snare!0.9,rd4s),rd4s,
+            syn(ki4s,rd4s),rd4s,syn(seq(snare@0.5,snare@0.5),rd4s),syn(seq(snare@0.5,snare@0.5),rd4s));
+
+core2k = seq(syn(kick1,rd4s),syn(ki2s,rd4s),syn(snare!0.9,rd4s,kick1),syn(ki2s,rd4s),
+            syn(ki4s,rd4s),syn(ki2s,rd4s),syn(snare!0.9,rd4s,ki2s),syn(ki4s,rd4s),
+            syn(ki2s,rd4s),syn(ki2s,rd4s),syn(snare!0.9,rd4s,ki2s),syn(ki4s,rd4s),
+            syn(ki4s,rd4s),syn(ki2s,rd4s),syn(seq(snare@0.5,snare@0.5),rd4s,ki4s),syn(seq(snare@0.5,snare@0.5),kick1,rd4s));
+
+coreX = seq(syn(ki4s,cr4s,snare),syn(ki4s,cr4s,snare),syn(ki4s,cr4s,seq(snare@0.5,snare@0.5)),syn(ki2s,cr4s,snare),
+            syn(ki4s,cr4s,seq(snare@0.5,snare@0.5)),syn(ki4s,cr4s,seq(snare@0.5,snare@0.5)),syn(ki2s,cr4s,snare),syn(ki2s,cr4s,snare),
+            syn(ki4s,cr4s,snare),syn(ki4s,cr4s,snare),syn(ki4s,cr4s,seq(snare@0.5,snare@0.5)),syn(ki4s,cr4s,seq(snare@0.5,snare@0.5)),
+           syn(ki4s,cr4s,seq(snare@0.5,snare@0.5)),syn(ki4s,cr4s,seq(snare@0.5,snare@0.5)),syn(ki4s,cr4s,seq(snare@0.25,snare@0.25,snare@0.25)),syn(ki4s,cr4s,seq(snare@0.25,snare@0.25,snare@0.25,snare@0.25)));
+
+coreX2 = seq(syn(ki4s,cr4s,snare),syn(ki4s,cr4s,snare),syn(ki4s,cr4s,snare),syn(ki4s,cr4s,snare),
+syn(ki4s,cr4s,seq(snare@0.25,snare@0.25,snare@0.25,snare@0.25)),syn(ki4s,cr4s,seq(snare@0.25,snare@0.25,snare@0.25,snare@0.25)),syn(ki4s,cr4s,seq(snare@0.25,snare@0.25,snare@0.25,snare@0.25)),syn(ki4s,cr4s,seq(snare@0.25,snare@0.25,snare@0.25,snare@0.25)),
+syn(ki4s,cr4s,seq(snare@0.5,snare@0.5)),syn(ki4s,cr4s,seq(snare@0.5,snare@0.5)),syn(ki4s,cr4s,seq(snare@0.5,snare@0.5)),syn(ki4s,cr4s,seq(snare@0.5,snare@0.5)),
+syn(ki4s,cr4s,seq(snare@0.25,snare@0.25,snare@0.25,snare@0.25)),syn(ki4s,cr4s,seq(snare@0.25,snare@0.25,snare@0.25,snare@0.25)),syn(ki4s,cr4s,seq(snare@0.25,snare@0.25,snare@0.25,snare@0.25)),syn(ki4s,cr4s,seq(snare@0.25,snare@0.25,snare@0.25,snare@0.25)));
+
+key-^-3=seq(c4,8x(seq(4x(core2),4x(core1),2x(core2),2x(core1))),speed=120/144);
+key-s-3=seq(8x(seq(4x(core2k),4x(core1k),2x(core2k),2x(core1k))),speed=120/144);
+key-c-3=seq(8x(seq(4x(core2),4x(core1),2x(core2),2x(core1))),speed=180/144);
+key-z-3=seq(8x(seq(4x(core2k),4x(core1k),2x(core2k),2x(core1k))),speed=180/144);;
+key-n-3=8x(seq(4x(coreX2),4x(coreX)),speed=160/144);
+key-p-3=8x(seq(4x(coreX),4x(coreX2)),speed=180/144);
 
 key-^-4=;
 key-s-4=;
