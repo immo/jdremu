@@ -125,4 +125,72 @@ cdfree = seq(c4,  cdf1, cdf2, c4, 4x(bia2_1), speed=160/144);
 cdfree2 = seq(c4,  cdf1, cdf2, c4, 4x(bia2_1), speed=160/144);
 
 cal_drems=seq(cd1,cdfree,cd1,cdfree2);
+
+
+
+
+
+key-^-0=kick1!0.9;
+key-s-0=syn(hicrash,ride!0.93,kick1!0.9);
+key-c-0=syn(crash!0.9,hicrash,kick1!0.9);
+key-z-0=syn(snarerim!0.9,hicrash,ride!0.93,seq(kck1,kck2,kck1,kck2));
 key-n-0=syn(snare!0.9,hicrash,ride!0.93,kick1!0.9);
+key-p-0=syn(floortomrim!0.9,crash!0.9,seq(kick1!0.9));
+
+rhtm1 = seq(blast1(kck1,kck2,syn(snarerim!0.9@0.25,hicrash@0.25),ride!0.94@0.25),
+          3x(blast1(kck1,kck2,snare!0.9@0.25,ride!0.94@0.25)));
+
+rhtm2 = seq(blast1(kck1,kck2,syn(snarerim!0.9@0.25,hicrash@0.25),syn(snr,ride!0.94@0.25)),
+          3x(blast1(kck1,kck2,snare!0.9@0.25,syn(snr,ride!0.94@0.25))));
+
+rhtm3 = seq(syn(seq(kck1,kck2), snare@0.5, hicrash@0.5), syn(seq(kck1,kck2), snare@0.5, crash@0.5),
+           4x(syn(seq(kck1,kck2), snare@0.5, ride!0.95@0.5)));
+
+rhtm4 = seq(syn(snare!0.9,
+                seq(kck1,kck2,kck1,kck2,kck1,kck2),
+                seq(hicrash@0.5,ride@0.5,ride@0.5)),
+            syn(snare,
+                seq(kck1,kck2,kck1,kck2,kck1,kck2),
+                seq(crash@0.5,ride@0.5,ride@0.5)),
+            syn(snare,
+                seq(kck1,kck2,kck1,kck2),
+                seq(crash@0.5,ride@0.5)));
+
+rhtm5 = seq(syn(snare!0.9,
+                seq(kck1,kck2,kck1,kck2,kck1,kck2),
+                seq(hicrash@0.25,ridebell@0.25,ride@0.25,ridebell@0.25,ride@0.25,ridebell@0.25)),
+            syn(snare,
+                seq(kck1,kck2,kck1,kck2,kck1,kck2),
+                seq(crash@0.25,ridebell@0.25,ride@0.25,ridebell@0.25,ride@0.25,ridebell@0.25)),
+            syn(snare,
+                seq(kck1,kck2,kck1,kck2),
+                seq(crash@0.25,ridebell@0.25,ride@0.25,ridebell@0.25)));
+
+rhtm6 = seq(syn(snarerim@0.25,kck1,hicrash!0.95@0.25),syn(snare@0.25,kck2,crash@0.25),
+            3x(seq(syn(snare@0.25,kck1,crash@0.25),syn(snare@0.25,kck2,crash@0.25))));
+
+rhtm6b = seq(syn(snarerim@0.25,kck1,hicrash!0.95@0.25),syn(snare@0.25,kck2,ridebell@0.25),
+            3x(seq(syn(snare@0.25,kck1,ride@0.25),syn(snare@0.25,kck2,ridebell@0.25))));
+
+bumbumzack = seq(syn(kck1,hicrash!0.95@0.25),kck2,syn(snare@0.5,kck1,crash@0.5));
+bumzack = seq(syn(kck1,hicrash!0.95@0.25),@0.25,syn(snare@0.5,kck1,crash@0.5));
+bumzackzack = seq(syn(kck1,hicrash!0.95@0.25),@0.25,syn(seq(snare@0.25,snare!0.95@0.25),kck1,crash@0.5));
+bumbumzackzack = seq(syn(kck1,hicrash!0.95@0.25),kck2,syn(seq(snare@0.25,snare!0.95@0.25),kck1,crash@0.5));
+
+rhtm7 = seq(bumzack, bumbumzack, bumzack, bumbumzackzack,
+            bumzack, bumbumzack, bumzackzack, bumbumzack);
+
+bumbumzack2 = seq(syn(kck1,ride!0.95@0.25),kck2,syn(snare@0.5,kck1,ride@0.5));
+bumzack2 = seq(syn(kck1,ride!0.95@0.25),@0.25,syn(snare@0.5,kck1,ride@0.5));
+bumzackzack2 = seq(syn(kck1,ride!0.95@0.25),@0.25,syn(seq(snare@0.25,snare!0.95@0.25),kck1,ride@0.5));
+bumbumzackzack2 = seq(syn(kck1,ride!0.95@0.25),kck2,syn(seq(snare@0.25,snare!0.95@0.25),kck1,ride@0.5));
+
+rhtm8 = seq(bumzack2, bumbumzack2, bumzack2, bumbumzackzack2,
+            bumzack2, bumbumzack2, bumzackzack2, bumbumzack2);
+
+key-^-1=4x(seq(2x(seq(rhtm1,rhtm1,rhtm2,rhtm1),speed=160/144),2x(seq(rhtm1,rhtm1,rhtm2,rhtm1),speed=190/144)));
+key-s-1=4x(seq(2x(rhtm3,speed=120/144),1x(rhtm3,speed=180/144),2x(rhtm3,speed=150/144),3x(rhtm3,speed=180/155)));
+key-c-1=4x(seq(rhtm3, rhtm3, rhtm4, rhtm4, rhtm1, rhtm1, rhtm2, rhtm2,speed=180/144));
+key-z-1=4x(seq(rhtm6, rhtm6, rhtm6b, rhtm6b));
+key-n-1=4x(seq(2x(rhtm7,speed=120/144),2x(rhtm8,speed=120/144)));
+key-p-1=4x(seq(rhtm8,rhtm7,rhtm8,rhtm7,rhtm8,rhtm8,speed=160/144));
