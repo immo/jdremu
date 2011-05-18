@@ -158,6 +158,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         jTextBuffersize = new javax.swing.JTextPane();
         jSlider2 = new javax.swing.JSlider();
         jLabel14 = new javax.swing.JLabel();
+        jToggleButton2 = new javax.swing.JToggleButton();
         jPanel2 = new javax.swing.JPanel();
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
@@ -329,6 +330,15 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         jLabel14.setText(resourceMap.getString("jLabel14.text")); // NOI18N
         jLabel14.setName("jLabel14"); // NOI18N
 
+        jToggleButton2.setSelected(true);
+        jToggleButton2.setText(resourceMap.getString("jToggleButton2.text")); // NOI18N
+        jToggleButton2.setName("jToggleButton2"); // NOI18N
+        jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -338,17 +348,18 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSlider2, javax.swing.GroupLayout.DEFAULT_SIZE, 222, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                        .addComponent(jSlider2, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jToggleButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
                         .addComponent(jLabel14)
+                        .addGap(3, 3, 3)
+                        .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)))
+                        .addComponent(jToggleButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(12, 12, 12)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
@@ -356,7 +367,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -368,17 +379,19 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
                         .addComponent(jButton3))
                     .addComponent(jLabel2)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jToggleButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jToggleButton2)
+                            .addComponent(jLabel14))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel1)
-                            .addComponent(jSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel14))
+                            .addComponent(jSlider2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 302, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
@@ -471,7 +484,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addComponent(jLabel6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 177, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 226, Short.MAX_VALUE)
                 .addComponent(jLabel7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel8)
@@ -479,7 +492,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
                 .addComponent(jButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton5))
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -494,7 +507,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
                             .addComponent(jLabel6)))
                     .addComponent(jLabel7))
                 .addGap(18, 18, 18)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 305, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(jLabel8)
                 .addContainerGap())
@@ -542,12 +555,12 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         jPanel4.setLayout(jPanel4Layout);
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)
+            .addComponent(jScrollPane3)
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton11)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 292, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 341, Short.MAX_VALUE)
                 .addComponent(jButton7)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton6))
@@ -564,7 +577,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
                         .addComponent(jButton7)
                         .addComponent(jButton11)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 271, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel4.TabConstraints.tabTitle"), jPanel4); // NOI18N
@@ -609,12 +622,12 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)
+            .addComponent(jScrollPane4)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton12)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 157, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 206, Short.MAX_VALUE)
                 .addComponent(jButton9)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton8))
@@ -632,7 +645,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE))
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel3.TabConstraints.tabTitle"), jPanel3); // NOI18N
@@ -688,13 +701,13 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel9)
                 .addGap(5, 5, 5)
-                .addComponent(jSlider1, javax.swing.GroupLayout.DEFAULT_SIZE, 561, Short.MAX_VALUE))
+                .addComponent(jSlider1, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE))
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addComponent(jLabel10)
                 .addGap(349, 349, 349)
                 .addComponent(jButton10)
                 .addContainerGap())
-            .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)
+            .addComponent(jScrollPane5)
         );
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -708,7 +721,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
                     .addComponent(jLabel10)
                     .addComponent(jButton10))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE))
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(resourceMap.getString("jPanel5.TabConstraints.tabTitle"), jPanel5); // NOI18N
@@ -784,13 +797,13 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
                         .addGap(48, 48, 48)
                         .addComponent(jLabel13)
                         .addGap(10, 10, 10)))
-                .addContainerGap(354, Short.MAX_VALUE))
-            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)
+                .addContainerGap(403, Short.MAX_VALUE))
+            .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+                .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
@@ -809,11 +822,11 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         mainPanel.setLayout(mainPanelLayout);
         mainPanelLayout.setHorizontalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 755, Short.MAX_VALUE)
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+            .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE)
         );
 
         menuBar.setName("menuBar"); // NOI18N
@@ -1113,6 +1126,10 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
         DrumsEmulationApp.getApplication().set_total_lvl(dB);
     }//GEN-LAST:event_jSlider2StateChanged
 
+    private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
+        DrumsEmulationApp.getApplication().setRealtimeHack(jToggleButton2.isSelected());
+    }//GEN-LAST:event_jToggleButton2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable instrumentTable;
     private javax.swing.JEditorPane jBindingsText;
@@ -1170,6 +1187,7 @@ public class DrumsEmulationView extends FrameView implements TableModelListener 
     private javax.swing.JTextPane jTextBuffersize;
     private javax.swing.JTextArea jTextInputArea;
     private javax.swing.JToggleButton jToggleButton1;
+    private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JPanel mainPanel;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JTable playModeTable;

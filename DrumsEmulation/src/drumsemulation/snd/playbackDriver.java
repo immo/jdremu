@@ -30,6 +30,8 @@ import javax.sound.sampled.*;
 public class playbackDriver implements LineListener, Runnable {
 
     boolean on_air;
+    boolean realtime_hack; //hack to improve realtime performance with resetT0 (!)
+    boolean apply_hack; //hack to be applied(!)
     int line_nbr;
     AudioFormat format;
     Line.Info[] lines;
@@ -45,28 +47,27 @@ public class playbackDriver implements LineListener, Runnable {
     final functionTables table;
     long total_lvl31;
     Random random_generator;
-
     public hitGenerator beep;
-
     public long tick_offset;
-
     public abstractData data;
     boolean playback;
     long current_t0;
     public float frame_rate;
     public float bps;
-
     public int request_buffer_size;
 
     public playbackDriver() {
+        this.realtime_hack = true;
+        this.apply_hack = false;
+
         this.on_air = false;
         this.line_nbr = 0;
         this.channels = 2;
         this.format = new AudioFormat(new Float(drumsemulation.DrumsEmulationApp.getApplication().getSampleRate()), 32, channels, true, true);
         DataLine.Info info = new DataLine.Info(SourceDataLine.class, format);
         lines = AudioSystem.getSourceLineInfo(info);
-        this.request_buffer_size = 16*1024;
-        
+        this.request_buffer_size = 16 * 1024;
+
         this.buffer_frames = 256;
         this.b_buffer = new byte[channels * 4 * buffer_frames];
         this.i_buffer = new int[channels * buffer_frames];
@@ -83,8 +84,8 @@ public class playbackDriver implements LineListener, Runnable {
         this.data = null;
         this.frame_rate = 44100;
         this.tick_offset = 512;//4410;
-        this.bps = 144/60.f;
-        
+        this.bps = 144 / 60.f;
+
         addGenerator(beep);
     }
 
@@ -100,8 +101,23 @@ public class playbackDriver implements LineListener, Runnable {
 
     }
 
+    public void useRealtimeHack(boolean use) {
+        this.realtime_hack = use;
+    }
+
     public void resetT0() {
-        this.current_t0 = this.frames_elapsed + this.tick_offset;
+        if (realtime_hack) {
+
+            synchronized(this) {
+                this.current_t0 = this.frames_elapsed - this.tick_offset; // !!
+                this.apply_hack = true;
+            }
+
+        } else {
+
+            this.current_t0 = this.frames_elapsed + this.tick_offset;
+        }
+        
     }
 
     public void update(LineEvent le) {
@@ -126,13 +142,13 @@ public class playbackDriver implements LineListener, Runnable {
     }
 
     public long get_total_lvl() {
-        synchronized(this) {
+        synchronized (this) {
             return total_lvl31;
         }
     }
 
     public void set_total_lvl(long lvl31) {
-        synchronized(this) {
+        synchronized (this) {
             total_lvl31 = lvl31;
         }
     }
@@ -142,7 +158,7 @@ public class playbackDriver implements LineListener, Runnable {
     }
 
     public void set_bps(float new_bps) {
-        
+
         synchronized (this) {
             long frames_el = this.frames_elapsed;
             float elapsed = frames_el - this.current_t0;
@@ -152,7 +168,7 @@ public class playbackDriver implements LineListener, Runnable {
             this.bps = new_bps;
             beat_rate = frame_rate / this.bps;
 
-            this.current_t0 = frames_el - (long)(t*beat_rate);
+            this.current_t0 = frames_el - (long) (t * beat_rate);
         }
     }
 
@@ -164,13 +180,14 @@ public class playbackDriver implements LineListener, Runnable {
         int byte_count = (buffer_frames * channels * 4);
         int count = out_line.available() / byte_count;
         int int_count = buffer_frames * channels;
-        long local_lvl31=0;
-        long local_t0=0;
-        long rel_elapsed =0;
-        long local_tickoffset=0;
+        long local_lvl31 = 0;
+        long local_t0 = 0;
+        long rel_elapsed = 0;
+        long local_tickoffset = 0;
         float local_bps = 1.f;
-        
+
         boolean local_playback = false;
+        boolean local_apply_hack = false;
 
         for (int idx = 0; idx < int_count; ++idx) {
             i_buffer[idx] = 0;
@@ -199,7 +216,11 @@ public class playbackDriver implements LineListener, Runnable {
                 float next_t = (rel_elapsed + buffer_frames) / beat_rate;
                 float prev_t = (rel_elapsed - buffer_frames) / beat_rate;
 
-                data.tick(frames_elapsed + local_tickoffset, t, next_t, prev_t);
+                if (local_apply_hack) {
+                    data.tick(frames_elapsed + local_tickoffset, t, next_t, -1.f);
+                } else {
+                    data.tick(frames_elapsed + local_tickoffset, t, next_t, prev_t);
+                }
             }
 
             synchronized (generators_lock) {
@@ -209,7 +230,7 @@ public class playbackDriver implements LineListener, Runnable {
                             channels, buffer_frames, local_lvl31);
                 }
             }
-            
+
             for (int idx = 0; idx < int_count; ++idx) {
                 int b_idx = idx << 2;
                 int f = i_buffer[idx];
@@ -233,6 +254,8 @@ public class playbackDriver implements LineListener, Runnable {
                 local_t0 = this.current_t0;
                 local_tickoffset = this.tick_offset;
                 local_bps = this.bps;
+                local_apply_hack = this.apply_hack;
+                this.apply_hack = false;
             }
         }
 
@@ -255,10 +278,10 @@ public class playbackDriver implements LineListener, Runnable {
                     //starts
                     synchronized (this) {
                         this.out_line = (SourceDataLine) AudioSystem.getLine(lines[line_nbr]);
-                        
+
                         out_line.addLineListener(this);
-                        out_line.open(format,request_buffer_size);
-                        System.out.println("Outline buffer size="+out_line.getBufferSize());
+                        out_line.open(format, request_buffer_size);
+                        System.out.println("Outline buffer size=" + out_line.getBufferSize());
                         writing_thread = new Thread(this);
                         writing_thread.setName("WritingThread");
                         writing_thread.start();

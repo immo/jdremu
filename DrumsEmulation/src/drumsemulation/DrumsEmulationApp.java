@@ -264,6 +264,11 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         show(new DrumsEmulationView(this));
     }
 
+    public void setRealtimeHack(boolean use) {
+        System.out.println("Realtime-hack="+use);
+        playback_driver.useRealtimeHack(use);
+    }
+
     public int getGeneratorsCount() {
         return names.size();
     }
