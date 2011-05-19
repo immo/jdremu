@@ -242,6 +242,7 @@ cr4s = seq(crash!0.9@0.5,crash@0.5);
 rd4s = seq(ride!0.9@0.5,ride@0.5);
 ki4s = seq(kick1@0.25,kick2@0.25,kick1@0.25,kick2@0.25);
 ki2s = seq(kick1@0.5,kick2@0.5);
+ki2tt = seq(kick1@0.5,kick2@0.5,speed=2);
 ki4t = seq(kick1@0.25,kick2@0.25,kick1@0.25,kick2@0.25,kick1@0.25,kick2@0.25,kick1@0.25,kick2@0.25,speed=2);
 ki3t = seq(kick1@0.25,kick2@0.25,kick1@0.25,kick2@0.25,kick1@0.25,kick2@0.25,kick1@0.5,speed=2);
 
@@ -381,9 +382,13 @@ key-z-6=4x(seq(1x(movement4,speed=160/144),1x(movement1,speed=80/144)));
 key-n-6=5x(syn(snare,kick1,ride),speed=4);
 key-p-6=4x(seq(1x(movement5,speed=160/144),1x(movement4,speed=120/144),1x(movement1,speed=60/144)));
 
+funnya=seq(8x(seq(syn(snare@0.25,crash@0.25),kick1@0.5)),
+           2x(8x(seq(syn(snare@0.25,crash@0.25),kick1@0.25))));
+funnyb=seq(syn(crash@0.5,ki2tt),ki2tt,syn(ride@0.5,ki2tt),ki2tt,syn(crash@0.5,ki2tt),syn(crash@0.5,ki2tt));
+
 key-^-7=cal_dreams;
-key-s-7=;
-key-c-7=;
-key-z-7=;
-key-n-7=;
+key-s-7=3x(seq(4x(funnya,speed=120/144),4x(funnyb,speed=160/144)));
+key-c-7=seq(1x(movement1,speed=120/144),1x(movement1,speed=180/144),1x(movement1,speed=120/144));
+key-z-7=3x(seq(4x(funnya),grind4,grind5),speed=180/144);
+key-n-7=seq(movement3,movement2,movement1,speed=160/144);
 key-p-7=bia;
