@@ -16,9 +16,10 @@ beat2=blast2c(kck1,kck2,snr,cym,hic);
 beat2b=blast2bc(kck1,kck2,snr,cym,hic);
 beat3=blast1(kck1,kck2,seq(snr,snr,speed=2.),hic);
 beat4=blast1(syn(kck1,snr,speed=2.),syn(kck2,snr,speed=2.),cym,hic);
-beat5=blast1(syn(kck1,snr,speed=2.),kck2,ride@0.25,ridebell@0.25);
+beat5=blast1(syn(kck1,snr,speed=2.),kck2,ride@0.25,ride@0.25);
 x = seq(8x(beat5),8x(beat4));
-c4=seq(@4.0,ride,ride,ride,ride);
+c4=seq(ride,ride,ride,ride);
+count4=seq(ride,ride,ride,ride);
 
 rde = ride@0.25;
 bel = ridebell@0.25;
@@ -126,7 +127,7 @@ cdf2 = 8x(8x(2x(blast1(kck1,kck2,snare!0.9@0.25,ride@0.25),speed=2)));
 cdfree = seq(c4,  cdf1, cdf2, c4, 4x(bia2_1), speed=160/144);
 cdfree2 = seq(c4,  cdf1, cdf2, c4, 4x(bia2_1), speed=160/144);
 
-cal_drems=seq(cd1,cdfree,cd1,cdfree2);
+cal_dreams=seq(cd1,cdfree,cd1,cdfree2);
 
 
 
@@ -241,6 +242,8 @@ cr4s = seq(crash!0.9@0.5,crash@0.5);
 rd4s = seq(ride!0.9@0.5,ride@0.5);
 ki4s = seq(kick1@0.25,kick2@0.25,kick1@0.25,kick2@0.25);
 ki2s = seq(kick1@0.5,kick2@0.5);
+ki4t = seq(kick1@0.25,kick2@0.25,kick1@0.25,kick2@0.25,kick1@0.25,kick2@0.25,kick1@0.25,kick2@0.25,speed=2);
+ki3t = seq(kick1@0.25,kick2@0.25,kick1@0.25,kick2@0.25,kick1@0.25,kick2@0.25,kick1@0.5,speed=2);
 
 core1 = seq(syn(kick1,cr4s),cr4s,syn(snare!0.9,cr4s),cr4s,
             syn(ki4s,cr4s),cr4s,syn(snare!0.9,cr4s),cr4s,
@@ -272,37 +275,115 @@ syn(ki4s,cr4s,seq(snare@0.25,snare@0.25,snare@0.25,snare@0.25)),syn(ki4s,cr4s,se
 syn(ki4s,cr4s,seq(snare@0.5,snare@0.5)),syn(ki4s,cr4s,seq(snare@0.5,snare@0.5)),syn(ki4s,cr4s,seq(snare@0.5,snare@0.5)),syn(ki4s,cr4s,seq(snare@0.5,snare@0.5)),
 syn(ki4s,cr4s,seq(snare@0.25,snare@0.25,snare@0.25,snare@0.25)),syn(ki4s,cr4s,seq(snare@0.25,snare@0.25,snare@0.25,snare@0.25)),syn(ki4s,cr4s,seq(snare@0.25,snare@0.25,snare@0.25,snare@0.25)),syn(ki4s,cr4s,seq(snare@0.25,snare@0.25,snare@0.25,snare@0.25)));
 
-key-^-3=seq(c4,8x(seq(4x(core2),4x(core1),2x(core2),2x(core1))),speed=120/144);
+key-^-3=seq(count4,8x(seq(4x(core2),4x(core1),2x(core2),2x(core1))),speed=120/144);
 key-s-3=seq(8x(seq(4x(core2k),4x(core1k),2x(core2k),2x(core1k))),speed=120/144);
 key-c-3=seq(8x(seq(4x(core2),4x(core1),2x(core2),2x(core1))),speed=180/144);
 key-z-3=seq(8x(seq(4x(core2k),4x(core1k),2x(core2k),2x(core1k))),speed=180/144);;
 key-n-3=8x(seq(4x(coreX2),4x(coreX)),speed=160/144);
 key-p-3=8x(seq(4x(coreX),4x(coreX2)),speed=180/144);
 
-key-^-4=;
-key-s-4=;
-key-c-4=;
-key-z-4=;
-key-n-4=;
-key-p-4=;
+blasts1 = seq(1x(syn(ki4s,snarerim!0.9,crash!0.9)),3x(syn(ki4s,snare,crash)));
+blasts1t = seq(1x(syn(ki4t,snarerim!0.9,crash!0.9)),3x(syn(ki4t,snare,crash)));
+blasts2 = seq(1x(syn(ki4s,snarerim!0.9,ride!0.9)),3x(syn(ki4s,snare,ride)));
+blasts2t = seq(1x(syn(ki4t,snarerim!0.9,ride!0.9)),3x(syn(ki4t,snare,ride)));
+blasts3 = seq(1x(syn(ki4s,snarerim!0.9,crash!0.9)),2x(syn(ki4s,snare,crash)));
+blasts3t = seq(1x(syn(ki4t,snarerim!0.9,crash!0.9)),2x(syn(ki4t,snare,crash)));
+blasts4 = seq(1x(syn(ki4s,snarerim!0.9,ride!0.9)),2x(syn(ki4s,snare,ride)));
+blasts4t = seq(1x(syn(ki4t,snarerim!0.9,ride!0.9)),2x(syn(ki4t,snare,ride)));
+fill1 = seq(syn(hicrash!0.9,4x(snarerim!0.95),speed=4),syn(crash!0.9,snare!0.95));
+blasteasy2 = seq(syn(ki4t,seq(ride,ride,speed=2)),
+                 syn(ki4t,seq(ride,ride,speed=2)),
+                 syn(snarerim,ki4t,seq(ride,ride,speed=2)),
+                 syn(ki4t,seq(ride,ride,speed=2)));
 
-key-^-5=;
-key-s-5=;
-key-c-5=;
-key-z-5=;
-key-n-5=;
-key-p-5=;
+blasteasy3 = seq(syn(ki4t,hicrash,snarerim!0.9),
+                 syn(ki4t,crash),
+                 syn(ki4t,crash),
+                 syn(ki4t,crash));
 
-key-^-6=;
-key-s-6=;
-key-c-6=;
-key-z-6=;
-key-n-6=;
-key-p-6=;
+fill2 = syn(kick1,ride!0.9);
 
-key-^-7=;
+key-^-4=6x(seq(8x(blasts1,speed=180/144),4x(blasts1t,speed=90/144)));
+key-s-4=6x(seq(8x(blasts2,speed=180/144),4x(blasts2t,speed=90/144)));
+key-c-4=8x(seq(8x(blasts3,speed=180/144),4x(blasts3t,speed=90/144)));
+key-z-4=8x(seq(8x(blasts4,speed=180/144),4x(blasts4t,speed=90/144)));
+key-n-4=1x(fill1,speed=180/144);
+key-p-4=6x(8x(blasteasy2),speed=180/144);
+
+key-^-5=6x(seq(8x(blasts1t,speed=120/144),8x(blasts1,speed=120/144)));
+key-s-5=6x(seq(8x(blasts2t,speed=120/144),8x(blasts2,speed=120/144)));
+key-c-5=8x(seq(8x(blasts3t,speed=120/144),8x(blasts3,speed=120/144)));
+key-z-5=8x(seq(8x(blasts4t,speed=120/144),8x(blasts4,speed=120/144)));
+key-n-5=1x(fill2,speed=120/144);
+key-p-5=6x(8x(blasteasy3),speed=120/144);
+
+ummf=syn(kick1!0.9,crash!0.9);
+tschhk=syn(snare!0.9,crash!0.9);
+ummfummf = seq(ummf,ummf,speed=2);
+trrrrr=syn(snare!0.9,crash!0.9,ki4t);
+trrrr=syn(snare!0.9,crash!0.9,ki3t);
+
+ummf1=syn(ki4s,crash!0.9);
+tschhk1=syn(snare!0.9,crash!0.9,ki4s);
+ummfummf1 = syn(ki4s,2x(crash!0.9@0.5));
+trrrrr1=syn(snare!0.9,crash!0.9,ki4t);
+trrrr1=syn(snare!0.9,crash!0.9,ki3t);
+
+grind1 = 2x(seq(ummf,tschhk,ummf,trrrrr,ummfummf,tschhk,ummf,trrrr),speed=1/2);
+grind2 = 2x(syn(seq(@0.5,7x(crash),crash@0.5),
+        seq(ummf,tschhk,ummf,trrrrr,ummfummf,tschhk,ummf,trrrr)),speed=1/2);
+
+boingboing = 4x(snarerim!0.9@1);
+grind3 = 2x(seq(ummf1,tschhk1,ummf1,trrrrr1,ummfummf1,tschhk1,ummf1,trrrr1));
+grind4 = 4x(8x(seq(syn(snare!0.9,hicrash,speed=2),kick1!0.9@0.5)),speed=2);
+
+grind5 = 4x(seq(3x(seq(
+                   syn(snare!0.9,hicrash,speed=2),kick1!0.9@0.5,kick2@0.5,
+                   syn(snare!0.9,hicrash,speed=2),kick1!0.9@0.5,kick2@0.5,
+                   syn(snare!0.9,hicrash,speed=2),kick1!0.9@0.5)
+                  ),4x(seq(syn(snare!0.9,hicrash,speed=2),kick1!0.9@0.5)),speed=2)));
+
+grind4b = 4x(8x(seq(syn(snare!0.9,ridebell,speed=2),kick1!0.9@0.5)),speed=2);
+
+grind5b = 4x(seq(3x(seq(
+                   syn(snare!0.9,ridebell,speed=2),kick1!0.9@0.5,kick2@0.5,
+                   syn(snare!0.9,ridebell,speed=2),kick1!0.9@0.5,kick2@0.5,
+                   syn(snare!0.9,ridebell,speed=2),kick1!0.9@0.5)
+                  ),4x(seq(syn(snare!0.9,ridebell,speed=2),kick1!0.9@0.5)),speed=2) ));
+
+
+umtsak = seq(syn(kick1!0.9,crash),syn(kick2,snare!0.9),speed=2);
+umtsaktsak = seq(syn(kick1!0.9,crash),syn(kick2,seq(snare,snare!0.95,speed=2)),speed=2);
+
+umtsakr = seq(syn(kick1!0.9,ride),syn(kick2,snare!0.9),speed=2);
+umtsaktsakr = seq(syn(kick1!0.9,ride),syn(kick2,seq(snare,snare!0.95,speed=2)),speed=2);
+
+umumtsaktsak = seq(syn(ki2s,crash),syn(kick2,seq(snare,snare!0.95,speed=2)),speed=2);
+runksblah = seq(syn(ki4s,crash,snare),syn(ki4s,seq(snare,crash,speed=2)),speed=2);
+umblah = seq(syn(ki2s,crash,snare),syn(ki2s,seq(snare,snare!0.95,speed=2)),speed=2);
+
+grinda=4x(seq(umtsak,umtsak,umtsaktsak,umtsak));
+grindb=4x(seq(umtsakr,umtsakr,umtsaktsakr,umtsakr));
+grindc=4x(seq(umumtsaktsak,umtsaktsak,umumtsaktsak,umtsaktsak));
+grindd=4x(seq(runksblah,runksblah,runksblah,umblah));
+
+movement1=seq(count4,grind1,grind2,seq(grind1,grind2,speed=2/3),grind3,boingboing,grind4);
+movement2=seq(count4, grinda,grindb,grindc,grindd);
+movement3=seq(count4,2x(seq(grind5,grind5b,grind4,grind4b)));
+movement4=seq(count4,4x(blasts2t,speed=2/3),grind4,4x(blasts1t,speed=2/3),grind4b,2x(blasts1t),2x(blasts2t));
+movement5=seq(count4,rhtm7,rhtm8,4x(blasts3t),blasts1t,rhtm8,rhtm7,4x(blasts4t),blasts2t);
+
+
+key-^-6=4x(seq(1x(movement1,speed=120/144),1x(movement1,speed=90/144)));
+key-s-6=4x(seq(1x(movement2,speed=105/144),1x(movement1,speed=90/144)));
+key-c-6=4x(seq(1x(movement3,speed=160/144),1x(movement2,speed=120/144)));
+key-z-6=4x(seq(1x(movement4,speed=160/144),1x(movement1,speed=80/144)));
+key-n-6=5x(syn(snare,kick1,ride),speed=4);
+key-p-6=4x(seq(1x(movement5,speed=160/144),1x(movement4,speed=120/144),1x(movement1,speed=60/144)));
+
+key-^-7=cal_dreams;
 key-s-7=;
 key-c-7=;
 key-z-7=;
 key-n-7=;
-key-p-7=;
+key-p-7=bia;
