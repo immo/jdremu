@@ -269,6 +269,11 @@ public class DrumsEmulationApp extends SingleFrameApplication {
         playback_driver.useRealtimeHack(use);
     }
 
+     public void setMono(boolean use) {
+        System.out.println("Mono="+use);
+        playback_driver.setMono(use);
+    }
+
     public int getGeneratorsCount() {
         return names.size();
     }

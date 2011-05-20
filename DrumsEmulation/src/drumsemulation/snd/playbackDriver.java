@@ -55,10 +55,12 @@ public class playbackDriver implements LineListener, Runnable {
     public float frame_rate;
     public float bps;
     public int request_buffer_size;
+    public boolean mono_output;
 
     public playbackDriver() {
         this.realtime_hack = true;
         this.apply_hack = false;
+        this.mono_output = false;
 
         this.on_air = false;
         this.line_nbr = 0;
@@ -190,6 +192,7 @@ public class playbackDriver implements LineListener, Runnable {
 
         boolean local_playback = false;
         boolean local_apply_hack = false;
+        boolean local_mono = false;
 
         for (int idx = 0; idx < int_count; ++idx) {
             i_buffer[idx] = 0;
@@ -233,13 +236,28 @@ public class playbackDriver implements LineListener, Runnable {
                 }
             }
 
-            for (int idx = 0; idx < int_count; ++idx) {
-                int b_idx = idx << 2;
-                int f = i_buffer[idx];
-                b_buffer[b_idx] = (byte) (f >> 24);
-                b_buffer[b_idx + 1] = (byte) (f >> 16);
-                b_buffer[b_idx + 2] = (byte) (f >> 8);
-                b_buffer[b_idx + 3] = (byte) (f);
+            if (local_mono) {
+                for (int idx = 0; idx < int_count; idx+=2) {
+                    int b_idx = idx << 2;
+                    int f = (i_buffer[idx]>>1)+(i_buffer[idx+1]>>1);
+                    b_buffer[b_idx] = (byte) (f >> 24);
+                    b_buffer[b_idx + 1] = (byte) (f >> 16);
+                    b_buffer[b_idx + 2] = (byte) (f >> 8);
+                    b_buffer[b_idx + 3] = (byte) (f);
+                    b_buffer[b_idx + 4] = (byte) (f >> 24);
+                    b_buffer[b_idx + 5] = (byte) (f >> 16);
+                    b_buffer[b_idx + 6] = (byte) (f >> 8);
+                    b_buffer[b_idx + 7] = (byte) (f);
+                }
+            } else {
+                for (int idx = 0; idx < int_count; ++idx) {
+                    int b_idx = idx << 2;
+                    int f = i_buffer[idx];
+                    b_buffer[b_idx] = (byte) (f >> 24);
+                    b_buffer[b_idx + 1] = (byte) (f >> 16);
+                    b_buffer[b_idx + 2] = (byte) (f >> 8);
+                    b_buffer[b_idx + 3] = (byte) (f);
+                }
             }
 
             frames_elapsed += this.buffer_frames;
@@ -258,6 +276,7 @@ public class playbackDriver implements LineListener, Runnable {
                 local_bps = this.bps;
                 local_apply_hack = this.apply_hack;
                 this.apply_hack = false;
+                local_mono = this.mono_output;
             }
         }
 
@@ -265,6 +284,12 @@ public class playbackDriver implements LineListener, Runnable {
             out_line.close();
             out_line.removeLineListener(this);
             out_line = null;
+        }
+    }
+
+    public void setMono(boolean m) {
+        synchronized (this) {
+            this.mono_output = m;
         }
     }
 
